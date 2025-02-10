@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+/* global */
+
+:root {
+  --main-text: 'Playfair Display';
+  --secondary-text: 'Montserrat';
+  --main-color: #f2e5d7;
+  --secondary-color: #303a2b;
+  --tertiary-color: #628395;
+  --light: #f2f2f2;
+  --dark: #333;
+}
+
+html {
+  font: 16px Verdana, Geneva, Tahoma, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+body {
+  background-color: var(--main-color);
+  margin: 0;
+}
+
+/* Content Wrapper */
+
+#content-wrapper {
+  margin: 0 auto;
+  width: 90%;
+}
+
+/* Header - Footer */
+
+header {
+  background-color: var(--secondary-color);
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  position: static;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+nav ul li {
+  list-style-type: none;
+  font: 22px var(--secondary-text);
+  padding: 0 0.5rem;
+}
+
+nav a {
+  color: var(--light);
+  display: inline-block;
+  opacity: 0.75;
+  text-decoration: none;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+nav a:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+h1 {
+  color: var(--light);
+  font: 48px var(--main-text);
+  margin: 0;
+}
+
+footer {
+  background-color: var(--secondary-color);
+  color: var(--light);
+  display: flex;
+  font: 18px var(--secondary-text);
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+footer a {
+  color: var(--light);
+  text-decoration: none;
+}
+
+/* Home */
+
+/* Hero Image Section */
+
+.hero-image {
+  background: url('../img/assets/hero.jpg') center / cover no-repeat;
+  height: 45vw;
+  position: relative;
+}
+
+.static-text {
+  font: 72px var(--main-text);
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+#text {
+  font: 48px var(--secondary-text);
+  text-align: center;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+.caret {
+  display: inline-block;
+  width: 10px;
+  margin-left: 5px;
+  animation: blink 1s infinite;
+}
+
+/* Main Paragraph */
+
+main > div:first-of-type {
+  font: 20px var(--secondary-text);
+}
+
+/* slideshow */
+
+.slideshow-container {
+  margin: auto;
+  max-width: 1000px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide the images by default */
+.mySlides {
+  display: none;
+  position: relative;
+}
+
+.mySlides img {
+  width: 100%;
+  display: block;
+  transition: filter 0.5s ease-in-out;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Caption text */
+.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  text-align: center;
+  color: white;
+  font: 24px var(--secondary-text);
+  background: rgba(0, 0, 0, 0.5); /* Slight background for readability */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.text a {
+  color: #628395;
+  text-decoration: none;
+}
+
+.text a:hover {
+  color: var(--light);
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: var(--light);
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0.25rem;
+  transition: background-color 0.6s ease;
+}
+
+.active,
+.dot:hover {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Our Vendors */
+
+form {
+  align-items: center;
+  background-color: var(--tertiary-color);
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1rem auto;
+  padding: 3rem;
+  width: 50%;
+}
+
+.search-bar input {
+  border-radius: 10px;
+  height: 30px;
+  width: 250px;
+}
+
+/* About Us */
+
+.aboutus h2 {
+  font: 64px var(--main-text);
+  text-align: center;
+}
+
+.aboutus div:nth-last-of-type(1) {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.aboutus main section {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.aboutus-item {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin: 0;
+}
+
+.aboutus-item:nth-of-type(2) {
+  flex-direction: row-reverse !important;
+  text-align: right;
+}
+
+.aboutus-item p {
+  font: 32px var(--secondary-text);
+}
+
+.aboutus div div:last-of-type {
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+/* User Login */
+
+.login {
+  background: url('/img/blueberries.jpg') center / cover no-repeat;
+}
+
+.login main {
+  display: flex;
+}
+
+.login form {
+  background-color: #628395cc;
+  display: flex;
+  flex-flow: column wrap;
+}
+
+form.user-login {
+  background-color: #f2e5d7cc;
+}
