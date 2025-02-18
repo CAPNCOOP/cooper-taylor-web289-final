@@ -315,20 +315,60 @@ form {
 
 /* User Login */
 
-.login {
-  background: url('/img/blueberries.jpg') center / cover no-repeat;
+.login-page {
+  background: url('/img/assets/blueberries.jpg') center / cover no-repeat;
 }
 
-.login main {
+.login-page main {
   display: flex;
 }
 
-.login form {
+.login-page form {
   background-color: #628395cc;
   display: flex;
   flex-flow: column wrap;
 }
 
+.login-page form fieldset {
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
 form.user-login {
   background-color: #f2e5d7cc;
+}
+
+form legend {
+  font: 32px var(--main-text);
+}
+
+form label {
+  font: 18px var(--secondary-text);
+  margin-right: 0.25rem;
+  text-align: left;
+}
+
+form:last-of-type fieldset:last-of-type {
+  flex-direction: column;
+}
+
+form.user-login input:focus {
+  background-color: var(--tertiary-color);
+  color: var(--light);
+}
+
+form input:focus {
+  background-color: var(--main-color);
+  outline: none;
+}
+
+form input[type='image'] {
+  background-color: #333;
+  height: 5rem;
+  width: 5rem;
+}
+
+form fieldset.ein-field {
+  display: none;
 }

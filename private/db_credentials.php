@@ -12,7 +12,7 @@
 // define("DB_NAME", "dbzlvmnyeq51y6");
 
 // Local Host
-// define("DB_SERVER", "localhost");
-// define("DB_USER", "root");
-// define("DB_PASS", '');
-// define("DB_NAME", "farmers_market");
+define("DB_SERVER", "localhost");
+define("DB_USER", "root");
+define("DB_PASS", '');
+define("DB_NAME", "farmers_market");
