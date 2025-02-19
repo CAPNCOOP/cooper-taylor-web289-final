@@ -1,19 +1,10 @@
 <?php
-// local
-$host = 'localhost';
-$dbname = 'farmers_market';
-$username = 'root';  // Default Laragon MySQL user
-$password = '';
+require_once 'db_credentials.php'; // Load database credentials
 
-// SiteGround
-// define("DB_SERVER", "localhost");
-// define("DB_USER", "uamij6bxstfg3");
-// define("DB_PASS", "w1ckedp155er!!");
-// define("DB_NAME", "dbzlvmnyeq51y6");
-
+// Create PDO connection
 try {
-  $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $db = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
   die("Database connection failed: " . $e->getMessage());
 }
