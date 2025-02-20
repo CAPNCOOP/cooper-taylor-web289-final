@@ -312,6 +312,48 @@ div#vendorhead {
   margin: 0 auto;
 }
 
+/* Vendor Profile */
+
+#vendor-profile-container {
+  background-color: var(--tertiary-color);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+
+#vendor-profile-card {
+  color: var(--light);
+  flex: 1;
+  padding: 1rem;
+}
+
+#vendor-upcoming-markets {
+  color: var(--light);
+  background-color: var(--secondary-color);
+  border-radius: 0 5px 5px 0;
+  align-self: stretch;
+  flex: 2;
+  padding: 1rem;
+}
+
+#vendor-upcoming-markets h2 {
+  margin: 1rem;
+}
+
+#vendor-profile-card img {
+  border-radius: 100%;
+  border: 5px solid var(--main-color);
+  box-shadow: 0 0 10px var(--dark);
+}
+
+.product-list {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
 /* About Us */
 
 .aboutus h2 {
