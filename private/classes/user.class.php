@@ -23,3 +23,12 @@ class User extends DatabaseObject
     $this->user_level_id = $args['user_level_id'] ?? 0;
   }
 }
+
+function find_by_username($username)
+{
+  global $db;
+  $sql = "SELECT * FROM users WHERE username = ? LIMIT 1";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$username]);
+  return $stmt->fetch(PDO::FETCH_ASSOC);
+}

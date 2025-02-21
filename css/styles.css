@@ -269,11 +269,14 @@ div#vendorhead {
   margin: 0;
 }
 
-#vendorhead input {
+#vendorhead form {
   border-radius: 5px;
   height: 1.5rem;
-  width: 300px;
   margin: 0 auto;
+}
+
+#vendorhead input {
+  width: 400px;
 }
 
 #vendor-list {
@@ -299,8 +302,12 @@ div#vendorhead {
   justify-content: center;
   padding: 1rem;
   margin: 1rem;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
+.vendor-card:hover {
+  box-shadow: 1px 5px 5px var(--light);
+}
 .vendor-card h2 {
   font: 28px var(--secondary-text);
   text-align: center;
@@ -318,14 +325,29 @@ div#vendorhead {
   background-color: var(--tertiary-color);
   border-radius: 5px;
   display: flex;
-  justify-content: center;
   margin: 1rem;
 }
 
 #vendor-profile-card {
   color: var(--light);
+  display: flex;
   flex: 1;
+  flex-direction: column;
   padding: 1rem;
+  justify-content: center;
+}
+
+#vendor-profile-card h2 {
+  text-align: center;
+}
+
+#vendor-profile-card a {
+  color: var(--dark);
+  text-decoration: none;
+}
+
+#vendor-profile-card a:hover {
+  color: var(--light);
 }
 
 #vendor-upcoming-markets {
@@ -345,6 +367,7 @@ div#vendorhead {
   border-radius: 100%;
   border: 5px solid var(--main-color);
   box-shadow: 0 0 10px var(--dark);
+  margin: 0 auto;
 }
 
 .product-list {

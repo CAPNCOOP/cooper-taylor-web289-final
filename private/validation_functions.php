@@ -107,15 +107,9 @@ function has_valid_email_format($value)
 // * Validates uniqueness of admins.username
 // * For new records, provide only the username.
 // * For existing records, provide current ID as second argument
-//   has_unique_username('johnqpublic', 4)
+// //   has_unique_username('johnqpublic', 4)
 function has_unique_username($username, $current_id = "0")
 {
-  $user = User::find_by_username($username);
-  if ($user === false || $user->id == $current_id) {
-    // is unique
-    return true;
-  } else {
-    // not unique
-    return false;
-  }
+  $user = find_by_username($username);
+  return !$user || $user['user_id'] == $current_id;
 }
