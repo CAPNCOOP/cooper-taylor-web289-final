@@ -427,56 +427,100 @@ div#vendorhead {
   background: url('/img/assets/blueberries.jpg') center / cover no-repeat;
 }
 
-.login-page main {
+.user-login {
+  background-color: var(--main-color);
+  border-radius: 5px;
+  padding: 1rem;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem;
 }
 
-.login-page form {
-  background-color: #628395cc;
-  display: flex;
-  flex-flow: column wrap;
+.user-login legend {
+  font: 48px var(--main-text);
+  text-align: center;
 }
 
-.login-page form fieldset {
-  display: flex;
+.user-login p {
+  text-align: center;
+}
+
+.user-login img {
+  border: 5px solid var(--dark);
+  border-radius: 100%;
+  box-shadow: 0 0 10px var(--dark);
+  margin: 0 auto;
+}
+
+.user-login input[type='text'] {
+  background: url(/img/assets/userB.png) no-repeat left 10px center;
+  border-radius: 5px;
+  color: var(--dark);
+  background-size: 20px 20px;
+  padding-left: 40px;
+  height: 30px;
+}
+
+.user-login input[type='password'] {
+  background: url(/img/assets/lock.png) no-repeat left 10px center;
+  border-radius: 5px;
+  color: var(--dark);
+  background-size: 20px 20px;
+  padding-left: 40px;
+  height: 30px;
+}
+
+.user-login fieldset {
   align-items: center;
   border: none;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
 }
 
-form.user-login {
-  background-color: #f2e5d7cc;
-}
-
-form legend {
-  font: 32px var(--main-text);
-}
-
-form label {
-  font: 18px var(--secondary-text);
-  margin-right: 0.25rem;
-  text-align: left;
-}
-
-form:last-of-type fieldset:last-of-type {
-  flex-direction: column;
-}
-
-form.user-login input:focus {
+.user-login button:first-of-type {
   background-color: var(--tertiary-color);
+  border-radius: 5px;
   color: var(--light);
+  margin: 0 auto;
+  width: 150px;
+  transition: 0.2s ease-in-out;
 }
 
-form input:focus {
-  background-color: var(--main-color);
-  outline: none;
+.user-login button:first-of-type:hover {
+  background-color: var(--light);
+  color: var(--dark);
 }
 
-form input[type='image'] {
-  background-color: #333;
-  height: 5rem;
-  width: 5rem;
+.user-login a {
+  color: var(--tertiary-color);
+  text-decoration: none;
 }
 
-form fieldset.ein-field {
+.hidden {
   display: none;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.popup-content button {
+  margin: 10px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.popup-content button:hover {
+  background-color: #ddd;
 }

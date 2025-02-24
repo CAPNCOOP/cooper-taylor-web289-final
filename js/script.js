@@ -85,19 +85,18 @@ function showSlides(n) {
   }
 }
 
-// Vendor EIN Toggle
-document.addEventListener('DOMContentLoaded', () => {
-  const yesRadio = document.getElementById('yes');
-  const noRadio = document.getElementById('no');
-  const einFieldset = document.querySelector('.ein-field');
+// sign-up pop-up
+document.addEventListener('DOMContentLoaded', function () {
+  const openSignup = document.getElementById('openSignup');
+  const closeSignup = document.getElementById('closeSignup');
+  const signupPopup = document.getElementById('signup-popup');
 
-  if (yesRadio && noRadio && einFieldset) {
-    yesRadio.addEventListener('change', function () {
-      einFieldset.style.display = 'block';
-    });
+  openSignup.addEventListener('click', function (event) {
+    event.preventDefault();
+    signupPopup.classList.remove('hidden');
+  });
 
-    noRadio.addEventListener('change', function () {
-      einFieldset.style.display = 'none';
-    });
-  }
+  closeSignup.addEventListener('click', function () {
+    signupPopup.classList.add('hidden');
+  });
 });

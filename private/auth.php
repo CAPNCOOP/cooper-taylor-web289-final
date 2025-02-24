@@ -7,8 +7,49 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-
 $errors = [];
+
+// Image Upload Function
+function upload_image($file, $folder)
+{
+  $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
+  $upload_dir = __DIR__ . "/../img/upload/{$folder}/";
+  if (!file_exists($upload_dir)) {
+    mkdir($upload_dir, 0777, true); // Create folder if it doesn't exist
+  }
+
+  if ($file['error'] === UPLOAD_ERR_OK) {
+    $file_type = mime_content_type($file['tmp_name']);
+    if (!in_array($file_type, $allowed_types)) {
+      return null; // Invalid file type
+    }
+
+    // Generate unique filename
+    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $new_filename = uniqid("img_", true) . '.' . $ext;
+    $target_path = $upload_dir . $new_filename;
+
+    // Resize Image
+    $image = imagecreatefromstring(file_get_contents($file['tmp_name']));
+    $resized_image = imagescale($image, 500, 500);
+    switch ($file_type) {
+      case 'image/jpeg':
+        imagejpeg($resized_image, $target_path);
+        break;
+      case 'image/png':
+        imagepng($resized_image, $target_path);
+        break;
+      case 'image/webp':
+        imagewebp($resized_image, $target_path);
+        break;
+    }
+    imagedestroy($image);
+    imagedestroy($resized_image);
+
+    return "img/upload/{$folder}/" . $new_filename;
+  }
+  return null;
+}
 
 // Handle user registration
 if (is_post_request() && isset($_POST['register'])) {
@@ -20,6 +61,9 @@ if (is_post_request() && isset($_POST['register'])) {
   $confirm_password = $_POST['confirm-pass'];
   $is_vendor = $_POST['vendorRequest'] === 'yes' ? 1 : 0;
   $ein = $is_vendor ? h($_POST['business_EIN']) : NULL;
+
+  // Image Upload Handling
+  $profile_image = isset($_FILES['profile_image']) ? upload_image($_FILES['profile_image'], 'users') : 'img/upload/users/default.png';
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
@@ -40,10 +84,31 @@ if (is_post_request() && isset($_POST['register'])) {
 
   if (empty($errors)) {
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-    $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id, business_EIN, user_status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1, $ein]); // 2 for vendors, 1 for regular users
 
+    if ($is_vendor) {
+      // Vendor-Specific Fields
+      $business_name = h($_POST['business_name']);
+      $business_address = h($_POST['business_address']);
+
+      // Business Image Upload
+      $business_image = isset($_FILES['business_image']) ? upload_image($_FILES['business_image'], 'vendors') : 'img/upload/vendors/default.png';
+
+      // Insert into Users Table
+      $sql = "INSERT INTO users (username, first_name, last_name, email, password, profile_image, user_level_id) VALUES (?, ?, ?, ?, ?, ?, 2)";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $profile_image]);
+      $user_id = $db->lastInsertId();
+
+      // Insert into Vendors Table
+      $sql = "INSERT INTO vendor (user_id, business_name, business_EIN, business_address, business_image, vendor_status) VALUES (?, ?, ?, ?, ?, 'pending')";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$user_id, $business_name, $ein, $business_address, $business_image]);
+    } else {
+      // Insert into Users Table (Regular Member)
+      $sql = "INSERT INTO users (username, first_name, last_name, email, password, profile_image, user_level_id) VALUES (?, ?, ?, ?, ?, ?, 1)";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $profile_image]);
+    }
 
     redirect_to('login.php?signup_success=1');
   }
@@ -59,7 +124,7 @@ if (is_post_request() && isset($_POST['login'])) {
   }
 
   if (empty($errors)) {
-    $sql = "SELECT user_id, username, password, is_vendor, user_status FROM users WHERE username = ?";
+    $sql = "SELECT user_id, username, password, user_level_id, user_status, profile_image FROM users WHERE username = ?";
     $stmt = $db->prepare($sql);
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -71,7 +136,8 @@ if (is_post_request() && isset($_POST['login'])) {
 
       $_SESSION['user_id'] = $user['user_id'];
       $_SESSION['username'] = $user['username'];
-      $_SESSION['is_vendor'] = $user['is_vendor'];
+      $_SESSION['user_level_id'] = $user['user_level_id'];
+      $_SESSION['profile_image'] = $user['profile_image'];
 
       redirect_to('dashboard.php');
     } else {
