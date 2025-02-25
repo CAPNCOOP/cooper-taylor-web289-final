@@ -1,5 +1,7 @@
 <?php
+ob_start(); // Start output buffering
 require_once 'private/initialize.php';
+ob_end_flush(); // End output buffering
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +30,7 @@ require_once 'private/initialize.php';
 
   <main>
     <form action="private/auth.php" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="user_type" value="member">
+      <input type="hidden" name="is_vendor" value="0">
 
       <fieldset>
         <label for="username">Username:</label>
@@ -53,6 +55,11 @@ require_once 'private/initialize.php';
       <fieldset>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
+      </fieldset>
+
+      <fieldset>
+        <label for="confirm-pass">Confirm Password:</label>
+        <input type="password" id="confirm-pass" name="confirm-pass" required>
       </fieldset>
 
       <fieldset>

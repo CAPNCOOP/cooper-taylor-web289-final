@@ -1,5 +1,4 @@
 <?php
-
 function url_for($script_path)
 {
   // add the leading '/' if not present
@@ -39,8 +38,13 @@ function error_500()
 
 function redirect_to($location)
 {
-  header("Location: " . $location);
-  exit;
+  if (!headers_sent()) {
+    header("Location: " . $location);
+    exit();
+  } else {
+    echo "<script>window.location.href='" . $location . "';</script>";
+    exit();
+  }
 }
 
 function is_post_request()

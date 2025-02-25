@@ -1,5 +1,4 @@
 <?php
-
 // is_blank('abcd')
 // * validate data presence
 // * uses trim() so empty spaces don't count

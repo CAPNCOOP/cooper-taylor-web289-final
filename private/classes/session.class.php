@@ -1,4 +1,10 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+  echo "New session started in " . __FILE__ . "<br>";
+} else {
+  echo "Session already active! Started at: " . debug_backtrace()[0]['file'] . " on line " . debug_backtrace()[0]['line'] . "<br>";
+}
 
 class Session
 {
@@ -12,7 +18,7 @@ class Session
 
   public function __construct()
   {
-    session_start();
+    echo "Session class constructor called.<br>";
     $this->check_stored_login();
   }
 
