@@ -1,9 +1,9 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-ob_start(); // turn on output buffering
+ob_start();
+if (headers_sent($file, $line)) {
+  die("🚨 Headers already sent in $file on line $line");
+}
+session_start();
 
 // Assign file paths to PHP constants
 // __FILE__ returns the current path to this file
@@ -33,9 +33,6 @@ require_once('cooper-taylor-db-connection.php');
 
 // Load class definitions manually
 
-// -> Individually
-// require_once('classes/bicycle.class.php');
-
 // -> All classes in directory
 foreach (glob('classes/*.class.php') as $file) {
   require_once($file);
@@ -52,6 +49,3 @@ spl_autoload_register('my_autoload');
 
 $database = db_connect();
 DatabaseObject::set_database($database);
-
-
-$session = new Session;

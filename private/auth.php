@@ -1,29 +1,21 @@
 <?php
-// temp
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-// TEMP DEBUGGING: CHECK IF SCRIPT STARTS EXECUTION
-echo "Auth script started...<br>";
-flush();  // Force output
-
-
 ob_start();
+echo "✅ Script started...<br>";
+flush();
+
 require_once __DIR__ . '/initialize.php';
 require_once __DIR__ . '/validation_functions.php';
 require_once __DIR__ . '/functions.php';
+
+echo "✅ All files included successfully...<br>";
+flush();
+
 ob_end_flush();
 
-// temp
-echo "Loaded initialize.php, validation_functions.php, and functions.php.<br>";
-flush();
-// echo "<pre>";
-// print_r($_POST);  // Show all form data
-// print_r($_FILES); // Show uploaded file data
-// echo "</pre>";
-// exit();
-
 $errors = [];
+$username = $password = $confirm_password = $email = "";
+$fname = $lname = $is_vendor = $ein = null;
+$profile_image = 'img/upload/users/default.png';
 
 // Image Upload Function
 function upload_image($file, $folder)
@@ -69,18 +61,21 @@ function upload_image($file, $folder)
 
 // Handle user registration
 if (is_post_request() && isset($_POST['register'])) {
-  // temp
-  echo "Handling registration request...<br>";
+  echo "✅ Processing registration request...<br>";
+  flush();
+
+  $username = h($_POST['username'] ?? '');
+  $fname = h($_POST['fname'] ?? '');
+  $lname = h($_POST['lname'] ?? '');
+  $email = h($_POST['email'] ?? '');
+  $password = $_POST['password'] ?? '';
+  $confirm_password = $_POST['confirm-pass'] ?? '';
+  $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
+  $ein = $is_vendor ? h($_POST['business_EIN'] ?? '') : NULL;
+
+  echo "✅ User data received: $username, $email<br>";
   flush();
 }
-$username = h($_POST['username']);
-$fname = h($_POST['fname']);
-$lname = h($_POST['lname']);
-$email = h($_POST['email']);
-$password = $_POST['password'];
-$confirm_password = $_POST['confirm-pass'];
-$is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
-$ein = $is_vendor ? h($_POST['business_EIN']) : NULL;
 
 // Image Upload Handling
 $profile_image = isset($_FILES['profile_image']) ? upload_image($_FILES['profile_image'], 'users') : 'img/upload/users/default.png';
@@ -103,31 +98,18 @@ if (!has_unique_username($username)) {
 }
 
 if (empty($errors)) {
-  $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-  // temp
-  echo "All validation checks passed. Preparing to insert into database...<br>";
+  echo "✅ Before database insert...<br>";
   flush();
+}
 
-  echo "Preparing to insert user...<br>";
-  flush();  // Force output
+if (empty($errors)) {
+  $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
   // Insert into Users Table
   $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id) VALUES (?, ?, ?, ?, ?, ?)";
   $stmt = $db->prepare($sql);
   $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
   $user_id = $db->lastInsertId();
-
-  // temp
-  flush();
-  if ($result) {
-    echo "User inserted successfully!<br>";
-  } else {
-    echo "Error inserting user: ";
-    print_r($stmt->errorInfo());
-    exit();
-  }
-
 
   // Store Profile Image in `profile_image` Table
   if (!empty($_FILES['profile_image']['name'])) {
@@ -159,9 +141,10 @@ if (empty($errors)) {
     $stmt = $db->prepare($sql);
     $stmt->execute([$user_id, $business_name, $contact_number, $ein, $business_email, $website, $city, $state_id, $street_address, $zip_code, $description, $vendor_bio]);
   }
-  redirect_to('/login.php?signup_success=1');
+  ob_end_clean(); // Clear any unexpected output before redirecting
+  header("Location: /dashboard.php");
+  exit();
 }
-
 
 // Handle user login
 if (is_post_request() && isset($_POST['login'])) {

@@ -4,14 +4,9 @@ if (!isset($db)) {
   exit("Database connection error.");
 }
 
-// Ensure user is logged in and is a vendor
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit("Redirecting to login...");
-  exit;
 }
 
 // Fetch user and vendor details
@@ -28,7 +23,6 @@ $vendor = $stmt->fetch(PDO::FETCH_ASSOC) ?: exit("Error: Vendor not found.");
 if (!$vendor || $vendor['vendor_status'] !== 'approved') {
   header("Location: index.php");
   exit("Access denied: Vendor approval required.");
-  exit;
 }
 
 ?>

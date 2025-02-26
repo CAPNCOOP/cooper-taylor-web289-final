@@ -24,7 +24,7 @@ function has_presence($value)
 // * use trim() if spaces should not count
 function has_length_greater_than($value, $min)
 {
-  $length = strlen($value);
+  $length = (!is_null($value) && $value !== '') ? strlen($value) : 0;
   return $length > $min;
 }
 
@@ -34,7 +34,7 @@ function has_length_greater_than($value, $min)
 // * use trim() if spaces should not count
 function has_length_less_than($value, $max)
 {
-  $length = strlen($value);
+  $length = (!is_null($value) && $value !== '') ? strlen($value) : 0;
   return $length < $max;
 }
 
@@ -44,7 +44,7 @@ function has_length_less_than($value, $max)
 // * use trim() if spaces should not count
 function has_length_exactly($value, $exact)
 {
-  $length = strlen($value);
+  $length = (!is_null($value) && $value !== '') ? strlen($value) : 0;
   return $length == $exact;
 }
 
@@ -96,11 +96,18 @@ function has_string($value, $required_string)
 // * preg_match is helpful, uses a regular expression
 //    returns 1 for a match, 0 for no match
 //    http://php.net/manual/en/function.preg-match.php
-function has_valid_email_format($value)
+function has_valid_email_format($value): bool
 {
   $email_regex = '/\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\Z/i';
-  return preg_match($email_regex, $value) === 1;
+
+  if (!empty($value)) {
+    $value = trim($value); // Trim whitespace to avoid false negatives
+    return (bool) preg_match($email_regex, $value);
+  }
+
+  return false; // Prevents deprecated warning
 }
+
 
 // has_unique_username('johnqpublic')
 // * Validates uniqueness of admins.username

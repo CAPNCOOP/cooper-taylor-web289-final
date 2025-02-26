@@ -23,7 +23,6 @@ function h($string = "")
   return htmlspecialchars($string ?? "", ENT_QUOTES, 'UTF-8');
 }
 
-
 function error_404()
 {
   header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
@@ -36,25 +35,35 @@ function error_500()
   exit();
 }
 
+// function redirect_to($location)
+// {
+//   if (!headers_sent()) {
+//     header("Location: " . $location);
+//     exit();
+//   }
+// }
+
 function redirect_to($location)
 {
-  if (!headers_sent()) {
-    header("Location: " . $location);
-    exit();
-  } else {
-    echo "<script>window.location.href='" . $location . "';</script>";
-    exit();
+  echo "Redirect function called for: $location <br>";
+  flush();
+
+  if (headers_sent($file, $line)) {
+    die("❌ Headers already sent in $file on line $line. Cannot redirect.");
   }
+
+  header("Location: " . $location);
+  exit("🚀 Exit called in redirect_to().");
 }
 
 function is_post_request()
 {
-  return $_SERVER['REQUEST_METHOD'] == 'POST';
+  return $_SERVER['REQUEST_METHOD'] === 'POST';
 }
 
 function is_get_request()
 {
-  return $_SERVER['REQUEST_METHOD'] == 'GET';
+  return $_SERVER['REQUEST_METHOD'] === 'GET';
 }
 
 // PHP on Windows does not have a money_format() function.

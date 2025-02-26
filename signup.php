@@ -30,7 +30,7 @@ ob_end_flush(); // End output buffering
 
   <main>
     <form action="private/auth.php" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="is_vendor" value="0">
+      <input type="hidden" name="register" value="0">
 
       <fieldset>
         <label for="username">Username:</label>

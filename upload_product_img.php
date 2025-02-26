@@ -2,7 +2,6 @@
 require_once 'private/initialize.php';
 
 // Ensure user is logged in and is a vendor
-session_start();
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit("Redirecting to login...");
