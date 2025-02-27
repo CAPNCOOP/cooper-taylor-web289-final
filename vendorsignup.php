@@ -77,7 +77,7 @@ require_once 'private/initialize.php';
 
       <fieldset>
         <label for="profile-pic">Profile Picture:</label>
-        <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" required>
+        <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp">
       </fieldset>
 
       <button type="submit">Sign Up</button>

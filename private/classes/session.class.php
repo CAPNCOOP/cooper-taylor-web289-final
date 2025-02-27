@@ -2,7 +2,7 @@
 class Session
 {
 
-  private $member_id;
+  private $user_id;
   public $username;
   private $last_login;
   private $user_level;
@@ -14,27 +14,27 @@ class Session
     $this->check_stored_login();
   }
 
-  public function login($member)
+  public function login($user)
   {
-    if ($member) {
+    if ($user) {
       session_regenerate_id();
-      $_SESSION['member_id'] = $member->id;
-      $_SESSION['username'] = $member->username;
+      $_SESSION['user_id'] = $user['user_id']; // FIX: Accessing user_id as array
+      $_SESSION['username'] = $user['username'];
       $_SESSION['last_login'] = time();
-      $_SESSION['user_level'] = $member->user_level;
+      $_SESSION['user_level'] = $user['user_level'];
 
-      $this->member_id = $member->id;
-      $this->username = $_SESSION['member_id'] = $member->username;
-      $this->last_login = time();
-      $this->user_level = $member->user_level;
+      $this->user_id = $_SESSION['user_id'];
+      $this->username = $_SESSION['username'];
+      $this->last_login = $_SESSION['last_login'];
+      $this->user_level = $_SESSION['user_level'];
     }
     return true;
   }
 
+
   public function is_logged_in()
   {
-    // return isset($this->member_id);
-    return isset($this->member_id) && $this->last_login_is_recent();
+    return isset($this->user_id) && isset($this->last_login) && $this->last_login_is_recent();
   }
 
   public function is_admin_logged_in()
@@ -44,19 +44,22 @@ class Session
 
   public function logout()
   {
-    unset($_SESSION['member_id']);
+    unset($_SESSION['user_id']);
     unset($_SESSION['username']);
     unset($_SESSION['last_login']);
-    unset($this->member_id);
+    unset($_SESSION['user_level']); // FIX: Unset user_level
+    unset($this->user_id);
     unset($this->username);
     unset($this->last_login);
+    unset($this->user_level); // FIX: Unset user_level in class
     return true;
   }
 
+
   private function check_stored_login()
   {
-    if (isset($_SESSION['member_id'])) {
-      $this->member_id = $_SESSION['member_id'];
+    if (isset($_SESSION['user_id'])) {
+      $this->user_id = $_SESSION['user_id'];
       $this->username = $_SESSION['username'] ?? NULL;
       $this->user_level = $_SESSION['user_level'] ?? NULL;
       $this->last_login = $_SESSION['last_login'] ?? NULL;

@@ -35,25 +35,12 @@ function error_500()
   exit();
 }
 
-// function redirect_to($location)
-// {
-//   if (!headers_sent()) {
-//     header("Location: " . $location);
-//     exit();
-//   }
-// }
-
 function redirect_to($location)
 {
-  echo "Redirect function called for: $location <br>";
-  flush();
-
-  if (headers_sent($file, $line)) {
-    die("❌ Headers already sent in $file on line $line. Cannot redirect.");
+  if (!headers_sent()) {
+    header("Location: " . $location);
+    exit();
   }
-
-  header("Location: " . $location);
-  exit("🚀 Exit called in redirect_to().");
 }
 
 function is_post_request()

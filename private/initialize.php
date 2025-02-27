@@ -1,9 +1,15 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_errors.log'); // Logs errors to a file
+
 ob_start();
-if (headers_sent($file, $line)) {
-  die("🚨 Headers already sent in $file on line $line");
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+  session_regenerate_id(true);
 }
-session_start();
+
 
 // Assign file paths to PHP constants
 // __FILE__ returns the current path to this file
@@ -20,9 +26,10 @@ define("SHARED_PATH", PRIVATE_PATH . '/shared');
 // define("WWW_ROOT", '/~kevinskoglund/chain_gang/public');
 // define("WWW_ROOT", '');
 // * Can dynamically find everything in URL up to "/public"
-$public_end = strpos($_SERVER['SCRIPT_NAME'], '/public') + 7;
-$doc_root = substr($_SERVER['SCRIPT_NAME'], 0, $public_end);
-define("WWW_ROOT", $doc_root);
+// $public_end = strpos($_SERVER['SCRIPT_NAME'], '') + 7;
+// $doc_root = substr($_SERVER['SCRIPT_NAME'], 0, $public_end);
+define("WWW_ROOT", '');
+// $doc_root
 
 require_once('functions.php');
 require_once('status_error_functions.php');
@@ -49,3 +56,4 @@ spl_autoload_register('my_autoload');
 
 $database = db_connect();
 DatabaseObject::set_database($database);
+$session = new Session(); // This ensures $session is available globally

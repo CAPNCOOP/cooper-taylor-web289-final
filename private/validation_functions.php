@@ -114,8 +114,21 @@ function has_valid_email_format($value): bool
 // * For new records, provide only the username.
 // * For existing records, provide current ID as second argument
 // //   has_unique_username('johnqpublic', 4)
-function has_unique_username($username, $current_id = "0")
+// function has_unique_username($username, $current_id = "0")
+// {
+//   $user = find_by_username($username);
+//   return !$user || $user['user_id'] == $current_id;
+// }
+function has_unique_username($username)
 {
-  $user = find_by_username($username);
-  return !$user || $user['user_id'] == $current_id;
+  global $db;
+
+  $sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$username]);
+  $count = $stmt->fetchColumn();
+
+  error_log("Username check for: " . $username . " | Count: " . $count);
+
+  return $count == 0; // Returns true if username does NOT exist
 }

@@ -64,7 +64,7 @@ require_once 'private/initialize.php';
         <input type="password" id="login-password" name="password" placeholder="Password" aria-label="Password" required>
       </fieldset>
 
-      <button type="submit">Log In</button>
+      <button type="submit" name="login" value="1">Log In</button>
     </form>
   </main>
   <footer>

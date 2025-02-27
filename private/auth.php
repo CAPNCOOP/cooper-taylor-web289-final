@@ -1,14 +1,13 @@
 <?php
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_errors.log');
 ob_start();
-echo "✅ Script started...<br>";
-flush();
 
 require_once __DIR__ . '/initialize.php';
 require_once __DIR__ . '/validation_functions.php';
 require_once __DIR__ . '/functions.php';
 
-echo "✅ All files included successfully...<br>";
-flush();
 
 ob_end_flush();
 
@@ -59,11 +58,10 @@ function upload_image($file, $folder)
   return null;
 }
 
+
+
 // Handle user registration
 if (is_post_request() && isset($_POST['register'])) {
-  echo "✅ Processing registration request...<br>";
-  flush();
-
   $username = h($_POST['username'] ?? '');
   $fname = h($_POST['fname'] ?? '');
   $lname = h($_POST['lname'] ?? '');
@@ -73,49 +71,47 @@ if (is_post_request() && isset($_POST['register'])) {
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
   $ein = $is_vendor ? h($_POST['business_EIN'] ?? '') : NULL;
 
-  echo "✅ User data received: $username, $email<br>";
-  flush();
-}
 
-// Image Upload Handling
-$profile_image = isset($_FILES['profile_image']) ? upload_image($_FILES['profile_image'], 'users') : 'img/upload/users/default.png';
+  // Image Upload Handling
+  $profile_image = isset($_FILES['profile_image']) ? upload_image($_FILES['profile_image'], 'users') : 'img/upload/users/default.png';
 
-// Validation
-if (is_blank($username) || is_blank($email) || is_blank($password)) {
-  $errors[] = "Required fields cannot be blank.";
-}
-if (!has_length($password, ['min' => 8])) {
-  $errors[] = "Password must be at least 8 characters.";
-}
-if ($password !== $confirm_password) {
-  $errors[] = "Passwords do not match.";
-}
-if (!has_valid_email_format($email)) {
-  $errors[] = "Invalid email format.";
-}
-if (!has_unique_username($username)) {
-  $errors[] = "Username is already taken.";
-}
+  // Validation
+  if (is_blank($username) || is_blank($email) || is_blank($password)) {
+    $errors[] = "Required fields cannot be blank.";
+    die("Validation failed: Required fields cannot be blank.");
+  }
+  if (!has_length($password, ['min' => 8])) {
+    $errors[] = "Password must be at least 8 characters.";
+    die("Validation failed: Password must be at least 8 characters.");
+  }
+  if ($password !== $confirm_password) {
+    $errors[] = "Passwords do not match.";
+    die("Validation failed: Passwords do not match.");
+  }
+  if (!has_valid_email_format($email)) {
+    $errors[] = "Invalid email format.";
+    die("Validation failed: Invalid email format.");
+  }
+  if (!has_unique_username($username)) {
+    $errors[] = "Username is already taken.";
+    die("Validation failed: Username already taken.");
+  }
 
-if (empty($errors)) {
-  echo "✅ Before database insert...<br>";
-  flush();
-}
+  if (empty($errors)) {
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-if (empty($errors)) {
-  $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-  // Insert into Users Table
-  $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id) VALUES (?, ?, ?, ?, ?, ?)";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
-  $user_id = $db->lastInsertId();
-
-  // Store Profile Image in `profile_image` Table
-  if (!empty($_FILES['profile_image']['name'])) {
-    $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
+    // Insert into Users Table
+    $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $db->prepare($sql);
-    $stmt->execute([$user_id, $profile_image]);
+    $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
+    $user_id = $db->lastInsertId();
+
+    // Store Profile Image in `profile_image` Table
+    if (!empty($_FILES['profile_image']['name'])) {
+      $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$user_id, $profile_image]);
+    }
   }
 
   // Insert into Vendor Table if Vendor
@@ -143,46 +139,43 @@ if (empty($errors)) {
   }
   ob_end_clean(); // Clear any unexpected output before redirecting
   header("Location: /dashboard.php");
-  exit();
 }
 
 // Handle user login
 if (is_post_request() && isset($_POST['login'])) {
+
   $username = h($_POST['username']);
   $password = $_POST['password'];
+
 
   if (is_blank($username) || is_blank($password)) {
     $errors[] = "Username and password cannot be blank.";
   }
 
   if (empty($errors)) {
-    $sql = "SELECT user_id, username, password, user_level_id, user_status FROM users WHERE username = ?";
+    $sql = "SELECT user_id, username, password, user_level_id FROM users WHERE username = ?";
     $stmt = $db->prepare($sql);
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
-      if ($user['user_status'] !== 'approved') {
-        redirect_to('/login.php?error=account_pending');
-      }
 
-      $_SESSION['user_id'] = $user['user_id'];
-      $_SESSION['username'] = $user['username'];
-      $_SESSION['user_level_id'] = $user['user_level_id'];
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['user_level_id'] = $user['user_level_id'];
 
-      // Fetch user profile image
-      $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
-      $stmt = $db->prepare($sql);
-      $stmt->execute([$user['user_id']]);
-      $profile = $stmt->fetch(PDO::FETCH_ASSOC);
-      $_SESSION['profile_image'] = $profile ? $profile['file_path'] : 'img/upload/users/default.png';
+    // Fetch user profile image
+    $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$user['user_id']]);
+    $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+    $_SESSION['profile_image'] = $profile ? $profile['file_path'] : 'img/upload/users/default.png';
 
-      redirect_to('/dashboard.php');
-    } else {
-      redirect_to('/login.php?error=invalid_credentials');
-    }
+    redirect_to('/dashboard.php');
+  } else {
+    redirect_to('/login.php?error=invalid_credentials');
   }
 }
+
 
 // Handle logout
 if (is_get_request() && isset($_GET['logout'])) {

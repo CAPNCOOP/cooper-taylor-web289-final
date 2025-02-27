@@ -67,7 +67,7 @@ ob_end_flush(); // End output buffering
         <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" required>
       </fieldset>
 
-      <button type="submit">Sign Up</button>
+      <button type="submit" name="register" value="1">Sign Up</button>
     </form>
   </main>
 </body>

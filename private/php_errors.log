@@ -1,0 +1,118 @@
+[27-Feb-2025 20:36:58 UTC] Redirecting to: /dashboard.php
+[27-Feb-2025 20:36:58 UTC] Session Data: Array
+(
+)
+
+[27-Feb-2025 20:51:54 UTC] Username check for: skirtlebeens | Count: 0
+[27-Feb-2025 20:53:21 UTC] Username check for: skirtlebeens | Count: 0
+[27-Feb-2025 20:54:03 UTC] Username check for: skindobands | Count: 0
+[27-Feb-2025 20:55:35 UTC] Username check for: tinafey | Count: 0
+[27-Feb-2025 20:57:23 UTC] Username check for: timtom111 | Count: 0
+[27-Feb-2025 20:59:20 UTC] Username check for: skinnygoober | Count: 0
+[27-Feb-2025 21:00:16 UTC] Username check for: dustyburns | Count: 0
+[27-Feb-2025 21:06:57 UTC] Username check for: dandy | Count: 0
+[27-Feb-2025 21:08:14 UTC] Username check for: trent | Count: 0
+[27-Feb-2025 21:21:52 UTC] Username check for: Johnny | Count: 0
+[27-Feb-2025 21:27:44 UTC] Username check for: test | Count: 0
+[27-Feb-2025 21:46:30 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:110
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(110): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 110
+[27-Feb-2025 21:52:34 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:110
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(110): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 110
+[27-Feb-2025 21:54:43 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:111
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(111): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 111
+[27-Feb-2025 21:54:45 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:111
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(111): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 111
+[27-Feb-2025 21:55:04 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:111
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(111): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 111
+[27-Feb-2025 21:55:08 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:111
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(111): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 111
+[27-Feb-2025 22:02:29 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:107
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(107): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 107
+[27-Feb-2025 22:03:23 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:107
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(107): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 107
+[27-Feb-2025 22:09:23 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:108
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(108): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 108
+[27-Feb-2025 22:09:39 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:108
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(108): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 108
+[27-Feb-2025 22:10:16 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:108
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(108): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 108
+[27-Feb-2025 22:10:49 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:108
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(108): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 108
+[27-Feb-2025 22:12:00 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:108
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(108): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 108
+[27-Feb-2025 22:14:06 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:109
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(109): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 109
+[27-Feb-2025 22:14:08 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'first_name' cannot be null in C:\laragon\www\blueridgebounty\private\auth.php:109
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(109): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 109
+[27-Feb-2025 22:17:58 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'user_status' in 'field list' in C:\laragon\www\blueridgebounty\private\auth.php:161
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(161): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 161
+[27-Feb-2025 22:18:16 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'user_status' in 'field list' in C:\laragon\www\blueridgebounty\private\auth.php:161
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(161): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\auth.php on line 161
+[27-Feb-2025 22:28:48 UTC] Username check for: test | Count: 1
+[27-Feb-2025 22:34:09 UTC] PHP Fatal error:  Uncaught Error: Call to a member function is_logged_in() on null in C:\laragon\www\blueridgebounty\private\status_error_functions.php:6
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\dashboard.php(3): require_login()
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\status_error_functions.php on line 6
+[27-Feb-2025 22:35:40 UTC] PHP Fatal error:  Uncaught Error: Call to a member function is_logged_in() on null in C:\laragon\www\blueridgebounty\private\status_error_functions.php:6
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\dashboard.php(3): require_login()
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\status_error_functions.php on line 6
+[27-Feb-2025 22:48:29 UTC] PHP Warning:  require_once(private/classes/session.class.php): Failed to open stream: No such file or directory in C:\laragon\www\blueridgebounty\private\initialize.php on line 40
+[27-Feb-2025 22:48:29 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'private/classes/session.class.php' (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\blueridgebounty\private\initialize.php:40
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\private\auth.php(7): require_once()
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\private\initialize.php on line 40
