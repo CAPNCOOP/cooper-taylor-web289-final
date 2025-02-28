@@ -32,6 +32,7 @@ if (!$vendor || $vendor['vendor_status'] !== 'approved') {
 <body>
   <h1>Welcome, <?php echo htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?></h1>
   <h2>Business: <?php echo htmlspecialchars($vendor['business_name']); ?></h2>
+  <a href="edit_profile.php" class="btn">Edit Profile</a>
 
   <nav>
     <ul>

@@ -59,11 +59,18 @@ class Session
   {
     if (isset($_SESSION['user_id'])) {
       $this->user_id = $_SESSION['user_id'];
-      $this->username = $_SESSION['username'] ?? NULL;
-      $this->user_level = $_SESSION['user_level'] ?? NULL;
-      $this->last_login = $_SESSION['last_login'] ?? NULL;
+      $this->username = $_SESSION['username'] ?? null;
+      $this->user_level = $_SESSION['user_level_id'] ?? null;
+      $this->last_login = $_SESSION['last_login'] ?? time(); // Set last login if missing
+    } else {
+      // Explicitly set everything to null if not found
+      $this->user_id = null;
+      $this->username = null;
+      $this->user_level = null;
+      $this->last_login = null;
     }
   }
+
 
   private function last_login_is_recent()
   {

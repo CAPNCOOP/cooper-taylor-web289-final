@@ -8,21 +8,6 @@ function require_login()
   }
 }
 
-// function require_login()
-// {
-//   global $session; // Ensure $session is actually available
-
-//   if (!isset($session)) {
-//     die("🚨 ERROR: \$session is NULL inside require_login()");
-//   }
-
-//   if (!$session->is_logged_in()) {
-//     die("🚨 ERROR: User is not logged in!");
-//     redirect_to('/login.php');
-//   }
-// }
-
-
 function display_errors($errors = array())
 {
   $output = '';

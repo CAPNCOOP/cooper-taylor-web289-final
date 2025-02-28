@@ -3,6 +3,7 @@ require_once 'private/initialize.php'; // Include necessary setup files
 require_once 'private/header.php';
 $page_title = "Member - Dashboard"; // Set dynamic title
 require_login(); // Ensure the user is logged in
+$user_level = $_SESSION['user_level_id'] ?? null;
 
 // Fetch user info
 $user_id = $_SESSION['user_id'];
@@ -44,6 +45,7 @@ if ($table_exists) {
   <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="100" width="100">
   <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
   <p><strong>Account Type:</strong> <?= $user_type ?></p>
+  <a href="edit_profile.php" class="btn">Edit Profile</a>
 </div>
 
 <div id="saved-vendors">
