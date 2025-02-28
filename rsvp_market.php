@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Market RSVP"; // Set dynamic title
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -33,14 +35,6 @@ $rsvp_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $rsvp_map = array_column($rsvp_status, 'status', 'market_id');
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>RSVP for Markets</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
 
 <body>
   <h1>RSVP for Upcoming Markets</h1>

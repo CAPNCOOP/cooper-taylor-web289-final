@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Upload - Product"; // Set dynamic title
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -128,15 +130,6 @@ $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Upload Product Image</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
 
 <body>
   <h1>Upload Product Image</h1>

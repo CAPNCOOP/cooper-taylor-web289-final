@@ -158,22 +158,35 @@ if (is_post_request() && isset($_POST['login'])) {
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if ($user && password_verify($password, $user['password'])) {
+      session_regenerate_id(true); // Prevent session fixation attacks
 
-    $_SESSION['user_id'] = $user['user_id'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['user_level_id'] = $user['user_level_id'];
+      $_SESSION['user_id'] = $user['user_id'];
+      $_SESSION['username'] = $user['username'];
+      $_SESSION['user_level'] = $user['user_level'];
 
-    // Fetch user profile image
-    $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$user['user_id']]);
-    $profile = $stmt->fetch(PDO::FETCH_ASSOC);
-    $_SESSION['profile_image'] = $profile ? $profile['file_path'] : 'img/upload/users/default.png';
+      $session->login($user); // Ensure Session class tracks the login
 
-    redirect_to('/dashboard.php');
-  } else {
-    redirect_to('/login.php?error=invalid_credentials');
+      redirect_to('/dashboard.php');
+    } else {
+      redirect_to('/login.php?error=invalid_credentials');
+    }
   }
+  //   $_SESSION['user_id'] = $user['user_id'];
+  //   $_SESSION['username'] = $user['username'];
+  //   $_SESSION['user_level_id'] = $user['user_level_id'];
+
+  //   // Fetch user profile image
+  //   $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
+  //   $stmt = $db->prepare($sql);
+  //   $stmt->execute([$user['user_id']]);
+  //   $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+  //   $_SESSION['profile_image'] = $profile ? $profile['file_path'] : 'img/upload/users/default.png';
+
+  //   redirect_to('/dashboard.php');
+  // } else {
+  //   redirect_to('/login.php?error=invalid_credentials');
+  // }
 }
 
 

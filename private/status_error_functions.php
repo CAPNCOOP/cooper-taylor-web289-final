@@ -1,26 +1,26 @@
 <?php
 
-// function require_login()
-// {
-//   global $session;
-//   if (!$session->is_logged_in()) {
-//     redirect_to(url_for('/index.php'));
-//   }
-// }
-
 function require_login()
 {
-  global $session; // Ensure $session is actually available
-
-  if (!isset($session)) {
-    die("🚨 ERROR: \$session is NULL inside require_login()");
-  }
-
+  global $session;
   if (!$session->is_logged_in()) {
-    die("🚨 ERROR: User is not logged in!");
-    redirect_to('/login.php');
+    redirect_to(url_for('/index.php'));
   }
 }
+
+// function require_login()
+// {
+//   global $session; // Ensure $session is actually available
+
+//   if (!isset($session)) {
+//     die("🚨 ERROR: \$session is NULL inside require_login()");
+//   }
+
+//   if (!$session->is_logged_in()) {
+//     die("🚨 ERROR: User is not logged in!");
+//     redirect_to('/login.php');
+//   }
+// }
 
 
 function display_errors($errors = array())

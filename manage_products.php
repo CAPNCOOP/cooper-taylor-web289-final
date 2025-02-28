@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Manage Products";
 if (!isset($db)) {
   exit("Database connection error.");
 }

@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Vendor - Signup"; // Set dynamic title
 ?>
 <!DOCTYPE html>
 <html lang="en">

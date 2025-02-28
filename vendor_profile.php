@@ -1,11 +1,13 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Vendor - Profile"; // Set dynamic title
 
 // Get vendor ID from URL
 $vendor_id = $_GET['id'] ?? 0;
 
 // Fetch vendor details & products
-$sql = "SELECT v.business_name, v.vendor_bio, v.business_email, v.website, v.city, s.state_abbr,
+$sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, v.business_email, v.website, v.city, s.state_abbr,
                pi.file_path AS profile_image, 
                p.product_id, p.name AS product_name, p.price, p.description, pimg.file_path AS product_image
         FROM vendor v
@@ -14,6 +16,7 @@ $sql = "SELECT v.business_name, v.vendor_bio, v.business_email, v.website, v.cit
         LEFT JOIN product_image pimg ON p.product_id = pimg.product_id
         LEFT JOIN state s ON v.state_id = s.state_id
         WHERE v.vendor_id = ?";
+
 
 $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
@@ -47,6 +50,8 @@ $vendor = $vendor_data[0];
   <meta charset="UTF-8">
   <title><?php echo htmlspecialchars($vendor['business_name']); ?> - Vendor Profile</title>
   <link rel="stylesheet" href="css/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="js/script.js" defer></script>
 </head>
 
 <body>
@@ -73,7 +78,28 @@ $vendor = $vendor_data[0];
         <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($vendor['website']); ?>" target="_blank">Visit Website</a></p>
       <?php endif; ?>
       <p><strong>Location:</strong> <?php echo htmlspecialchars($vendor['city'] . ', ' . $vendor['state_abbr']); ?></p>
+
+      <!-- JavaScript-powered button -->
+      <button class="favorite-btn" data-vendor-id="<?= $vendor['vendor_id'] ?>">♡</button>
+
+      <!-- PHP Fallback for Non-JS Browsers -->
+      <noscript>
+        <form action="favorite_vendor.php" method="POST">
+          <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
+          <button type="submit">♡</button>
+        </form>
+      </noscript>
+
+      <!-- Notification Element -->
+      <div id="notification" class="hidden"></div>
+
+      <?php if (isset($_GET['message'])): ?>
+        <div class="notification">
+          <?= htmlspecialchars($_GET['message']) ?>
+        </div>
+      <?php endif; ?>
     </div>
+
     <div id="vendor-upcoming-markets">
       <h2>Upcoming Markets</h2>
       <ul>

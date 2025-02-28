@@ -116,3 +116,116 @@ Stack trace:
 #0 C:\laragon\www\blueridgebounty\private\auth.php(7): require_once()
 #1 {main}
   thrown in C:\laragon\www\blueridgebounty\private\initialize.php on line 40
+[28-Feb-2025 03:58:21 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 03:58:21 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 03:58:21 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'farmers_market.favorites' doesn't exist in C:\laragon\www\blueridgebounty\dashboard.php:16
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\dashboard.php(16): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\dashboard.php on line 16
+[28-Feb-2025 04:08:00 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 04:08:00 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 04:14:46 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'farmers_market.favorites' doesn't exist in C:\laragon\www\blueridgebounty\favorite_vendor.php:12
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\favorite_vendor.php(12): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\favorite_vendor.php on line 12
+[28-Feb-2025 04:22:48 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 04:22:48 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 04:23:39 UTC] PHP Warning:  Undefined variable $fname in C:\laragon\www\blueridgebounty\dashboard.php on line 38
+[28-Feb-2025 04:23:39 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 38
+[28-Feb-2025 04:24:02 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`farmers_market`.`favorite`, CONSTRAINT `favorite_ibfk_2` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`user_id`) ON DELETE CASCADE) in C:\laragon\www\blueridgebounty\favorite_vendor.php:24
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\favorite_vendor.php(24): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\favorite_vendor.php on line 24
+[28-Feb-2025 04:26:16 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:26:16 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:26:49 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:26:49 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:30:47 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:30:47 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:31:45 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:31:45 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:31:46 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:31:46 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:31:57 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:31:57 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:33:22 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:33:22 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:34:51 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:34:51 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:34:59 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 78
+[28-Feb-2025 04:34:59 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 83
+[28-Feb-2025 04:36:25 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 79
+[28-Feb-2025 04:36:25 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 84
+[28-Feb-2025 04:40:44 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 79
+[28-Feb-2025 04:40:44 UTC] PHP Warning:  Undefined array key "vendor_id" in C:\laragon\www\blueridgebounty\vendor_profile.php on line 84
+[28-Feb-2025 04:45:06 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'farmers_market.favorites' doesn't exist in C:\laragon\www\blueridgebounty\favorite_vendor.php:40
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\favorite_vendor.php(40): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\favorite_vendor.php on line 40
+[28-Feb-2025 04:45:22 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'farmers_market.favorites' doesn't exist in C:\laragon\www\blueridgebounty\favorite_vendor.php:40
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\favorite_vendor.php(40): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\favorite_vendor.php on line 40
+[28-Feb-2025 04:50:26 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'farmers_market.favorites' doesn't exist in C:\laragon\www\blueridgebounty\favorite_vendor.php:86
+Stack trace:
+#0 C:\laragon\www\blueridgebounty\favorite_vendor.php(86): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\laragon\www\blueridgebounty\favorite_vendor.php on line 86
+[28-Feb-2025 04:56:56 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 04:56:56 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 05:17:59 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 05:17:59 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 05:19:28 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 05:19:28 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 05:23:06 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 05:23:06 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 06:09:15 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 28
+[28-Feb-2025 06:09:15 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 28
+[28-Feb-2025 06:09:22 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 28
+[28-Feb-2025 06:09:22 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 28
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Undefined variable $user_id in C:\laragon\www\blueridgebounty\dashboard.php on line 9
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Undefined variable $user in C:\laragon\www\blueridgebounty\dashboard.php on line 14
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Trying to access array offset on null in C:\laragon\www\blueridgebounty\dashboard.php on line 14
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 39
+[28-Feb-2025 06:13:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 39
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Undefined variable $user in C:\laragon\www\blueridgebounty\dashboard.php on line 60
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Trying to access array offset on null in C:\laragon\www\blueridgebounty\dashboard.php on line 60
+[28-Feb-2025 06:13:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 60
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Undefined variable $user in C:\laragon\www\blueridgebounty\dashboard.php on line 62
+[28-Feb-2025 06:13:47 UTC] PHP Warning:  Trying to access array offset on null in C:\laragon\www\blueridgebounty\dashboard.php on line 62
+[28-Feb-2025 06:13:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 62
+[28-Feb-2025 06:15:10 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:15:10 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:15:12 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:15:12 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:17:47 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 06:17:47 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 06:17:47 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:17:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:22:04 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:22:04 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:38:11 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:38:11 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:41:27 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 06:41:27 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 06:41:27 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:41:27 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:44:04 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 06:44:04 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 06:44:04 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:44:04 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:44:25 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\auth.php on line 166
+[28-Feb-2025 06:44:25 UTC] PHP Warning:  Undefined array key "user_level" in C:\laragon\www\blueridgebounty\private\classes\session.class.php on line 24
+[28-Feb-2025 06:44:25 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:44:25 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:44:32 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:44:32 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:45:22 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:45:22 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:45:36 UTC] PHP Warning:  Undefined variable $username in C:\laragon\www\blueridgebounty\dashboard.php on line 45
+[28-Feb-2025 06:45:36 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\blueridgebounty\dashboard.php on line 45

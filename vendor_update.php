@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Vendor - Update"; // Set dynamic title
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -42,14 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Update Profile</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
 
 <body>
   <h1>Update Your Profile</h1>

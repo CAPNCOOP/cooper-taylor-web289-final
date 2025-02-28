@@ -87,16 +87,53 @@ function showSlides(n) {
 
 // sign-up pop-up
 document.addEventListener('DOMContentLoaded', function () {
-  const openSignup = document.getElementById('openSignup');
-  const closeSignup = document.getElementById('closeSignup');
-  const signupPopup = document.getElementById('signup-popup');
+  document.querySelectorAll('.favorite-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      let vendorId = this.dataset.vendorId;
+      let buttonElement = this; // Store reference to button
 
-  openSignup.addEventListener('click', function (event) {
-    event.preventDefault();
-    signupPopup.classList.remove('hidden');
-  });
-
-  closeSignup.addEventListener('click', function () {
-    signupPopup.classList.add('hidden');
+      fetch('favorite_vendor.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `vendor_id=${vendorId}`,
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showNotification(data.message);
+            // Toggle button style based on action
+            if (data.message.includes('removed')) {
+              buttonElement.textContent = '♡'; // Unfavorite icon
+            } else {
+              buttonElement.textContent = '❤️'; // Favorited icon
+            }
+          } else {
+            showNotification(data.message, true);
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
   });
 });
+
+// Notification Function
+function showNotification(message, isError = false) {
+  let notification = document.getElementById('notification');
+  if (!notification) {
+    console.error('❌ Notification element NOT found!');
+    return;
+  }
+
+  notification.textContent = message;
+  notification.classList.remove('hidden');
+  notification.classList.add(isError ? 'error' : 'success');
+  notification.style.display = 'block'; // Ensure it appears
+
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    setTimeout(() => {
+      notification.style.display = 'none'; // Hide after fade out
+      notification.style.opacity = '1';
+    }, 500);
+  }, 2000);
+}

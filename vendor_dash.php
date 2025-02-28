@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Vendor - Dashboard"; // Set dynamic title
 if (!isset($db)) {
   exit("Database connection error.");
 }
@@ -26,14 +28,6 @@ if (!$vendor || $vendor['vendor_status'] !== 'approved') {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Vendor Dashboard</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
 
 <body>
   <h1>Welcome, <?php echo htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?></h1>

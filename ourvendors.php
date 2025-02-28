@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php';
+require_once 'private/header.php';
+$page_title = "Our Vendors"; // Set dynamic title
 
 // Pagination settings
 $itemsPerPage = 10;
@@ -49,62 +51,40 @@ if ($searchTerm) {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Our Vendors</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
+<div id="vendorhead">
+  <h2>Our Vendors</h2>
+  <form method="GET" action="ourvendors.php">
+    <input type="text" id="searchBar" name="search" placeholder="Search vendors, products, markets, locations...">
+    <button type="submit">Search</button>
+  </form>
+</div>
 
-<body class="ourvendors">
-  <header>
-    <h1>Blue Ridge Bounty</h1>
-    <nav>
-      <ul>
-        <li><a href="index.php"><img src="img/assets/barn.png" alt="An icon of a barn" height="25" width="25"></a></li>
-        <li><a href="schedule.php">Schedule</a></li>
-        <li><a href="ourvendors.php">Our Vendors</a></li>
-        <li><a href="aboutus.php">About Us</a></li>
-        <li><a href="login.php"><img src="img/assets/user.png" alt="A user login icon." height="25" width="25"></a></li>
-      </ul>
-    </nav>
-  </header>
+<div id="vendor-list">
+  <?php if (!empty($filteredVendors)): ?>
+    <?php foreach ($filteredVendors as $vendor): ?>
+      <div class="vendor-card" data-tags="<?php echo htmlspecialchars($vendor['product_tags'] . ', ' . $vendor['market_tags'] . ', ' . $vendor['state_abbrs'] . ', ' . $vendor['state_names'] . ', ' . $vendor['cities']); ?>" onclick="window.location.href='vendor_profile.php?id=<?php echo $vendor['vendor_id']; ?>'">
+        <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
+        <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
+        <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
+      </div>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <p>No results found for "<?php echo htmlspecialchars($searchTerm); ?>"</p>
+  <?php endif; ?>
+</div>
 
-  <div id="vendorhead">
-    <h2>Our Vendors</h2>
-    <form method="GET" action="ourvendors.php">
-      <input type="text" id="searchBar" name="search" placeholder="Search vendors, products, markets, locations...">
-      <button type="submit">Search</button>
-    </form>
-  </div>
-
-  <div id="vendor-list">
-    <?php if (!empty($filteredVendors)): ?>
-      <?php foreach ($filteredVendors as $vendor): ?>
-        <div class="vendor-card" data-tags="<?php echo htmlspecialchars($vendor['product_tags'] . ', ' . $vendor['market_tags'] . ', ' . $vendor['state_abbrs'] . ', ' . $vendor['state_names'] . ', ' . $vendor['cities']); ?>" onclick="window.location.href='vendor_profile.php?id=<?php echo $vendor['vendor_id']; ?>'">
-          <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-          <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
-          <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>No results found for "<?php echo htmlspecialchars($searchTerm); ?>"</p>
+<div id="pagination">
+  <?php if ($totalPages > 1): ?>
+    <p>Page <?php echo $page; ?> of <?php echo $totalPages; ?></p>
+    <?php if ($page > 1): ?>
+      <a href="?page=<?php echo $page - 1; ?>">Previous</a>
     <?php endif; ?>
-  </div>
-
-  <div id="pagination">
-    <?php if ($totalPages > 1): ?>
-      <p>Page <?php echo $page; ?> of <?php echo $totalPages; ?></p>
-      <?php if ($page > 1): ?>
-        <a href="?page=<?php echo $page - 1; ?>">Previous</a>
-      <?php endif; ?>
-      <?php if ($page < $totalPages): ?>
-        <a href="?page=<?php echo $page + 1; ?>">Next</a>
-      <?php endif; ?>
+    <?php if ($page < $totalPages): ?>
+      <a href="?page=<?php echo $page + 1; ?>">Next</a>
     <?php endif; ?>
-  </div>
+  <?php endif; ?>
+</div>
 </body>
 
 </html>
