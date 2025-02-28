@@ -86,6 +86,27 @@ function showSlides(n) {
 }
 
 // sign-up pop-up
+
+document.addEventListener('DOMContentLoaded', function () {
+  let signupBtn = document.getElementById('openSignup');
+  let closeBtn = document.getElementById('closeSignup');
+  let signupPopup = document.getElementById('signup-popup');
+
+  if (signupBtn && signupPopup) {
+    signupBtn.addEventListener('click', function (event) {
+      event.preventDefault(); // Prevent any default link behavior
+      signupPopup.classList.remove('hidden');
+    });
+  }
+
+  if (closeBtn && signupPopup) {
+    closeBtn.addEventListener('click', function () {
+      signupPopup.classList.add('hidden');
+    });
+  }
+});
+
+// favorite button
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.favorite-btn').forEach(button => {
     button.addEventListener('click', function () {

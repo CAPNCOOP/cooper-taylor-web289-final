@@ -1,5 +1,7 @@
 <?php
 require_once 'private/initialize.php'; // Include necessary setup files
+require_once 'private/header.php';
+$page_title = "Member - Dashboard"; // Set dynamic title
 require_login(); // Ensure the user is logged in
 
 // Fetch user info
@@ -37,56 +39,31 @@ if ($table_exists) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<div id="user-profile">
+  <h2>Hello, <?= htmlspecialchars($user['username']) ?>!</h2>
+  <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="100" width="100">
+  <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+  <p><strong>Account Type:</strong> <?= $user_type ?></p>
+</div>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard - <?= htmlspecialchars($username) ?></title>
-  <link rel="stylesheet" href="css/styles.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="js/script.js" defer></script>
-</head>
-
-<body class="user-dash">
-  <header>
-    <h1>Blue Ridge Bounty</h1>
-    <nav>
-      <ul>
-        <li><a href="index.php"><img src="img/assets/barn.png" alt="An icon of a barn" height="25" width="25"></a></li>
-        <li><a href="schedule.php">Schedule</a></li>
-        <li><a href="ourvendors.php">Our Vendors</a></li>
-        <li><a href="aboutus.php">About Us</a></li>
-        <li><a href="login.php"><img src="img/assets/user.png" alt="A user login icon." height="25" width="25"></a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <div id="user-profile">
-    <h2>Hello, <?= htmlspecialchars($user['username']) ?>!</h2>
-    <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="100" width="100">
-    <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-    <p><strong>Account Type:</strong> <?= $user_type ?></p>
-  </div>
-
-  <div id="saved-vendors">
-    <h2>Saved Vendors</h2>
-    <?php if (!empty($favorites)): ?>
-      <ul>
-        <?php foreach ($favorites as $vendor): ?>
-          <li>
-            <img src="img/upload/users/<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
-              height="50" width="50" alt="Vendor Image">
-            <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
-              <?= htmlspecialchars($vendor['business_name']) ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    <?php else: ?>
-      <p>No saved vendors yet.</p>
-    <?php endif; ?>
-  </div>
+<div id="saved-vendors">
+  <h2>Saved Vendors</h2>
+  <?php if (!empty($favorites)): ?>
+    <ul>
+      <?php foreach ($favorites as $vendor): ?>
+        <li>
+          <img src="img/upload/users/<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
+            height="50" width="50" alt="Vendor Image">
+          <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
+            <?= htmlspecialchars($vendor['business_name']) ?>
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  <?php else: ?>
+    <p>No saved vendors yet.</p>
+  <?php endif; ?>
+</div>
 
 
 </body>

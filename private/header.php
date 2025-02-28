@@ -13,7 +13,7 @@ if (!isset($page_title)) {
   <title><?= htmlspecialchars($page_title) ?></title>
   <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="<?= url_for('/js/script.js') ?>" defer>
+  <script src="/js/script.js" defer></script>
 </head>
 
 <body>

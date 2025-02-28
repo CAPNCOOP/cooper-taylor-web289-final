@@ -1,7 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/php_errors.log');
+
 ob_start();
 
 require_once __DIR__ . '/initialize.php';
@@ -138,7 +140,20 @@ if (is_post_request() && isset($_POST['register'])) {
     $stmt->execute([$user_id, $business_name, $contact_number, $ein, $business_email, $website, $city, $state_id, $street_address, $zip_code, $description, $vendor_bio]);
   }
   ob_end_clean(); // Clear any unexpected output before redirecting
-  header("Location: /dashboard.php");
+
+  $_SESSION['user_id'] = $user_id;
+  $_SESSION['username'] = $username;
+  $_SESSION['user_level_id'] = $is_vendor ? 2 : 1;
+  $_SESSION['profile_image'] = $profile_image;
+
+  echo "<pre>✅ Session Before Redirecting: ";
+  print_r($_SESSION);
+  echo "</pre>";
+  exit;
+
+  $redirect_url = ($is_vendor) ? "/vendor_dash.php" : "/dashboard.php";
+  header("Location: " . $redirect_url);
+  exit;
 }
 
 // Handle user login
@@ -172,21 +187,6 @@ if (is_post_request() && isset($_POST['login'])) {
       redirect_to('/login.php?error=invalid_credentials');
     }
   }
-  //   $_SESSION['user_id'] = $user['user_id'];
-  //   $_SESSION['username'] = $user['username'];
-  //   $_SESSION['user_level_id'] = $user['user_level_id'];
-
-  //   // Fetch user profile image
-  //   $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
-  //   $stmt = $db->prepare($sql);
-  //   $stmt->execute([$user['user_id']]);
-  //   $profile = $stmt->fetch(PDO::FETCH_ASSOC);
-  //   $_SESSION['profile_image'] = $profile ? $profile['file_path'] : 'img/upload/users/default.png';
-
-  //   redirect_to('/dashboard.php');
-  // } else {
-  //   redirect_to('/login.php?error=invalid_credentials');
-  // }
 }
 
 
