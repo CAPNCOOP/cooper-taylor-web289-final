@@ -11,7 +11,7 @@ $offset = ($page - 1) * $itemsPerPage;
 // Fetch all approved vendors with related products, markets, and locations
 $sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, pi.file_path AS profile_image,
                GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS product_tags,
-               GROUP_CONCAT(DISTINCT m.name SEPARATOR ', ') AS market_tags,
+               GROUP_CONCAT(DISTINCT CONCAT(mw.week_start, ' - ', mw.week_end) SEPARATOR ', ') AS market_weeks,
                GROUP_CONCAT(DISTINCT s.state_abbr SEPARATOR ', ') AS state_abbrs,
                GROUP_CONCAT(DISTINCT s.state_name SEPARATOR ', ') AS state_names,
                GROUP_CONCAT(DISTINCT v.city SEPARATOR ', ') AS cities
@@ -19,7 +19,7 @@ $sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, pi.file_path AS profi
         LEFT JOIN profile_image pi ON v.user_id = pi.user_id
         LEFT JOIN product p ON v.vendor_id = p.vendor_id
         LEFT JOIN vendor_market vm ON v.vendor_id = vm.vendor_id
-        LEFT JOIN market m ON vm.market_id = m.market_id
+        LEFT JOIN market_week mw ON vm.week_id = mw.week_id
         LEFT JOIN state s ON v.state_id = s.state_id
         WHERE v.vendor_status = 'approved'
         GROUP BY v.vendor_id
@@ -63,7 +63,18 @@ if ($searchTerm) {
 <div id="vendor-list">
   <?php if (!empty($filteredVendors)): ?>
     <?php foreach ($filteredVendors as $vendor): ?>
-      <div class="vendor-card" data-tags="<?php echo htmlspecialchars($vendor['product_tags'] . ', ' . $vendor['market_tags'] . ', ' . $vendor['state_abbrs'] . ', ' . $vendor['state_names'] . ', ' . $vendor['cities']); ?>" onclick="window.location.href='vendor_profile.php?id=<?php echo $vendor['vendor_id']; ?>'">
+      <div class="vendor-card"
+        data-tags="<?php
+                    $tags = array_filter([
+                      $vendor['product_tags'] ?? '',
+                      $vendor['market_tags'] ?? '',
+                      $vendor['state_abbrs'] ?? '',
+                      $vendor['state_names'] ?? '',
+                      $vendor['cities'] ?? ''
+                    ]);
+                    echo htmlspecialchars(implode(', ', $tags));
+                    ?>"
+        onclick="window.location.href='vendor_profile.php?id=<?= htmlspecialchars($vendor['vendor_id']) ?>'">
         <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
         <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
         <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>

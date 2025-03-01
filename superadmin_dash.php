@@ -81,50 +81,53 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <section>
     <h3>Pending Vendor Approvals</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Business Name</th>
-          <th>Owner</th>
-          <th>Email</th>
-          <th>Contact</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email, v.contact_number, v.vendor_status
-        FROM vendor v 
-        JOIN users u ON v.user_id = u.user_id 
-        WHERE v.vendor_status IN ('pending', 'denied')";
 
-        $stmt = $db->query($sql);
-        $pending_vendors = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
+    <?php
+    $sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email, v.contact_number, v.vendor_status
+    FROM vendor v 
+    JOIN users u ON v.user_id = u.user_id 
+    WHERE v.vendor_status IN ('pending', 'denied')";
 
-        if (!$pending_vendors) { // Ensure it's always an array
-          $pending_vendors = [];
-        }
+    $stmt = $db->query($sql);
+    $pending_vendors = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
 
-        ?>
+    if (!$pending_vendors) { // Ensure it's always an array
+      $pending_vendors = [];
+    }
+    ?>
 
-        <?php foreach ($pending_vendors as $vendor): ?>
+    <?php if (empty($pending_vendors)): ?>
+      <p>No vendors are currently pending approval.</p>
+    <?php else: ?>
+      <table>
+        <thead>
           <tr>
-            <td><?= htmlspecialchars($vendor['business_name']) ?></td>
-            <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
-            <td><?= htmlspecialchars($vendor['email']) ?></td>
-            <td><?= htmlspecialchars($vendor['contact_number']) ?></td>
-            <td><?= htmlspecialchars($vendor['vendor_status']) ?></td>
-            <td>
-              <a href="approve_vendor.php?vendor_id=<?= $vendor['vendor_id'] ?>&action=approve" class="btn btn-success">Approve</a>
-              <a href="approve_vendor.php?vendor_id=<?= $vendor['vendor_id'] ?>&action=reject" class="btn btn-danger">Reject</a>
-            </td>
+            <th>Business Name</th>
+            <th>Owner</th>
+            <th>Email</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Action</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <?php foreach ($pending_vendors as $vendor): ?>
+            <tr>
+              <td><?= htmlspecialchars($vendor['business_name']) ?></td>
+              <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
+              <td><?= htmlspecialchars($vendor['email']) ?></td>
+              <td><?= htmlspecialchars($vendor['contact_number']) ?></td>
+              <td><?= htmlspecialchars($vendor['vendor_status']) ?></td>
+              <td>
+                <a href="approve_vendor.php?vendor_id=<?= $vendor['vendor_id'] ?>&action=approve" class="btn btn-success">Approve</a>
+                <a href="approve_vendor.php?vendor_id=<?= $vendor['vendor_id'] ?>&action=reject" class="btn btn-danger">Reject</a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    <?php endif; ?>
   </section>
-
 
   <section>
     <h3>Update Homepage Content</h3>

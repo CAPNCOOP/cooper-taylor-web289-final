@@ -23,12 +23,12 @@ $stmt->execute([$vendor_id]);
 $vendor_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch vendor's upcoming markets
-$sql = "SELECT m.name, m.market_date, m.city, s.state_abbr
+$sql = "SELECT mw.week_start, mw.week_end, s.state_abbr
         FROM vendor_market vm
-        LEFT JOIN market m ON vm.market_id = m.market_id
-        LEFT JOIN state s ON m.state_id = s.state_id
-        WHERE vm.vendor_id = ? AND m.market_date >= CURDATE()
-        ORDER BY m.market_date ASC";
+        LEFT JOIN market_week mw ON vm.week_id = mw.week_id
+        LEFT JOIN state s ON mw.market_id = s.state_id
+        WHERE vm.vendor_id = ? AND mw.week_start >= CURDATE()
+        ORDER BY mw.week_start ASC";
 $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
 $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -81,10 +81,11 @@ $vendor = $vendor_data[0];
     <ul>
       <?php foreach ($markets as $market): ?>
         <li>
-          <strong><?php echo htmlspecialchars($market['name']); ?></strong> -
-          <?php echo htmlspecialchars($market['market_date'] . ' | ' . $market['city'] . ', ' . $market['state_abbr']); ?>
+          <strong>Market Week:</strong>
+          <?php echo htmlspecialchars($market['week_start'] . " - " . $market['week_end'] . " | " . $market['state_abbr']); ?>
         </li>
       <?php endforeach; ?>
+
       <?php if (empty($markets)): ?>
         <li>No upcoming markets scheduled.</li>
       <?php endif; ?>

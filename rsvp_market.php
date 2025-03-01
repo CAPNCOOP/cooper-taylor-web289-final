@@ -1,7 +1,7 @@
 <?php
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Market RSVP"; // Set dynamic title
+$page_title = "Market RSVP";
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -9,8 +9,9 @@ if (!isset($_SESSION['user_id'])) {
   exit("Redirecting to login...");
 }
 
-// Fetch vendor details
 $user_id = $_SESSION['user_id'];
+
+// Fetch vendor details
 $sql = "SELECT vendor_id FROM vendor WHERE user_id = ? AND vendor_status = 'approved'";
 $stmt = $db->prepare($sql);
 $stmt->execute([$user_id]);
@@ -20,47 +21,71 @@ if (!$vendor) {
   header("Location: index.php");
   exit("Access denied: Vendor approval required.");
 }
+
 $vendor_id = $vendor['vendor_id'];
 
-// Fetch upcoming markets
-$sql = "SELECT market_id, name, market_date FROM market WHERE market_date >= CURDATE() ORDER BY market_date ASC";
+// Fetch upcoming markets from `market_week`
+$sql = "SELECT mw.week_id, mw.week_start, mw.week_end, mw.confirmation_deadline 
+        FROM market_week mw
+        JOIN market m ON mw.market_id = m.market_id
+        WHERE mw.week_start >= CURDATE()
+        ORDER BY mw.week_start ASC";
+
 $stmt = $db->query($sql);
-$markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch vendor's existing RSVPs
-$sql = "SELECT market_id, status FROM vendor_market WHERE vendor_id = ?";
+$sql = "SELECT week_id, status FROM vendor_market WHERE vendor_id = ?";
 $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
 $rsvp_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$rsvp_map = array_column($rsvp_status, 'status', 'market_id');
+$rsvp_map = array_column($rsvp_status, 'status', 'week_id');
 
 ?>
 
 <body>
   <h1>RSVP for Upcoming Markets</h1>
-  <table>
-    <tr>
-      <th>Market Name</th>
-      <th>Date</th>
-      <th>RSVP Status</th>
-    </tr>
-    <?php foreach ($markets as $market): ?>
+
+  <?php if (empty($weeks)): ?>
+    <p>No upcoming markets available.</p>
+  <?php else: ?>
+    <table>
       <tr>
-        <td><?php echo htmlspecialchars($market['name']); ?></td>
-        <td><?php echo htmlspecialchars($market['market_date']); ?></td>
-        <td>
-          <form method="post" action="rsvp_action.php">
-            <input type="hidden" name="market_id" value="<?php echo $market['market_id']; ?>">
-            <select name="status" onchange="this.form.submit()">
-              <option value="planned" <?php echo isset($rsvp_map[$market['market_id']]) && $rsvp_map[$market['market_id']] == 'planned' ? 'selected' : ''; ?>>Planned</option>
-              <option value="confirmed" <?php echo isset($rsvp_map[$market['market_id']]) && $rsvp_map[$market['market_id']] == 'confirmed' ? 'selected' : ''; ?>>Confirmed</option>
-              <option value="canceled" <?php echo isset($rsvp_map[$market['market_id']]) && $rsvp_map[$market['market_id']] == 'canceled' ? 'selected' : ''; ?>>Canceled</option>
-            </select>
-          </form>
-        </td>
+        <th>Week Start</th>
+        <th>Week End</th>
+        <th>RSVP Status</th>
+        <th>Deadline</th>
+        <th>Action</th>
       </tr>
-    <?php endforeach; ?>
-  </table>
+
+      <?php foreach ($weeks as $week): ?>
+        <tr>
+          <td><?= htmlspecialchars($week['week_start']) ?></td>
+          <td><?= htmlspecialchars($week['week_end']) ?></td>
+          <td>
+            <?= isset($rsvp_map[$week['week_id']]) ? ucfirst($rsvp_map[$week['week_id']]) : 'Not RSVPed' ?>
+          </td>
+          <td><?= htmlspecialchars($week['confirmation_deadline']) ?></td>
+          <td>
+            <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
+              <form method="post" action="rsvp_action.php">
+                <input type="hidden" name="week_id" value="<?= $week['week_id'] ?>">
+                <select name="status" onchange="this.form.submit()">
+                  <option value="planned" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'planned' ? 'selected' : '' ?>>Planned</option>
+                  <option value="confirmed" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                  <option value="canceled" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+                </select>
+              </form>
+            <?php else: ?>
+              <span style="color: gray;">RSVP Closed</span>
+            <?php endif; ?>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+
+    </table>
+  <?php endif; ?>
 </body>
 
 </html>
+``
