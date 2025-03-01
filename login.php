@@ -6,8 +6,13 @@ $page_title = "Log In"; // Set dynamic title
 
 <main>
   <?php if (isset($_GET['error'])): ?>
-    <p class="error-message">Invalid username or password.</p>
+    <?php if ($_GET['error'] === "invalid_credentials"): ?>
+      <p class="error-message">Invalid username or password.</p>
+    <?php elseif ($_GET['error'] === "account_inactive"): ?>
+      <p class="error-message">Your account has been deactivated. Contact support.</p>
+    <?php endif; ?>
   <?php endif; ?>
+
   <?php if (isset($_GET['signup_success'])): ?>
     <p class="success-message">Account created successfully! Pending approval.</p>
   <?php endif; ?>
@@ -31,20 +36,19 @@ $page_title = "Log In"; // Set dynamic title
 
     <img src="/img/upload/users/default.png" alt="A stylized user icon." height="250" width="250">
     <fieldset>
-      <label for="login-username">
-      </label>
+      <label for="login-username"></label>
       <input type="text" id="login-username" name="username" placeholder="Username" aria-label="Username" required>
     </fieldset>
 
     <fieldset>
-      <label for="login-password">
-      </label>
+      <label for="login-password"></label>
       <input type="password" id="login-password" name="password" placeholder="Password" aria-label="Password" required>
     </fieldset>
 
     <button type="submit" name="login" value="1">Log In</button>
   </form>
 </main>
+
 <footer>
   <span>Blue Ridge Bounty &copy; 2025</span>
   <a href="aboutus.php#contact">Contact Us</a>

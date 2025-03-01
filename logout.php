@@ -6,13 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// Destroy session data
-$_SESSION = [];
-session_destroy();
+// Unset all session variables
+session_unset();
 
-// Regenerate a new session ID for security
-session_start();
-session_regenerate_id(true);
+// Destroy session data
+session_destroy();
 
 // Redirect to login page
 header("Location: " . url_for('/login.php'));

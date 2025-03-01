@@ -2,7 +2,6 @@
 if (!isset($page_title)) {
   $page_title = "Blue Ridge Bounty";
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,18 +26,24 @@ if (!isset($page_title)) {
         <li><a href="<?= url_for('/aboutus.php') ?>">About Us</a></li>
 
         <?php if ($session->is_logged_in()) : ?>
-          <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 2) : ?>
-            <li><a href="<?= url_for('vendor_dash.php') ?>">Dashboard</a></li>
+          <?php if (isset($_SESSION['user_level_id'])) : ?>
+            <?php if ($_SESSION['user_level_id'] == 2) : ?>
+              <li><a href="<?= url_for('/vendor_dash.php') ?>">Dashboard</a></li>
+            <?php elseif ($_SESSION['user_level_id'] == 3) : ?>
+              <li><a href="<?= url_for('/admin_dash.php') ?>">Admin Dashboard</a></li>
+            <?php elseif ($_SESSION['user_level_id'] == 4) : ?>
+              <li><a href="<?= url_for('/superadmin_dash.php') ?>">Super Admin Dashboard</a></li>
+            <?php else : ?>
+              <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
+            <?php endif; ?>
           <?php else : ?>
             <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
           <?php endif; ?>
+
           <li><a href="<?= url_for('/logout.php') ?>">Logout</a></li>
         <?php else : ?>
           <li><a href="<?= url_for('/login.php') ?>"><img src="<?= url_for('/img/assets/user.png') ?>" alt="A user login icon." height="25" width="25"></a></li>
         <?php endif; ?>
-
-
-
       </ul>
     </nav>
   </header>

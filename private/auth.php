@@ -1,6 +1,5 @@
 <?php
 ob_start();
-
 require_once 'initialize.php';
 require_once 'validation_functions.php';
 require_once 'functions.php';
@@ -44,16 +43,15 @@ if (is_post_request() && isset($_POST['register'])) {
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
     // Insert into Users Table
-    $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id, is_active) 
+            VALUES (?, ?, ?, ?, ?, ?, 1)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
     $user_id = $db->lastInsertId();
 
     // Image Upload Handling
-    $profile_image = 'img/upload/users/default.png'; // Default fallback
-
     if (!empty($_FILES['profile_image']['name'])) {
-      $full_name = strtolower($_POST['fname'] . '_' . $_POST['lname']); // Create `{firstname}_{lastname}`
+      $full_name = strtolower($_POST['fname'] . '_' . $_POST['lname']);
       $profile_image = upload_image($_FILES['profile_image'], 'users', $full_name);
     }
 
@@ -77,7 +75,7 @@ if (is_post_request() && isset($_POST['register'])) {
       $vendor_bio = h($_POST['vendor_bio']);
 
       $sql = "INSERT INTO vendor (user_id, business_name, contact_number, business_EIN, business_email, website, city, state_id, street_address, zip_code, description, vendor_bio, vendor_status) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
       $stmt = $db->prepare($sql);
       $stmt->execute([$user_id, $business_name, $contact_number, $ein, $business_email, $website, $city, $state_id, $street_address, $zip_code, $description, $vendor_bio]);
     }
@@ -107,23 +105,37 @@ if (is_post_request() && isset($_POST['login'])) {
     exit;
   }
 
-  $sql = "SELECT user_id, username, password, user_level_id FROM users WHERE username = ?";
+  $sql = "SELECT user_id, username, password, user_level_id, is_active FROM users WHERE username = ?";
+  $sql = "SELECT u.user_id, u.username, u.password, u.user_level_id, u.is_active, v.vendor_status
+  FROM users u
+  LEFT JOIN vendor v ON u.user_id = v.user_id
+  WHERE u.username = ?";
+
   $stmt = $db->prepare($sql);
   $stmt->execute([$username]);
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($user && password_verify($password, $user['password'])) {
-    session_regenerate_id(true); // Secure session
+    if ($user['is_active'] == 0) {
+      header("Location: login.php?error=account_inactive");
+      exit;
+    }
+
+    session_regenerate_id(true);
 
     // Set Correct Session Variables
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['username'] = $user['username'];
-    $_SESSION['user_level_id'] = $user['user_level_id']; // Fix here
+    $_SESSION['user_level_id'] = $user['user_level_id'];
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
 
     // Redirect Based on User Level
     if ($_SESSION['user_level_id'] == 2) {
       header("Location: /vendor_dash.php");
+    } elseif ($_SESSION['user_level_id'] == 3) { // Admin
+      header("Location: /admin_dash.php");
+    } elseif ($_SESSION['user_level_id'] == 4) { // Super Admin
+      header("Location: /superadmin_dash.php");
     } else {
       header("Location: /dashboard.php");
     }
@@ -134,6 +146,14 @@ if (is_post_request() && isset($_POST['login'])) {
   }
 }
 
+if ($_SESSION['user_level_id'] == 2 && isset($user['vendor_status'])) {
+  if ($user['vendor_status'] == 'pending') {
+    die("❌ Error: Your vendor account is pending approval.");
+  } elseif ($user['vendor_status'] == 'denied') {
+    die("❌ Error: Your vendor application was denied. Contact support for more info.");
+  }
+}
+
 // Handle Logout
 if (is_get_request() && isset($_GET['logout'])) {
   session_destroy();
@@ -141,7 +161,7 @@ if (is_get_request() && isset($_GET['logout'])) {
   exit;
 }
 
-// Function to Get Profile Image (Prevents Null Errors)
+// Function to Get Profile Image
 function get_profile_image($user_id)
 {
   global $db;
