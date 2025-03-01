@@ -53,7 +53,7 @@ function is_get_request()
   return $_SERVER['REQUEST_METHOD'] === 'GET';
 }
 
-function upload_image($file, $folder, $name_reference = "default")
+function upload_image($file, $folder, $name)
 {
   $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
   $upload_dir = __DIR__ . "/../img/upload/{$folder}/";
@@ -68,59 +68,28 @@ function upload_image($file, $folder, $name_reference = "default")
       return null; // Invalid file type
     }
 
-    // **Sanitize Name Reference**
-    $clean_name = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $name_reference)));
-
-    // Get file extension
+    // Force rename based on condition (User or Product)
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $sanitized_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name)); // Sanitize
 
-    // **Generate Final Filename**
-    $new_filename = "{$clean_name}.{$ext}";
+    $new_filename = "{$sanitized_name}.{$ext}"; // FINAL name format
     $target_path = $upload_dir . $new_filename;
 
-    // Load image based on type
+    // Crop Image to 500x500 (Centered Crop)
+    $image = imagecreatefromstring(file_get_contents($file['tmp_name']));
+    $width = imagesx($image);
+    $height = imagesy($image);
+    $size = min($width, $height);
+    $cropped_image = imagecrop($image, [
+      'x' => ($width - $size) / 2,
+      'y' => ($height - $size) / 2,
+      'width' => 500,
+      'height' => 500
+    ]);
+
     switch ($file_type) {
       case 'image/jpeg':
-        $image = imagecreatefromjpeg($file['tmp_name']);
-        break;
-      case 'image/png':
-        $image = imagecreatefrompng($file['tmp_name']);
-        break;
-      case 'image/webp':
-        $image = imagecreatefromwebp($file['tmp_name']);
-        break;
-      default:
-        return null; // Unsupported type
-    }
-
-    // Get original dimensions
-    $orig_width = imagesx($image);
-    $orig_height = imagesy($image);
-
-    // Determine crop size (center-crop to square)
-    $crop_size = min($orig_width, $orig_height);
-    $crop_x = ($orig_width - $crop_size) / 2;
-    $crop_y = ($orig_height - $crop_size) / 2;
-
-    // Create a blank square canvas (500x500)
-    $cropped_image = imagecreatetruecolor(500, 500);
-    imagecopyresampled(
-      $cropped_image,
-      $image,
-      0,
-      0,
-      $crop_x,
-      $crop_y,
-      500,
-      500,
-      $crop_size,
-      $crop_size
-    );
-
-    // Save cropped image based on type
-    switch ($file_type) {
-      case 'image/jpeg':
-        imagejpeg($cropped_image, $target_path, 90);
+        imagejpeg($cropped_image, $target_path);
         break;
       case 'image/png':
         imagepng($cropped_image, $target_path);
@@ -130,12 +99,22 @@ function upload_image($file, $folder, $name_reference = "default")
         break;
     }
 
-    // Cleanup
     imagedestroy($image);
     imagedestroy($cropped_image);
 
-    return "img/upload/{$folder}/" . $new_filename;
+    return $new_filename;
   }
-
   return null;
+}
+
+// this function is used to get the existing tags of a product
+function get_existing_tags($product_id)
+{
+  global $db;
+  $sql = "SELECT t.tag_name FROM product_tag t
+          JOIN product_tag_map ptm ON t.tag_id = ptm.tag_id
+          WHERE ptm.product_id = ?";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$product_id]);
+  return $stmt->fetchAll(PDO::FETCH_COLUMN);
 }

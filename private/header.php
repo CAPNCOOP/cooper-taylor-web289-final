@@ -1,5 +1,4 @@
 <?php
-
 if (!isset($page_title)) {
   $page_title = "Blue Ridge Bounty";
 }
@@ -28,11 +27,18 @@ if (!isset($page_title)) {
         <li><a href="<?= url_for('/aboutus.php') ?>">About Us</a></li>
 
         <?php if ($session->is_logged_in()) : ?>
-          <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
+          <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 2) : ?>
+            <li><a href="<?= url_for('vendor_dash.php') ?>">Dashboard</a></li>
+          <?php else : ?>
+            <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
+          <?php endif; ?>
           <li><a href="<?= url_for('/logout.php') ?>">Logout</a></li>
         <?php else : ?>
           <li><a href="<?= url_for('/login.php') ?>"><img src="<?= url_for('/img/assets/user.png') ?>" alt="A user login icon." height="25" width="25"></a></li>
         <?php endif; ?>
+
+
+
       </ul>
     </nav>
   </header>

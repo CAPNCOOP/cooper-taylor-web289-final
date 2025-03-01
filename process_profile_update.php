@@ -12,20 +12,17 @@ $profile_image = $_SESSION['profile_image']; // Default to current image
 
 // Handle Profile Image Upload (if provided)
 if (!empty($_FILES['profile_image']['name'])) {
-  $profile_image = upload_image($_FILES['profile_image'], 'users'); // Upload & get path
-}
+  $full_name = strtolower($_SESSION['username']); // Use `{firstname}_{lastname}`
+  $profile_image = upload_image($_FILES['profile_image'], 'users', $full_name);
 
-// Update `users` table (DO NOT include profile_image, it does not exist there)
-$sql = "UPDATE users SET username = ?, email = ? WHERE user_id = ?";
-$stmt = $db->prepare($sql);
-$stmt->execute([$username, $email, $user_id]);
-
-// Update or Insert into `profile_image` table (fixing ON DUPLICATE KEY)
-if (!empty($profile_image)) {
+  // Update profile_image table
   $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?) 
-            ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+          ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
   $stmt = $db->prepare($sql);
   $stmt->execute([$user_id, $profile_image]);
+
+  // Update session variable
+  $_SESSION['profile_image'] = $profile_image;
 }
 
 // If Vendor, Update Vendor-Specific Details

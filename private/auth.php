@@ -12,7 +12,7 @@ $username = $password = $confirm_password = $email = "";
 $fname = $lname = $is_vendor = $ein = null;
 $profile_image = 'img/upload/users/default.png';
 
-// ✅ Handle user registration
+// Handle user registration
 if (is_post_request() && isset($_POST['register'])) {
   $username = h($_POST['username'] ?? '');
   $fname = h($_POST['fname'] ?? '');
@@ -23,10 +23,7 @@ if (is_post_request() && isset($_POST['register'])) {
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
   $ein = $is_vendor ? h($_POST['business_EIN'] ?? '') : NULL;
 
-  // ✅ Image Upload Handling
-  $profile_image = isset($_FILES['profile_image']) ? upload_image($_FILES['profile_image'], 'users') : 'img/upload/users/default.png';
-
-  // ✅ Validation
+  // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
     die("❌ Required fields cannot be blank.");
   }
@@ -46,20 +43,27 @@ if (is_post_request() && isset($_POST['register'])) {
   if (empty($errors)) {
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // ✅ Insert into Users Table
+    // Insert into Users Table
     $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
     $user_id = $db->lastInsertId();
 
-    // ✅ Store Profile Image
+    // Image Upload Handling
+    $profile_image = 'img/upload/users/default.png'; // Default fallback
+
     if (!empty($_FILES['profile_image']['name'])) {
-      $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
-      $stmt = $db->prepare($sql);
-      $stmt->execute([$user_id, $profile_image]);
+      $full_name = strtolower($_POST['fname'] . '_' . $_POST['lname']); // Create `{firstname}_{lastname}`
+      $profile_image = upload_image($_FILES['profile_image'], 'users', $full_name);
     }
 
-    // ✅ Insert into Vendor Table if Vendor
+    // Save profile image path
+    $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?) 
+        ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$user_id, $profile_image]);
+
+    // Insert into Vendor Table if Vendor
     if ($is_vendor) {
       $business_name = h($_POST['business_name']);
       $contact_number = h($_POST['contact_number']);
@@ -80,20 +84,20 @@ if (is_post_request() && isset($_POST['register'])) {
 
     ob_end_clean(); // Clear output before redirecting
 
-    // ✅ Set Session Variables
+    // Set Session Variables
     $_SESSION['user_id'] = $user_id;
     $_SESSION['username'] = $username;
     $_SESSION['user_level_id'] = $is_vendor ? 2 : 1;
     $_SESSION['profile_image'] = $profile_image;
 
-    // ✅ Redirect Based on User Level
-    $redirect_url = ($is_vendor) ? "/vendor_dashboard.php" : "/dashboard.php";
+    // Redirect Based on User Level
+    $redirect_url = ($is_vendor) ? "/vendor_dash.php" : "/dashboard.php";
     header("Location: " . $redirect_url);
     exit;
   }
 }
 
-// ✅ Handle User Login
+// Handle User Login
 if (is_post_request() && isset($_POST['login'])) {
   $username = h($_POST['username']);
   $password = $_POST['password'];
@@ -111,23 +115,17 @@ if (is_post_request() && isset($_POST['login'])) {
   if ($user && password_verify($password, $user['password'])) {
     session_regenerate_id(true); // Secure session
 
-    // ✅ Set Correct Session Variables
+    // Set Correct Session Variables
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['user_level_id'] = $user['user_level_id']; // Fix here
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
 
-    // ✅ Debugging (Check Session)
-    echo "<pre>✅ Session Before Redirecting: ";
-    print_r($_SESSION);
-    echo "</pre>";
-    exit;
-
-    // ✅ Redirect Based on User Level
+    // Redirect Based on User Level
     if ($_SESSION['user_level_id'] == 2) {
-      header("Location: vendor_dashboard.php");
+      header("Location: /vendor_dash.php");
     } else {
-      header("Location: user_dashboard.php");
+      header("Location: /dashboard.php");
     }
     exit;
   } else {
@@ -136,14 +134,14 @@ if (is_post_request() && isset($_POST['login'])) {
   }
 }
 
-// ✅ Handle Logout
+// Handle Logout
 if (is_get_request() && isset($_GET['logout'])) {
   session_destroy();
   header("Location: login.php");
   exit;
 }
 
-// ✅ Function to Get Profile Image (Prevents Null Errors)
+// Function to Get Profile Image (Prevents Null Errors)
 function get_profile_image($user_id)
 {
   global $db;

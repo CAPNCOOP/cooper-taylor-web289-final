@@ -47,7 +47,7 @@ $vendor = $vendor_data[0];
 <div id="vendor-profile-container">
   <div id="vendor-profile-card">
     <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-    <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
+    <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="A Vendor Image.">
     <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
     <p><strong>Contact:</strong> <?php echo htmlspecialchars($vendor['business_email']); ?></p>
     <?php if ($vendor['website']): ?>
