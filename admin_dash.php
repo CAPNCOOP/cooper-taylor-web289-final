@@ -1,6 +1,11 @@
 <?php
 require_once 'private/initialize.php';
 
+// Debugging: Print session variables
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
 // Restrict access to admins only
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -120,6 +125,23 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </table>
     <?php endif; ?>
   </section>
+
+  <section>
+    <h3>Schedule a Market Week</h3>
+    <form action="schedule_market.php" method="POST">
+      <label for="week_start">Week Start:</label>
+      <input type="date" id="week_start" name="week_start" required>
+
+      <label for="week_end">Week End:</label>
+      <input type="date" id="week_end" name="week_end" required>
+
+      <label for="confirmation_deadline">RSVP Deadline:</label>
+      <input type="date" id="confirmation_deadline" name="confirmation_deadline" required>
+
+      <button type="submit">Schedule Market</button>
+    </form>
+  </section>
+
 
   <section>
     <h3>Update Homepage Content</h3>

@@ -3,6 +3,11 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 $page_title = "Our Vendors"; // Set dynamic title
 
+// Debugging: Print session variables
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
 // Pagination settings
 $itemsPerPage = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;

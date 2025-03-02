@@ -24,12 +24,15 @@ if (!$vendor) {
 
 $vendor_id = $vendor['vendor_id'];
 
-// Fetch upcoming markets from `market_week`
-$sql = "SELECT mw.week_id, mw.week_start, mw.week_end, mw.confirmation_deadline 
+// Fetch all upcoming market weeks
+$sql = "SELECT mw.week_id, mw.week_start, mw.week_end, mw.confirmation_deadline
         FROM market_week mw
-        JOIN market m ON mw.market_id = m.market_id
         WHERE mw.week_start >= CURDATE()
         ORDER BY mw.week_start ASC";
+
+$stmt = $db->query($sql);
+$markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 $stmt = $db->query($sql);
 $weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -69,17 +72,18 @@ $rsvp_map = array_column($rsvp_status, 'status', 'week_id');
           <td>
             <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
               <form method="post" action="rsvp_action.php">
-                <input type="hidden" name="week_id" value="<?= $week['week_id'] ?>">
+                <input type="hidden" name="week_id" value="<?php echo $week['week_id']; ?>">
                 <select name="status" onchange="this.form.submit()">
-                  <option value="planned" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'planned' ? 'selected' : '' ?>>Planned</option>
-                  <option value="confirmed" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
-                  <option value="canceled" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+                  <option value="planned" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'planned' ? 'selected' : ''; ?>>Planned</option>
+                  <option value="confirmed" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'confirmed' ? 'selected' : ''; ?>>Confirmed</option>
+                  <option value="canceled" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'canceled' ? 'selected' : ''; ?>>Canceled</option>
                 </select>
               </form>
             <?php else: ?>
               <span style="color: gray;">RSVP Closed</span>
             <?php endif; ?>
           </td>
+
         </tr>
       <?php endforeach; ?>
 

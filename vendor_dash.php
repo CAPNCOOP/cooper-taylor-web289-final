@@ -1,6 +1,12 @@
 <?php
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+
+// Debugging: Print session variables
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
 $page_title = "Vendor - Dashboard"; // Set dynamic title
 if (!isset($db)) {
   exit("Database connection error.");
