@@ -18,6 +18,7 @@ if (!isset($page_title)) {
 
   <header>
     <h1>Blue Ridge Bounty</h1>
+
     <nav>
       <ul>
         <li><a href="<?= url_for('/index.php') ?>"><img src="<?= url_for('/img/assets/barn.png') ?>" alt="An icon of a barn" height="25" width="25"></a></li>

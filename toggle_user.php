@@ -1,6 +1,5 @@
 <?php
 require_once 'private/initialize.php';
-session_start();
 
 // Restrict access to admins
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 3) {

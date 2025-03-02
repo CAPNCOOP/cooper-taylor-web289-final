@@ -119,7 +119,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <form action="manage_products.php" method="POST" enctype="multipart/form-data">
   <fieldset>
     <label for="product_name">Product Name:</label>
-    <input type="text" id="product_name" name="product_name" required>
+    <input type="text" id="product_name" name="product_name" spellcheck="true" required>
   </fieldset>
 
   <fieldset>
@@ -138,17 +138,17 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <fieldset>
     <label for="description">Description:</label>
-    <textarea id="description" name="description"></textarea>
+    <textarea id="description" name="description" spellcheck="true" required></textarea>
   </fieldset>
 
   <fieldset>
     <label for="custom_tags">Tags (comma-separated):</label>
-    <input type="text" id="custom_tags" name="custom_tags" placeholder="e.g., fresh, organic, handmade">
+    <input type="text" id="custom_tags" name="custom_tags" placeholder="e.g., fresh, organic, handmade" spellcheck="true">
   </fieldset>
 
   <fieldset>
     <label for="product_image">Product Image:</label>
-    <input type="file" id="product_image" name="product_image" accept="image/png, image/jpeg, image/webp">
+    <input type="file" id="product_image" name="product_image" accept="image/png, image/jpeg, image/webp" required>
   </fieldset>
 
   <button type="submit">Add Product</button>

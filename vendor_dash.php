@@ -2,11 +2,6 @@
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 
-// Debugging: Print session variables
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-
 $page_title = "Vendor - Dashboard"; // Set dynamic title
 if (!isset($db)) {
   exit("Database connection error.");
@@ -35,22 +30,22 @@ if (!$vendor || $vendor['vendor_status'] !== 'approved') {
 
 ?>
 
-<body>
+<div>
   <h1>Welcome, <?php echo htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?></h1>
   <h2>Business: <?php echo htmlspecialchars($vendor['business_name']); ?></h2>
   <a href="edit_profile.php" class="btn">Edit Profile</a>
+</div>
 
-  <nav>
-    <ul>
-      <li><a href="manage_products.php">Manage Products</a></li>
-      <li><a href="rsvp_market.php">RSVP for Markets</a></li>
-      <li><a href="update_profile.php">Update Profile</a></li>
-      <li><a href="logout.php">Logout</a></li>
-    </ul>
-  </nav>
+<h2>Dashboard Overview</h2>
+<p>Manage your products, RSVP for upcoming markets, and update your business profile.</p>
 
-  <h2>Dashboard Overview</h2>
-  <p>Manage your products, RSVP for upcoming markets, and update your business profile.</p>
+<nav>
+  <ul>
+    <li><a href="manage_products.php">Manage Products</a></li>
+    <li><a href="rsvp_market.php">RSVP for Markets</a></li>
+    <li><a href="update_profile.php">Update Profile</a></li>
+  </ul>
+</nav>
 </body>
 
 </html>

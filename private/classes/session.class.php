@@ -17,7 +17,6 @@ class Session
   public function login($user)
   {
     if ($user) {
-      session_regenerate_id();
       $_SESSION['user_id'] = $user['user_id']; // FIX: Accessing user_id as array
       $_SESSION['username'] = $user['username'];
       $_SESSION['last_login'] = time();

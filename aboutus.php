@@ -2,6 +2,10 @@
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 $page_title = "Home"; // Set dynamic title
+require_once 'private/initialize.php';
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
 ?>
 
 <main>

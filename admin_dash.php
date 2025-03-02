@@ -1,16 +1,7 @@
 <?php
 require_once 'private/initialize.php';
 
-// Debugging: Print session variables
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-
 // Restrict access to admins only
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 3) { // 3 = Admin
   header("Location: login.php");
   exit();

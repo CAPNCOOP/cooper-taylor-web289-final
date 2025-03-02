@@ -1,10 +1,17 @@
 <?php
 ob_start();
+session_set_cookie_params([
+  'lifetime' => 36000, // 10 hours
+  'path' => '/',
+  'domain' => '', // Leave empty for default
+  'secure' => false, // Set to true if using HTTPS
+  'httponly' => true,
+  'samesite' => 'Lax' // Adjust if necessary
+]);
+
 if (session_status() == PHP_SESSION_NONE) {
   session_start();
-  session_regenerate_id(true);
 }
-
 
 // Assign file paths to PHP constants
 // __FILE__ returns the current path to this file
