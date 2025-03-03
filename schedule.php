@@ -1,30 +1,65 @@
 <?php
 $page_title = "Market Schedule";
 require_once 'private/initialize.php';
-require_once 'private/header.php';
+require_once 'private/map_header.php';
 
 // Fetch upcoming markets
-$sql = "SELECT week_id, week_start, week_end FROM market_week WHERE week_start >= CURDATE() ORDER BY week_start ASC";
+$sql = "SELECT 
+    mw.week_id, 
+    mw.week_start, 
+    DATE_ADD(mw.week_start, INTERVAL 6 DAY) AS saturday_market_date, 
+    mw.confirmation_deadline
+FROM market_week mw
+ORDER BY mw.week_start ASC;
+";
 $stmt = $db->query($sql);
 $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<h2>Upcoming Markets</h2>
-<table>
-  <tr>
-    <th>Market Week Start</th>
-    <th>Market Week End</th>
-    <th>Vendors Attending</th>
-  </tr>
-  <?php foreach ($markets as $market): ?>
-    <tr>
-      <td><?= htmlspecialchars($market['week_start']) ?></td>
-      <td><?= htmlspecialchars($market['week_end']) ?></td>
-      <td>
-        <a href="market_vendors.php?week_id=<?= $market['week_id'] ?>">View Vendors</a>
-      </td>
-    </tr>
-  <?php endforeach; ?>
-</table>
+<h2>Markets are every Saturday 8am-2pm, Pack Square Park</h2>
+
+<div id="schedule-map-container">
+  <div id="schedule-div">
+    <h2>Upcoming Markets</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Market Date</th> <!-- This will now be the Saturday of the week -->
+          <th>Vendors Attending</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($markets as $market): ?>
+          <tr>
+            <td><?= htmlspecialchars($market['saturday_market_date']) ?></td>
+            <td>
+              <a href="market_vendors.php?week_id=<?= $market['week_id'] ?>">View Vendors</a>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([35.595527869870025, -82.54932889086415], 17); // Coordinates for Asheville, NC
+
+    // Add OpenStreetMap tiles to the map
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add a marker (pin) to the map
+    var marker = L.marker([35.595527869870025, -82.54932889086415]).addTo(map);
+    marker.bindPopup("<b>Blue Ridge Bounty</b><br>80 Court Plaza, Asheville, NC").openPopup();
+  </script>
+</div>
 
 <?php require_once 'private/footer.php'; ?>
+
+</body>
+
+</html>

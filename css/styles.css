@@ -246,27 +246,52 @@ footer a {
 
 /* Schedule */
 
+#schedule-map-container {
+  border: 3px solid var(--dark);
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+
+#schedule-div {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+#map {
+  flex: 2;
+  height: 430px;
+  margin: 0;
+  width: 50%;
+}
+
 .market-schedule h2 {
-  font: 48px var(--main-text);
+  font: 36px var(--main-text);
   text-align: center;
+  margin-top: 0;
 }
 
 .market-schedule table {
   border: 1px solid var(--tertiary-color);
   border-spacing: 0;
   font: 24px var(--secondary-text);
-  margin: 0 auto;
+  margin: 0;
   text-align: center;
-  width: 60%;
+  width: 100%;
 }
 
 .market-schedule table th {
+  background-color: var(--secondary-color);
   color: var(--light);
-  font: 12px var(--secondary-color);
+  font: 24px var(--secondary-text);
+  padding: 0.5rem;
 }
 
 .market-schedule table td {
-  border: 1px solid var(--tertiary-color);
+  border: 1px solid var(--dark);
   color: var(--dark);
   padding: 1rem;
 }
@@ -277,17 +302,22 @@ footer a {
 }
 
 .market-schedule table tr:nth-of-type(odd) {
-  border: 1px solid var(--tertiary-color);
   background-color: var(--tertiary-color);
   color: var(--light);
 }
 
-.market-schedule table a {
+.market-schedule table td a {
   background-color: var(--secondary-color);
   border-radius: 5px;
   color: var(--light);
   padding: 0.5rem;
   text-decoration: none;
+}
+
+.market-schedule table td a:hover {
+  background-color: var(--main-color);
+  color: var(--dark);
+  cursor: pointer;
 }
 
 /* Our Vendors */

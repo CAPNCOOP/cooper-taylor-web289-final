@@ -9,11 +9,12 @@ if (!isset($page_title)) {
 <head>
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($page_title) ?></title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/js/script.js" defer></script>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
+
 
 <body class="<?= strtolower(str_replace(' ', '-', $page_title ?? 'Blue Ridge Bounty')) ?>">
 

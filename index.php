@@ -6,7 +6,7 @@ require_once 'private/header.php';
 
 <div class="hero-image">
   <section class="typewriter-wrapper">
-    <span class="static-text">Blue Ridge Bounty Is...</span>
+    <span class="static-text">We Are...</span>
     <div class="typewriter">
       <span id="text"></span>
     </div>

@@ -36,17 +36,20 @@ $stmtCount = $db->query($sqlCount);
 $totalVendors = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
 $totalPages = ceil($totalVendors / $itemsPerPage);
 
+// Search functionality
 $searchTerm = $_GET['search'] ?? '';
 $filteredVendors = [];
+
 if ($searchTerm) {
   $searchTermLower = strtolower($searchTerm);
   foreach ($vendors as $vendor) {
-    $tags = strtolower($vendor['product_tags'] . ', ' . $vendor['market_tags'] . ', ' . $vendor['business_name'] . ', ' . $vendor['vendor_bio'] . ', ' . $vendor['state_abbrs'] . ', ' . $vendor['state_names'] . ', ' . $vendor['cities']);
+    $tags = strtolower($vendor['product_tags'] . ', ' . $vendor['market_weeks'] . ', ' . $vendor['business_name'] . ', ' . $vendor['vendor_bio'] . ', ' . $vendor['state_abbrs'] . ', ' . $vendor['state_names'] . ', ' . $vendor['cities']);
     if (strpos($tags, $searchTermLower) !== false) {
       $filteredVendors[] = $vendor;
     }
   }
 } else {
+  // If no search term, display all vendors
   $filteredVendors = $vendors;
 }
 
@@ -55,7 +58,7 @@ if ($searchTerm) {
 <div id="vendorhead">
   <h2>Our Vendors</h2>
   <form method="GET" action="ourvendors.php">
-    <input type="text" id="searchBar" name="search" placeholder="Search vendors, products, markets, locations...">
+    <input type="text" id="searchBar" name="search" placeholder="Search vendors, products, markets, locations..." value="<?= htmlspecialchars($searchTerm) ?>">
     <button type="submit">Search</button>
   </form>
 </div>
@@ -67,7 +70,7 @@ if ($searchTerm) {
         data-tags="<?php
                     $tags = array_filter([
                       $vendor['product_tags'] ?? '',
-                      $vendor['market_tags'] ?? '',
+                      $vendor['market_weeks'] ?? '',
                       $vendor['state_abbrs'] ?? '',
                       $vendor['state_names'] ?? '',
                       $vendor['cities'] ?? ''
