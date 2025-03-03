@@ -1,7 +1,7 @@
 <?php
-require_once 'private/initialize.php'; // Include necessary setup files
+$page_title = "Member - Dashboard";
+require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Member - Dashboard"; // Set dynamic title
 require_login(); // Ensure the user is logged in
 $user_level = $_SESSION['user_level_id'] ?? null;
 
@@ -67,7 +67,4 @@ if ($table_exists) {
   <?php endif; ?>
 </div>
 
-
-</body>
-
-</html>
+<?php require_once 'private/footer.php'; ?>

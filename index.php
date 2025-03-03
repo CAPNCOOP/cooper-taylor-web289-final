@@ -1,7 +1,7 @@
 <?php
+$page_title = "Home";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Home"; // Set dynamic title
 ?>
 
 <div class="hero-image">
@@ -15,9 +15,6 @@ $page_title = "Home"; // Set dynamic title
 
 <div id="content-wrapper">
   <main>
-    <div>
-      <p>Nestled in the heart of the Blue Ridge Mountains, Blue Ridge Bounty is your gateway to the freshest, locally sourced produce, farm-raised meats, artisan goods, and handcrafted delights. We believe in real food, real people, and real connections—which is why every item you find here is grown, raised, or made with care by passionate farmers and artisans in our community.</p>
-    </div>
 
     <div class="slideshow-container">
       <div class="mySlides fade">
@@ -33,12 +30,12 @@ $page_title = "Home"; // Set dynamic title
       <div class="mySlides fade">
         <img src="img/assets/pastries.jpg" alt="A booth at a farmers market." height="600" width="900">
         <div class="numbertext">3/6</div>
-        <div class="text"><strong>Artisan & Handmade Goods</strong> – Beyond produce, you’ll find fresh-baked bread, local honey, handcrafted soaps, and more—all made with love by local makers.</div>
+        <div class="text"><strong>Artisan & Handmade Goods</strong> – Beyond produce, you&apos;ll find fresh-baked bread, local honey, handcrafted soaps, and more—all made with love by local makers.</div>
       </div>
       <div class="mySlides fade">
         <img src="img/assets/farmer10.jpg" alt="A farmer tends to some crops." height="600" width="900">
         <div class="numbertext">4/6</div>
-        <div class="text"><strong>Know Your Farmers, Know Your Food</strong> – Know Your Farmers, Know Your Food – Here, you can meet the growers, ask questions, and feel confident about what you’re putting on your plate.</div>
+        <div class="text"><strong>Know Your Farmers, Know Your Food</strong> – Know Your Farmers, Know Your Food – Here, you can meet the growers, ask questions, and feel confident about what you&apos;re putting on your plate.</div>
       </div>
       <div class="mySlides fade">
         <img src="img/assets/produce.jpg" alt="A produce stand at a market." height="600" width="900">
@@ -48,7 +45,7 @@ $page_title = "Home"; // Set dynamic title
       <div class="mySlides fade">
         <img src="img/assets/booth.jpg" alt="A booth at a farmers market." height="600" width="900">
         <div class="numbertext">6/6</div>
-        <div class="text"><strong>Want to be a vendor?</strong> Learn how you can join our community of growers and makers. <a href="login.php">Click here!</a></div>
+        <div class="text"><strong>Want to be a vendor?</strong> Learn how you can join our community of growers and makers. <a href="aboutus.php#contact">Click here!</a></div>
       </div>
 
       <!-- arrow buttons -->
@@ -68,10 +65,4 @@ $page_title = "Home"; // Set dynamic title
   </main>
 </div>
 
-<footer>
-  <span>Blue Ridge Bounty &copy; 2025</span>
-  <a href="aboutus.php#contact">Contact Us</a>
-</footer>
-</body>
-
-</html>
+<?php require_once 'private/footer.php'; ?>

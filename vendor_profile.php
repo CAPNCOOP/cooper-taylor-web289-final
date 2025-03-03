@@ -1,7 +1,7 @@
 <?php
+$page_title = "Vendor - Profile";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Vendor - Profile"; // Set dynamic title
 
 // Get vendor ID from URL
 $vendor_id = $_GET['id'] ?? 0;
@@ -106,6 +106,5 @@ $vendor = $vendor_data[0];
     <?php endif; ?>
   <?php endforeach; ?>
 </div>
-</body>
 
-</html>
+<?php require_once 'private/footer.php'; ?>

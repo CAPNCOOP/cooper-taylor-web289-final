@@ -1,4 +1,5 @@
 <?php
+$page_title = "Edit Product";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
@@ -165,12 +166,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <fieldset>
     <label for="description">Description:</label>
-    <textarea id="description" name="description"><?= htmlspecialchars($product['description']) ?></textarea>
+    <textarea id="description" name="description" spellcheck="true"><?= htmlspecialchars($product['description']) ?></textarea>
   </fieldset>
 
   <fieldset>
     <label for="tags">Tags (comma-separated):</label>
-    <input type="text" id="tags" name="tags" value="<?= htmlspecialchars(implode(', ', $product_tags)) ?>">
+    <input type="text" id="tags" name="tags" value="<?= htmlspecialchars(implode(', ', $product_tags)) ?>" spellcheck="true">
   </fieldset>
 
   <fieldset>
@@ -180,3 +181,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <button type="submit">Save Changes</button>
 </form>
+
+<?php require_once 'private/footer.php'; ?>

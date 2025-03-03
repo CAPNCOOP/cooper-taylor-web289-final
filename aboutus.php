@@ -1,11 +1,7 @@
 <?php
+$page_title = "About Us"; // Set dynamic title
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Home"; // Set dynamic title
-require_once 'private/initialize.php';
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
 ?>
 
 <main>
@@ -26,23 +22,20 @@ echo "</pre>";
       </div>
 
 
-      <!-- Booooo 👎-->
-      <!-- <div>
-            <h3 id="contact">Contact Us</h3>
-            <div>
-              <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25">
-              <span>support@blueridgebounty.us</span>
-            </div>
-            <div>
-              <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25">
-              <span>1-258-2689</span>
-            </div>
-          </div>
-        </div> -->
+
+      <div>
+        <h3 id="contact">Contact Us</h3>
+        <div>
+          <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25">
+          <span>support@blueridgebounty.us</span>
+        </div>
+        <div>
+          <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25">
+          <span>1-258-2689</span>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 
-<footer>
-  <span>Blue Ridge Bounty &copy; 2025</span>
-</footer>
-</body>
+<?php require_once 'private/footer.php'; ?>

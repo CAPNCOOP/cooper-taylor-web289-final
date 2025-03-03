@@ -1,4 +1,5 @@
 <?php
+$page_title = "Admin Dashboard";
 require_once 'private/initialize.php';
 
 // Restrict access to admins only
@@ -7,7 +8,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 3) { // 3 = Ad
   exit();
 }
 
-$page_title = "Admin Dashboard";
 require_once 'private/header.php';
 
 // Fetch all users (except super admins)
@@ -143,9 +143,4 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </section>
 </main>
 
-<footer>
-  <span>Blue Ridge Bounty &copy; 2025</span>
-</footer>
-</body>
-
-</html>
+<?php require_once 'private/footer.php'; ?>

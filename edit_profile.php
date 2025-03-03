@@ -1,7 +1,7 @@
 <?php
+$page_title = "Edit Profile Details";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Edit Profile Details"; // Set dynamic title
 require_login(); // Ensure only logged-in users access this
 
 $user_id = $_SESSION['user_id'] ?? null;
@@ -76,6 +76,5 @@ if ($user_level == 2) {
     <button type="submit">Save Changes</button>
   </form>
 </main>
-</body>
 
-</html>
+<?php require_once 'private/footer.php'; ?>

@@ -1,6 +1,5 @@
 <?php
 require_once 'private/initialize.php';
-require_once 'private/header.php';
 
 // Ensure the user is logged in and is a vendor
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 2) {

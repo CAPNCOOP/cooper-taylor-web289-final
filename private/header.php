@@ -12,9 +12,11 @@ if (!isset($page_title)) {
   <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/js/script.js" defer></script>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 
-<body>
+<body class="<?= strtolower(str_replace(' ', '-', $page_title ?? 'Blue Ridge Bounty')) ?>">
+
 
   <header>
     <h1>Blue Ridge Bounty</h1>

@@ -1,7 +1,7 @@
 <?php
+$page_title = "Log In";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Log In"; // Set dynamic title
 ?>
 
 <main>
@@ -49,10 +49,4 @@ $page_title = "Log In"; // Set dynamic title
   </form>
 </main>
 
-<footer>
-  <span>Blue Ridge Bounty &copy; 2025</span>
-  <a href="aboutus.php#contact">Contact Us</a>
-</footer>
-</body>
-
-</html>
+<?php require_once 'private/footer.php'; ?>

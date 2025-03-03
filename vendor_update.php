@@ -1,7 +1,7 @@
 <?php
+$page_title = "Vendor - Update";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Vendor - Update"; // Set dynamic title
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -69,6 +69,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <button type="submit">Update Profile</button>
   </form>
-</body>
 
-</html>
+  <?php require_once 'private/footer.php'; ?>

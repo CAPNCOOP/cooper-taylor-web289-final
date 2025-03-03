@@ -1,7 +1,7 @@
 <?php
+$page_title = "Our Vendors";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Our Vendors"; // Set dynamic title
 
 // Pagination settings
 $itemsPerPage = 10;
@@ -96,6 +96,5 @@ if ($searchTerm) {
     <?php endif; ?>
   <?php endif; ?>
 </div>
-</body>
 
-</html>
+<?php require_once 'private/footer.php'; ?>

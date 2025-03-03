@@ -1,4 +1,5 @@
 <?php
+$page_title = "Super Admin Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 
@@ -6,9 +7,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 4) { // 4 = Su
   header("Location: login.php");
   exit();
 }
-
-$page_title = "Super Admin Dashboard";
-require_once 'private/header.php';
 
 // Fetch all users (including admins but excluding super admins)
 $sql = "SELECT user_id, first_name, last_name, email, user_level_id, is_active FROM users WHERE user_level_id != 4";
@@ -150,9 +148,4 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </section>
 </main>
 
-<footer>
-  <span>Blue Ridge Bounty &copy; 2025</span>
-</footer>
-</body>
-
-</html>
+<?php require_once 'private/footer.php'; ?>

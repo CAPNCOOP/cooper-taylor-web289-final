@@ -1,7 +1,7 @@
 <?php
+$page_title = "Upload - Product";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Upload - Product"; // Set dynamic title
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -146,6 +146,5 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <input type="file" name="product_image" accept="image/*" required>
     <button type="submit">Upload</button>
   </form>
-</body>
 
-</html>
+  <?php require_once 'private/footer.php'; ?>

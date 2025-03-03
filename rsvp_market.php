@@ -1,7 +1,7 @@
 <?php
+$page_title = "Market RSVP";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Market RSVP";
 
 // Ensure user is logged in and is a vendor
 if (!isset($_SESSION['user_id'])) {
@@ -89,7 +89,5 @@ $rsvp_map = array_column($rsvp_status, 'status', 'week_id');
 
     </table>
   <?php endif; ?>
-</body>
 
-</html>
-``
+  <?php require_once 'private/footer.php'; ?>

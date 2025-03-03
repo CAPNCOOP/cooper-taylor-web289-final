@@ -1,8 +1,7 @@
 <?php
+$page_title = "Manage Products";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-
-$page_title = "Manage Products";
 
 // Ensure user is a logged-in vendor
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 2) {
@@ -171,7 +170,4 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php endif; ?>
 </div>
 
-
-</body>
-
-</html>
+<?php require_once 'private/footer.php'; ?>

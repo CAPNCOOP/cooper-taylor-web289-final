@@ -1,8 +1,8 @@
 <?php
+$page_title = "Vendor - Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 
-$page_title = "Vendor - Dashboard"; // Set dynamic title
 if (!isset($db)) {
   exit("Database connection error.");
 }
@@ -46,6 +46,5 @@ if (!$vendor || $vendor['vendor_status'] !== 'approved') {
     <li><a href="update_profile.php">Update Profile</a></li>
   </ul>
 </nav>
-</body>
 
-</html>
+<?php require_once 'private/footer.php'; ?>

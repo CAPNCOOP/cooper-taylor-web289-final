@@ -1,7 +1,7 @@
 <?php
+$page_title = "Upload - Profile";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Upload - Profile"; // Set dynamic title
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -77,24 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Upload Profile Image</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-
-<body>
-  <h1>Upload Profile Image</h1>
-  <?php if (isset($error)): ?>
-    <p style="color: red;"> <?php echo htmlspecialchars($error); ?> </p>
-  <?php endif; ?>
-  <form method="post" enctype="multipart/form-data">
-    <input type="file" name="profile_image" accept="image/*" required>
-    <button type="submit">Upload</button>
-  </form>
+<h1>Upload Profile Image</h1>
+<?php if (isset($error)): ?>
+  <p style="color: red;"> <?php echo htmlspecialchars($error); ?> </p>
+<?php endif; ?>
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="profile_image" accept="image/*" required>
+  <button type="submit">Upload</button>
+</form>
 </body>
 
-</html>
+<?php require_once 'private/footer.php'; ?>

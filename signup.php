@@ -1,8 +1,8 @@
 <?php
+$page_title = "Sign Up";
 ob_start(); // Start output buffering
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-$page_title = "Sign Up"; // Set dynamic title
 ob_end_flush(); // End output buffering
 ?>
 
@@ -47,5 +47,5 @@ ob_end_flush(); // End output buffering
 
     <button type="submit" name="register" value="1">Sign Up</button>
   </form>
-</main>
-</body>
+
+  <?php require_once 'private/footer.php'; ?>
