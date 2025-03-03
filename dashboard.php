@@ -13,11 +13,26 @@ $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Get user profile image
-$sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
+$sql = "SELECT first_name, last_name FROM users WHERE user_id = ?";
 $stmt = $db->prepare($sql);
 $stmt->execute([$user_id]);
-$profile = $stmt->fetch(PDO::FETCH_ASSOC);
-$profile_image = $profile['file_path'] ?? 'img/upload/users/default.png';
+$user_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Create possible file paths for each image type
+$profile_image_base = 'img/upload/users/' . strtolower($user_info['first_name'] . '_' . $user_info['last_name']);
+$accepted_formats = ['.jpg', '.png', '.webp'];
+
+// Initialize the profile image variable to the default image
+$profile_image = 'img/upload/users/default.png';
+
+// Loop through accepted formats to find a valid profile image
+foreach ($accepted_formats as $format) {
+  $image_path = $profile_image_base . $format;
+  if (file_exists($image_path)) {
+    $profile_image = $image_path;
+    break;
+  }
+}
 
 // Determine user type
 $user_type = ($user['user_level_id'] == 2) ? 'Vendor' : 'Member';
@@ -55,7 +70,7 @@ if ($table_exists) {
       <?php foreach ($favorites as $vendor): ?>
         <li>
           <img src="img/upload/users/<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
-            height="50" width="50" alt="Vendor Image">
+            height="100" width="100" alt="Vendor Image">
           <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
             <?= htmlspecialchars($vendor['business_name']) ?>
           </a>

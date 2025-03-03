@@ -79,24 +79,12 @@ if ($searchTerm) {
                     ?>"
         onclick="window.location.href='vendor_profile.php?id=<?= htmlspecialchars($vendor['vendor_id']) ?>'">
         <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-        <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
+        <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="200" width="200" alt="Vendor Image">
         <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
       </div>
     <?php endforeach; ?>
   <?php else: ?>
     <p>No results found for "<?php echo htmlspecialchars($searchTerm); ?>"</p>
-  <?php endif; ?>
-</div>
-
-<div id="pagination">
-  <?php if ($totalPages > 1): ?>
-    <p>Page <?php echo $page; ?> of <?php echo $totalPages; ?></p>
-    <?php if ($page > 1): ?>
-      <a href="?page=<?php echo $page - 1; ?>">Previous</a>
-    <?php endif; ?>
-    <?php if ($page < $totalPages): ?>
-      <a href="?page=<?php echo $page + 1; ?>">Next</a>
-    <?php endif; ?>
   <?php endif; ?>
 </div>
 

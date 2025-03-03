@@ -59,7 +59,3 @@ $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php require_once 'private/footer.php'; ?>
-
-</body>
-
-</html>

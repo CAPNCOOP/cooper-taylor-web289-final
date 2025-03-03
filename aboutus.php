@@ -10,7 +10,7 @@ require_once 'private/header.php';
     <div>
       <div class="aboutus-item">
         <img src="img/assets/farmer4.jpg" alt="A photo of a local farmer." height="450" width="300">
-        <p>At Blue Ridge Bounty, we believe that food should be more than just sustenance—it should be a connection to the land, the farmers who cultivate it, and the community that gathers around it. Founded with a passion for local, sustainable agriculture, our farmers market is a vibrant hub where fresh, non-GMO produce, pasture-raised meats, and handcrafted goods come together in celebration of real food and honest craftsmanship.</p>
+        <p>At <strong>Blue Ridge Bounty</strong>, we believe that food should be more than just sustenance—it should be a connection to the land, the farmers who cultivate it, and the community that gathers around it. Founded with a passion for local, sustainable agriculture, our farmers market is a vibrant hub where fresh, non-GMO produce, pasture-raised meats, and handcrafted goods come together in celebration of real food and honest craftsmanship.</p>
       </div>
       <div class="aboutus-item">
         <img src="img/assets/flour.jpg" alt="A photo of a man preparing bread." height="450" width="300">

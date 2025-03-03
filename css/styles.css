@@ -109,7 +109,7 @@ footer a {
   left: 50%;
   position: absolute;
   text-align: center;
-  top: 50%;
+  top: 45%;
   transform: translate(-50%, -50%);
 }
 
@@ -121,13 +121,6 @@ footer a {
   text-align: center;
   top: 60%;
   transform: translate(-50%, -50%);
-}
-
-.caret {
-  animation: blink 1s infinite;
-  display: inline-block;
-  margin-left: 5px;
-  width: 10px;
 }
 
 /* slideshow */
@@ -271,7 +264,7 @@ footer a {
 .market-schedule h2 {
   font: 36px var(--main-text);
   text-align: center;
-  margin-top: 0;
+  margin: 0 0 1rem 0;
 }
 
 .market-schedule table {
@@ -307,17 +300,19 @@ footer a {
 }
 
 .market-schedule table td a {
-  background-color: var(--secondary-color);
+  background-color: #f2f2f2cc;
   border-radius: 5px;
-  color: var(--light);
+  color: var(--dark);
   padding: 0.5rem;
   text-decoration: none;
+  transition: 0.3s ease-in-out;
 }
 
 .market-schedule table td a:hover {
-  background-color: var(--main-color);
-  color: var(--dark);
+  background-color: var(--dark);
+  color: var(--light);
   cursor: pointer;
+  opacity: 0.7;
 }
 
 /* Our Vendors */
@@ -362,17 +357,21 @@ div#vendorhead {
 }
 
 .vendor-card {
-  align-content: space-around;
+  align-content: space-between;
   background-color: var(--main-color);
   border-radius: 5px;
   box-shadow: 1px 5px 5px var(--dark);
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 450px;
   justify-content: center;
-  padding: 1rem;
   margin: 1rem;
+  overflow: hidden;
+  padding: 1rem;
+  text-align: center;
   transition: box-shadow 0.3s ease-in-out;
+  width: 300px;
 }
 
 .vendor-card:hover {
@@ -382,12 +381,33 @@ div#vendorhead {
 .vendor-card h2 {
   font: 28px var(--secondary-text);
   text-align: center;
+  white-space: wrap;
 }
 
 .vendor-card img {
   border-radius: 100%;
   box-shadow: 0 0 10px var(--dark);
+  height: 200px;
+  object-fit: cover;
   margin: 0 auto;
+  width: 200px;
+}
+
+/* Vendor Product List */
+
+.product-list {
+  margin: 1rem;
+}
+
+.product-card {
+  background-color: var(--light);
+  border-radius: 5px;
+  box-shadow: 0 1px 5px var(--dark);
+  padding: 1rem;
+}
+
+.product-card img {
+  border-radius: 5px;
 }
 
 /* Vendor Profile */
@@ -476,28 +496,31 @@ div#vendorhead {
 
 /* About Us */
 
-.aboutus h2 {
+.about-us h2 {
   font: 64px var(--main-text);
   text-align: center;
 }
 
-.aboutus div:nth-last-of-type(1) {
+.about-us div:nth-last-of-type(1) {
   margin: 0 auto;
   width: 80%;
 }
 
-.aboutus main section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.about-us main section {
   padding: 1.5rem;
+  width: 75%;
+  margin: 0 auto;
 }
 
 .aboutus-item {
+  align-content: center;
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  margin: 0;
+}
+
+.aboutus-item img {
+  flex: 1;
 }
 
 .aboutus-item:nth-of-type(2) {
@@ -506,10 +529,11 @@ div#vendorhead {
 }
 
 .aboutus-item p {
+  flex: 2;
   font: 32px var(--secondary-text);
 }
 
-.aboutus div div:last-of-type {
+.about-us div div:last-of-type {
   display: flex;
   flex-direction: column;
   gap: 1rem;
