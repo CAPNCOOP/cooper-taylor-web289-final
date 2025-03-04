@@ -58,7 +58,7 @@ if ($searchTerm) {
 <div id="vendorhead">
   <h2>Our Vendors</h2>
   <form method="GET" action="ourvendors.php">
-    <input type="text" id="searchBar" name="search" placeholder="Search vendors, products, markets, locations..." value="<?= htmlspecialchars($searchTerm) ?>">
+    <input type="text" id="searchBar" name="search" placeholder="Search vendors, products, locations..." value="<?= htmlspecialchars($searchTerm) ?>">
     <button type="submit">Search</button>
   </form>
 </div>

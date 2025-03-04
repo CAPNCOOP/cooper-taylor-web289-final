@@ -35,6 +35,13 @@ if ($user_level == 2) {
   <h2>Edit Profile</h2>
   <form action="process_profile_update.php" method="POST" enctype="multipart/form-data">
     <fieldset>
+      <label for="profile_image">Profile Picture</label>
+      <p><strong>Current:</strong></p>
+      <img src="<?= url_for($user['profile_image']) ?>" height="300" width="300">
+      <input type="file" id="profile_image" name="profile_image" accept="image/png, image/jpeg, image/webp">
+    </fieldset>
+
+    <fieldset>
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
     </fieldset>
@@ -42,12 +49,6 @@ if ($user_level == 2) {
     <fieldset>
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-    </fieldset>
-
-    <fieldset>
-      <label for="profile_image">Profile Picture:</label>
-      <input type="file" id="profile_image" name="profile_image" accept="image/png, image/jpeg, image/webp">
-      <p>Current: <img src="<?= url_for($user['profile_image']) ?>" height="50"></p>
     </fieldset>
 
     <?php if ($user_level == 2): // Vendor-specific fields 

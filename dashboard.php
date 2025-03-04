@@ -64,15 +64,15 @@ if ($table_exists) {
 
 <div id="user-profile">
   <div id="user-card">
-    <h2>Hello, <?= htmlspecialchars($user['username']) ?>!</h2>
+    <h2>Hello, <strong><?= htmlspecialchars($user['username']) ?></strong>!</h2>
     <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="250" width="250">
     <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
     <p><strong>Account Type:</strong> <?= $user_type ?></p>
     <a href="edit_profile.php" class="btn">Edit Profile</a>
   </div>
 
-  <h2>Saved Vendors</h2>
   <div id="saved-vendors">
+    <h2>Saved Vendors</h2>
     <?php if (!empty($favorites)): ?>
       <ul>
         <?php foreach ($favorites as $vendor): ?>

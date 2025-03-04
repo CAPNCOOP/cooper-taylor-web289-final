@@ -4,7 +4,7 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 
 // Get vendor ID from URL
-$vendor_id = $_GET['id'] ?? 0;
+$vendor_id = $_GET['vendor_id'] ?? 0;
 
 // Fetch vendor details & products
 $sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, v.business_email, v.website, v.city, s.state_abbr,
