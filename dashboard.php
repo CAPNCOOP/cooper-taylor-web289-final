@@ -55,31 +55,42 @@ if ($table_exists) {
 }
 ?>
 
-<div id="user-profile">
-  <h2>Hello, <?= htmlspecialchars($user['username']) ?>!</h2>
-  <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="100" width="100">
-  <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-  <p><strong>Account Type:</strong> <?= $user_type ?></p>
-  <a href="edit_profile.php" class="btn">Edit Profile</a>
-</div>
+<?php if (isset($_SESSION['message'])): ?>
+  <div class="message">
+    <p><?= htmlspecialchars($_SESSION['message']) ?></p>
+  </div>
+  <?php unset($_SESSION['message']); ?>
+<?php endif; ?>
 
-<div id="saved-vendors">
+<div id="user-profile">
+  <div id="user-card">
+    <h2>Hello, <?= htmlspecialchars($user['username']) ?>!</h2>
+    <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="250" width="250">
+    <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+    <p><strong>Account Type:</strong> <?= $user_type ?></p>
+    <a href="edit_profile.php" class="btn">Edit Profile</a>
+  </div>
+
   <h2>Saved Vendors</h2>
-  <?php if (!empty($favorites)): ?>
-    <ul>
-      <?php foreach ($favorites as $vendor): ?>
-        <li>
-          <img src="img/upload/users/<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
-            height="100" width="100" alt="Vendor Image">
-          <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
-            <?= htmlspecialchars($vendor['business_name']) ?>
-          </a>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  <?php else: ?>
-    <p>No saved vendors yet.</p>
-  <?php endif; ?>
+  <div id="saved-vendors">
+    <?php if (!empty($favorites)): ?>
+      <ul>
+        <?php foreach ($favorites as $vendor): ?>
+          <li>
+            <img src="img/upload/users/<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
+              height="200" width="200" alt="An Image of a Vendor.">
+            <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
+              <?= htmlspecialchars($vendor['business_name']) ?>
+            </a>
+            <!-- Add the Remove link -->
+            <a href="remove_vendor.php?vendor_id=<?= $vendor['vendor_id'] ?>" class="remove-link">Remove</a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    <?php else: ?>
+      <p>No saved vendors yet.</p>
+    <?php endif; ?>
+  </div>
 </div>
 
 <?php require_once 'private/footer.php'; ?>

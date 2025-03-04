@@ -5,6 +5,9 @@ require_once 'private/header.php';
 ?>
 
 <main>
+
+  <p>Becoming a vendor with us requires the submission of a valid Employer Identification Number (EIN) for verification. Once your EIN has been successfully approved, you will gain access to our platform, allowing you to register for upcoming market dates and showcase your products to our community. We strive to ensure a smooth and efficient approval process, but please allow up to 48 hours for confirmation. This step is essential for maintaining a high standard of service and ensuring all vendors meet our operational requirements.</p>
+
   <form action="private/auth.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="is_vendor" value="1">
 

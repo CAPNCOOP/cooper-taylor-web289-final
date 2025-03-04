@@ -4,11 +4,13 @@
 :root {
   --main-text: 'Playfair Display';
   --secondary-text: 'Montserrat';
-  --main-color: #f2e5d7;
-  --secondary-color: #303a2b;
-  --tertiary-color: #628395;
+  --main-color: #eee4e1;
+  --secondary-color: #073b3a;
+  --tertiary-color: #70a288;
   --light: #f2f2f2;
   --dark: #333;
+  --new: #d4e4bc;
+  --new2: #9d695a;
 }
 
 html {
@@ -420,7 +422,7 @@ div#vendorhead {
 }
 
 #vendor-profile-card {
-  color: var(--light);
+  color: var(--dark);
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -501,19 +503,17 @@ div#vendorhead {
   text-align: center;
 }
 
-.about-us div:nth-last-of-type(1) {
-  margin: 0 auto;
-  width: 80%;
-}
-
 .about-us main section {
+  background: #f2f2f2cc;
+  box-shadow: 0 0 10px var(--dark);
   padding: 1.5rem;
-  width: 75%;
   margin: 0 auto;
+  width: 70%;
 }
 
 .aboutus-item {
   align-content: center;
+  border-bottom: 5px solid var(--dark);
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -521,6 +521,7 @@ div#vendorhead {
 
 .aboutus-item img {
   flex: 1;
+  object-fit: contain;
 }
 
 .aboutus-item:nth-of-type(2) {
@@ -533,17 +534,22 @@ div#vendorhead {
   font: 32px var(--secondary-text);
 }
 
-.about-us div div:last-of-type {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+#contact {
+  background-color: var(--dark);
+  color: var(--light);
+  text-align: left;
   margin: 0;
   padding: 1rem;
 }
 
+.about-us div div:last-of-type h3,
+.about-us div div:last-of-type span {
+  font: 20px var(--secondary-text);
+}
+
 /* User Login */
 
-.login-page {
+.log-in {
   background: url('/img/assets/blueberries.jpg') center / cover no-repeat;
 }
 
@@ -553,8 +559,9 @@ div#vendorhead {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 2rem;
+  margin: 2rem auto;
   padding: 1rem;
+  width: 50%;
 }
 
 .user-login legend {
@@ -642,5 +649,113 @@ div#vendorhead {
 }
 
 .popup-content button:hover {
-  background-color: #ddd;
+  background-color: var(--light);
+}
+
+/* User Dashboard */
+
+#user-profile {
+  color: var(--dark);
+  padding: 1rem;
+  display: flex;
+}
+
+#user-profile h2 {
+  font: 48px var(--secondary-text);
+  margin: 0;
+}
+
+#user-profile h2:last-of-type {
+  font: 24px var(--secondary-text);
+}
+
+#user-card {
+  background-color: var(--tertiary-color);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+#user-card p {
+  font: 24px var(--secondary-text);
+}
+
+#user-card img {
+  border-radius: 100%;
+  box-shadow: 0 0 10px var(--dark);
+  margin-top: 2rem;
+}
+
+.btn {
+  background-color: var(--dark);
+  border-radius: 20px;
+  color: var(--light);
+  font: 14 var(--secondary-text);
+  padding: 1rem;
+  text-align: center;
+  text-decoration: none;
+  width: 120px;
+}
+
+#saved-vendors {
+  display: flex;
+  flex-flow: column wrap;
+  padding: 1rem;
+}
+
+#saved-vendors img {
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+#saved-vendors ul {
+  padding-left: 0;
+}
+
+#saved-vendors li {
+  background-color: var(--light);
+  font: 18px;
+  list-style-type: none;
+  padding: 1rem;
+  margin: 1rem;
+  text-align: center;
+}
+
+#saved-vendors a {
+  color: var(--dark);
+  display: block;
+  text-decoration: none;
+}
+
+#saved-vendors a:last-of-type {
+  background-color: #e74c3c;
+  color: var(--dark);
+}
+
+/* Message styling */
+.message {
+  background-color: #4caf50; /* Green for success */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 18px;
+  left: 50%;
+  opacity: 1;
+  padding: 20px;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  top: 50%;
+  transition: opacity 1s ease-in-out;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+/* Error message styling */
+.message.error {
+  background-color: #e74c3c; /* Red for error */
+}
+
+/* Fade out the message after 3 seconds */
+.message.fade-out {
+  opacity: 0;
 }

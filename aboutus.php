@@ -23,15 +23,15 @@ require_once 'private/header.php';
 
 
 
-      <div>
-        <h3 id="contact">Contact Us</h3>
+      <div id="contact">
+        <h3>Contact Us</h3>
         <div>
           <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25">
           <span>support@blueridgebounty.us</span>
         </div>
         <div>
           <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25">
-          <span>1-258-2689</span>
+          <span>1-828-874-2689</span>
         </div>
       </div>
     </div>

@@ -158,3 +158,13 @@ function showNotification(message, isError = false) {
     }, 500);
   }, 2000);
 }
+
+// Function to fade out the removed vendor message after 3 seconds
+window.onload = function () {
+  let message = document.querySelector('.message');
+  if (message) {
+    setTimeout(function () {
+      message.classList.add('fade-out'); // Add fade-out class to the message
+    }, 1000); // Delay for 3 seconds
+  }
+};
