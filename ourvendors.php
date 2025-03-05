@@ -63,25 +63,27 @@ if ($searchTerm) {
   </form>
 </div>
 
+
 <div id="vendor-list">
   <?php if (!empty($filteredVendors)): ?>
     <?php foreach ($filteredVendors as $vendor): ?>
-      <div class="vendor-card"
-        data-tags="<?php
-                    $tags = array_filter([
-                      $vendor['product_tags'] ?? '',
-                      $vendor['market_weeks'] ?? '',
-                      $vendor['state_abbrs'] ?? '',
-                      $vendor['state_names'] ?? '',
-                      $vendor['cities'] ?? ''
-                    ]);
-                    echo htmlspecialchars(implode(', ', $tags));
-                    ?>"
-        onclick="window.location.href='vendor_profile.php?id=<?= htmlspecialchars($vendor['vendor_id']) ?>'">
-        <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-        <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="200" width="200" alt="Vendor Image">
-        <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
-      </div>
+      <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
+        <div class="vendor-card"
+          data-tags="<?php
+                      $tags = array_filter([
+                        $vendor['product_tags'] ?? '',
+                        $vendor['market_weeks'] ?? '',
+                        $vendor['state_abbrs'] ?? '',
+                        $vendor['state_names'] ?? '',
+                        $vendor['cities'] ?? ''
+                      ]);
+                      echo htmlspecialchars(implode(', ', $tags));
+                      ?>"
+          <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
+          <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="200" width="200" alt="Vendor Image">
+          <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
+        </div>
+      </a>
     <?php endforeach; ?>
   <?php else: ?>
     <p>No results found for "<?php echo htmlspecialchars($searchTerm); ?>"</p>
