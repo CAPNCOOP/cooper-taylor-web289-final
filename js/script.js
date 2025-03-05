@@ -168,3 +168,25 @@ window.onload = function () {
     }, 1000); // Delay for 3 seconds
   }
 };
+
+// Image Preview
+// Get the file input and image preview elements
+document.getElementById('profile-pic').addEventListener('change', function (event) {
+  const file = event.target.files[0];
+  const preview = document.getElementById('image-preview');
+  const fileName = document.getElementById('file-name');
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+      fileName.textContent = file.name; // Show the file name after selection
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = ''; // Clear the preview if no file is selected
+    fileName.textContent = 'No file chosen'; // Reset file name text
+  }
+});

@@ -627,23 +627,34 @@ div#vendorhead {
   padding: 1rem;
 }
 
-.user-login button:first-of-type {
+#login {
   background-color: var(--tertiary-color);
   border-radius: 5px;
   color: var(--light);
+  cursor: pointer;
+  font: 16px var(--secondary-text);
   margin: 0 auto;
-  transition: 0.2s ease-in-out;
+  padding: 5px;
+  transition: all 0.1s ease-in-out;
   width: 150px;
 }
 
-.user-login button:first-of-type:hover {
+#login:hover {
   background-color: var(--light);
   color: var(--dark);
 }
 
-.user-login a {
-  color: var(--tertiary-color);
+#openSignup {
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  color: var(--light);
   text-decoration: none;
+  padding: 5px 10px;
+  transition: 0.1s ease-in-out;
+}
+
+#openSignup:hover {
+  background-color: var(--tertiary-color);
 }
 
 .hidden {
@@ -651,26 +662,171 @@ div#vendorhead {
 }
 
 .popup {
-  background: white;
+  background: var(--light);
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   left: 50%;
   padding: 20px;
   position: fixed;
-  top: 50%;
   text-align: center;
+  top: 50%;
   transform: translate(-50%, -50%);
 }
 
 .popup-content button {
+  background-color: var(--tertiary-color);
   border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px var(--dark);
+  color: var(--light);
   cursor: pointer;
+  font: 18px var(--secondary-text);
   margin: 10px;
-  padding: 10px 15px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
 }
 
 .popup-content button:hover {
   background-color: var(--light);
+  color: var(--dark);
+}
+
+/* User / Vendor Sign Up */
+
+.sign-up main,
+.vendor-signup main {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.sign-up form {
+  background-color: var(--tertiary-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.vendor-signup form {
+  background-color: var(--tertiary-color);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.sign-up fieldset,
+.vendor-signup fieldset {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.sign-up legend {
+  font: 48px var(--main-text);
+  margin: 1rem;
+  text-align: center;
+}
+
+.vendor-signup h2 {
+  font: 48px var(--main-text);
+  margin: 1rem;
+  text-align: center;
+}
+
+.vendor-signup p {
+  font: 18px var(--secondary-text);
+}
+
+#img-preview {
+  border-radius: 0;
+  display: none;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.sign-up label,
+.vendor-signup label {
+  font: 32px var(--secondary-text);
+  text-align: center;
+}
+
+.sign-up input {
+  border: 0;
+  border-radius: 5px;
+  height: 30px;
+  width: 400px;
+  padding: 10px;
+}
+
+.vendor-signup input {
+  border: 0;
+  border-radius: 5px;
+  height: 30px;
+  width: 200px;
+  padding: 10px;
+}
+
+.sign-up button,
+.vendor-signup button {
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px var(--dark);
+  font: 18px var(--secondary-text);
+  margin: 1rem;
+  padding: 0.5rem;
+}
+
+.vendor-signup div {
+  padding: 1rem;
+}
+
+/* Styling the custom file input button */
+.file-input {
+  display: none; /* Hide the default file input */
+}
+
+.custom-file-label {
+  background-color: #4caf50; /* Green background */
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px 20px;
+}
+
+.custom-file-label:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.file-preview-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.image-preview {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+#file-name {
+  color: #333;
+  display: block;
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+/* File input label when file is chosen */
+.file-input:valid + .file-preview-container #file-name {
+  color: #4caf50;
+  font-style: normal;
+  font-weight: bold;
 }
 
 /* User Dashboard */
@@ -692,15 +848,19 @@ div#vendorhead {
 
 #user-card {
   background-color: var(--tertiary-color);
+  border-radius: 5px;
+  box-shadow: 0 2px 5px var(--dark);
   display: inline-flex;
   flex: 1;
   flex-direction: column;
+  height: 600px;
   padding: 2rem;
-  height: auto;
 }
 
 #user-card p {
   font: 24px var(--secondary-text);
+  margin: 0;
+  padding: 1rem;
 }
 
 #user-card img {
@@ -718,7 +878,7 @@ div#vendorhead {
   text-align: center;
   text-decoration: none;
   width: 120px;
-  transition: 0.3s ease-in-out;
+  transition: 0.2s ease-in-out;
 }
 
 .btn:hover {
@@ -734,6 +894,10 @@ div#vendorhead {
   padding: 1rem;
 }
 
+#saved-vendors h2 {
+  margin: 0 auto;
+}
+
 #saved-vendors img {
   border-radius: 5px;
   margin: 0 auto;
@@ -744,8 +908,9 @@ div#vendorhead {
 }
 
 #saved-vendors li {
-  background-color: var(--light);
+  background: linear-gradient(to bottom, #70a288 0%, #073b3a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   border-radius: 5px;
+  box-shadow: 0 2px 5px var(--dark);
   display: inline-block;
   font: 18px;
   list-style-type: none;

@@ -10,42 +10,43 @@ ob_end_flush(); // End output buffering
   <form action="private/auth.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="register" value="0">
 
-    <fieldset>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-    </fieldset>
+    <div>
+      <legend>User Sign up</legend>
+      <fieldset>
+        <input type="text" id="username" name="username" required aria-label="Username" placeholder="Username">
+      </fieldset>
 
-    <fieldset>
-      <label for="fname">First Name:</label>
-      <input type="text" id="fname" name="fname" required>
-    </fieldset>
+      <fieldset>
+        <input type="text" id="fname" name="fname" required aria-label="First Name" placeholder="First Name">
+      </fieldset>
 
-    <fieldset>
-      <label for="lname">Last Name:</label>
-      <input type="text" id="lname" name="lname" required>
-    </fieldset>
+      <fieldset>
+        <input type="text" id="lname" name="lname" required aria-label="Last Name" placeholder="Last Name">
+      </fieldset>
 
-    <fieldset>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-    </fieldset>
+      <fieldset>
+        <input type="email" id="email" name="email" required aria-label="Email Address" placeholder="Email Address">
+      </fieldset>
 
-    <fieldset>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-    </fieldset>
+      <fieldset>
+        <input type="password" id="password" name="password" required aria-label="Password" placeholder="Password">
+      </fieldset>
 
-    <fieldset>
-      <label for="confirm-pass">Confirm Password:</label>
-      <input type="password" id="confirm-pass" name="confirm-pass" required>
-    </fieldset>
+      <fieldset>
+        <input type="password" id="confirm-pass" name="confirm-pass" required aria-label="Confirm Password" placeholder="Confirm Password">
+      </fieldset>
+    </div>
 
-    <fieldset>
-      <label for="profile-pic">Profile Picture:</label>
-      <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" required>
-    </fieldset>
+    <div>
+      <fieldset>
+        <label for="profile-pic">Profile Picture:</label>
+        <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" required aria-label="Profile Picture">
+        <img id="image-preview" src="" alt="Image Preview">
+      </fieldset>
+      <button type="submit" name="register" value="1">Sign Up</button>
+    </div>
 
-    <button type="submit" name="register" value="1">Sign Up</button>
   </form>
+</main>
 
-  <?php require_once 'private/footer.php'; ?>
+<?php require_once 'private/footer.php'; ?>

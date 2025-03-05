@@ -45,7 +45,7 @@ require_once 'private/header.php';
       <input type="password" id="login-password" name="password" placeholder="Password" aria-label="Password" required>
     </fieldset>
 
-    <button type="submit" name="login" value="1">Log In</button>
+    <button type="submit" name="login" value="1" id="login">Log In</button>
   </form>
 </main>
 
