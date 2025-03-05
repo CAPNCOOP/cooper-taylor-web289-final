@@ -137,6 +137,26 @@ if ($user_level == 2) {
 $_SESSION['username'] = $username;
 $_SESSION['profile_image'] = $profile_image; // Correctly store updated profile image
 
-// Redirect Back to Dashboard
-header("Location: dashboard.php?success=profile_updated");
+// Assuming user level is stored in the session after login
+if (isset($_SESSION['user_level_id'])) {
+  switch ($_SESSION['user_level_id']) {
+    case 1: // Regular user
+      header("Location: dashboard.php?success=profile_updated");
+      break;
+    case 2: // Vendor
+      header("Location: vendor_dash.php?success=profile_updated");
+      break;
+    case 3: // Admin
+      header("Location: admin_dash.php?success=profile_updated");
+      break;
+    case 4: // Super Admin
+      header("Location: superadmin_dash.php?success=profile_updated");
+      break;
+    default: // Fallback if user level is unknown
+      header("Location: index.php?error=invalid_user_level_id");
+  }
+} else {
+  header("Location: login.php?error=session_expired");
+}
+
 exit;

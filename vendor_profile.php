@@ -7,15 +7,18 @@ require_once 'private/header.php';
 $vendor_id = $_GET['vendor_id'] ?? 0;
 
 // Fetch vendor details & products
-$sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, v.business_email, v.website, v.city, s.state_abbr,
+$sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, v.description, v.business_email, v.website, v.city, s.state_abbr,
+               u.first_name, u.last_name, 
                pi.file_path AS profile_image, 
-               p.product_id, p.name AS product_name, p.price, p.description, pimg.file_path AS product_image
+               p.product_id, p.name AS product_name, p.price, p.description AS product_description, pimg.file_path AS product_image
         FROM vendor v
+        LEFT JOIN users u ON v.user_id = u.user_id
         LEFT JOIN profile_image pi ON v.user_id = pi.user_id
         LEFT JOIN product p ON v.vendor_id = p.vendor_id
         LEFT JOIN product_image pimg ON p.product_id = pimg.product_id
         LEFT JOIN state s ON v.state_id = s.state_id
         WHERE v.vendor_id = ?";
+
 
 
 $stmt = $db->prepare($sql);
@@ -47,7 +50,7 @@ $vendor = $vendor_data[0];
 <div id="vendor-profile-container">
   <div id="vendor-profile-card">
     <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-    <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="A Vendor Image.">
+    <img src="<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="A Vendor Image.">
     <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
     <p><strong>Contact:</strong> <?php echo htmlspecialchars($vendor['business_email']); ?></p>
     <?php if ($vendor['website']): ?>
@@ -92,6 +95,17 @@ $vendor = $vendor_data[0];
     </ul>
   </div>
 </div>
+
+<!--  Testimonial Section -->
+<?php if (!empty($vendor['description'])): ?>
+  <div class="vendor-testimonial">
+    <blockquote>
+      “<?= htmlspecialchars($vendor['description']); ?>”
+    </blockquote>
+    <p class="testimonial-author">— <?= htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?>, <?= htmlspecialchars($vendor['business_name']); ?></p>
+  </div>
+<?php endif; ?>
+
 
 <h2>Products</h2>
 <div class="product-list">

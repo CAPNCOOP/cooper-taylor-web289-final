@@ -80,7 +80,7 @@ if ($searchTerm) {
                       echo htmlspecialchars(implode(', ', $tags));
                       ?>"
           <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-          <img src="img/upload/users/<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="200" width="200" alt="Vendor Image">
+          <img src="<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="200" width="200" alt="Vendor Image">
           <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
         </div>
       </a>

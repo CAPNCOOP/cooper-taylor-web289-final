@@ -106,64 +106,70 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h2>Manage Products</h2>
-<h3>Business: <?= htmlspecialchars($vendor['business_name']); ?></h3>
+<p>Business: <?= htmlspecialchars($vendor['business_name']); ?></span>
 
-<!-- Success Message -->
-<?php if (isset($_GET['success']) && $_GET['success'] === 'product_added'): ?>
-  <p class="success-message">✅ Product Added Successfully!</p>
+  <!-- Success Message -->
+  <?php if (isset($_GET['success']) && $_GET['success'] === 'product_added'): ?>
+<p class="success-message">✅ Product Added Successfully!</p>
 <?php endif; ?>
 
 <!-- Product Upload Form -->
-<h2>Add New Product</h2>
 <form action="manage_products.php" method="POST" enctype="multipart/form-data">
-  <fieldset>
-    <label for="product_name">Product Name:</label>
-    <input type="text" id="product_name" name="product_name" spellcheck="true" required>
-  </fieldset>
+  <div>
+    <legend>Add New Product</legend>
+    <fieldset>
+      <label for="product_name">Product Name:</label>
+      <input type="text" id="product_name" name="product_name" spellcheck="true" required>
+    </fieldset>
 
-  <fieldset>
-    <label for="price">Price ($):</label>
-    <input type="number" step="0.01" id="price" name="price" required>
-  </fieldset>
+    <fieldset>
+      <label for="price">Price ($):</label>
+      <input type="number" step="0.01" id="price" name="price" required>
+    </fieldset>
 
-  <fieldset>
-    <label for="amount_id">Select Amount:</label>
-    <select id="amount_id" name="amount_id" required>
-      <?php foreach ($amounts as $amount): ?>
-        <option value="<?= $amount['amount_id']; ?>"><?= htmlspecialchars($amount['amount_name']); ?></option>
-      <?php endforeach; ?>
-    </select>
-  </fieldset>
+    <fieldset>
+      <label for="amount_id">Select Amount:</label>
+      <select id="amount_id" name="amount_id" required>
+        <?php foreach ($amounts as $amount): ?>
+          <option value="<?= $amount['amount_id']; ?>"><?= htmlspecialchars($amount['amount_name']); ?></option>
+        <?php endforeach; ?>
+      </select>
+    </fieldset>
 
-  <fieldset>
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" spellcheck="true" required></textarea>
-  </fieldset>
+    <fieldset>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" spellcheck="true" required></textarea>
+    </fieldset>
 
-  <fieldset>
-    <label for="custom_tags">Tags (comma-separated):</label>
-    <input type="text" id="custom_tags" name="custom_tags" placeholder="e.g., fresh, organic, handmade" spellcheck="true">
-  </fieldset>
+    <fieldset>
+      <label for="custom_tags">Tags (comma-separated):</label>
+      <input type="text" id="custom_tags" name="custom_tags" placeholder="e.g., fresh, organic, handmade" spellcheck="true">
+    </fieldset>
+  </div>
 
-  <fieldset>
-    <label for="product_image">Product Image:</label>
-    <input type="file" id="product_image" name="product_image" accept="image/png, image/jpeg, image/webp" required>
-  </fieldset>
+  <div>
+    <fieldset>
+      <label for="product_image">Product Image:</label>
+      <input type="file" id="product_image" name="product_image" accept="image/png, image/jpeg, image/webp" required>
+    </fieldset>
+    <button type="submit">Add Product</button>
+  </div>
 
-  <button type="submit">Add Product</button>
 </form>
 
 <div class="product-list">
   <?php if (!empty($products)): ?>
     <?php foreach ($products as $product): ?>
       <div class="product-card">
-        <img src="img/upload/products/<?= htmlspecialchars($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image">
         <h3><?= htmlspecialchars($product['name']); ?></h3>
-        <p>Price: $<?= number_format($product['price'], 2); ?></p>
+        <img src="img/upload/products/<?= htmlspecialchars($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image">
+        <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p>
+        <p><strong>Per:</strong> <?= htmlspecialchars($product['amount_name'] ?? 'unit'); ?></p> <!-- New Line for Amount Offered -->
         <p><?= htmlspecialchars($product['description']); ?></p>
-        <a href="edit_product.php?id=<?= $product['product_id']; ?>" class="edit-btn" ;">⬆️ Update</a>
-        <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">❌ Delete</a>
+        <a href="edit_product.php?id=<?= $product['product_id']; ?>" class="edit-btn">Update</a>
+        <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
       </div>
+
     <?php endforeach; ?>
   <?php else: ?>
     <p>No products added yet.</p>
