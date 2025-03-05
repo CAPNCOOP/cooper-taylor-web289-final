@@ -10,16 +10,17 @@ $vendor_id = $_GET['vendor_id'] ?? 0;
 $sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, v.description, v.business_email, v.website, v.city, s.state_abbr,
                u.first_name, u.last_name, 
                pi.file_path AS profile_image, 
-               p.product_id, p.name AS product_name, p.price, p.description AS product_description, pimg.file_path AS product_image
+               p.product_id, p.name AS product_name, p.price, p.description AS product_description, 
+               a.amount_name, 
+               pimg.file_path AS product_image
         FROM vendor v
         LEFT JOIN users u ON v.user_id = u.user_id
         LEFT JOIN profile_image pi ON v.user_id = pi.user_id
         LEFT JOIN product p ON v.vendor_id = p.vendor_id
         LEFT JOIN product_image pimg ON p.product_id = pimg.product_id
+        LEFT JOIN amount_offered a ON p.amount_id = a.amount_id  -- ✅ Now joins amount_offered
         LEFT JOIN state s ON v.state_id = s.state_id
         WHERE v.vendor_id = ?";
-
-
 
 $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
@@ -100,7 +101,7 @@ $vendor = $vendor_data[0];
 <?php if (!empty($vendor['description'])): ?>
   <div class="vendor-testimonial">
     <blockquote>
-      “<?= htmlspecialchars($vendor['description']); ?>”
+      <?= htmlspecialchars($vendor['description']); ?>
     </blockquote>
     <p class="testimonial-author">— <?= htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?>, <?= htmlspecialchars($vendor['business_name']); ?></p>
   </div>
@@ -110,15 +111,22 @@ $vendor = $vendor_data[0];
 <h2>Products</h2>
 <div class="product-list">
   <?php foreach ($vendor_data as $product): ?>
-    <?php if ($product['product_name']): ?>
+    <?php if (!empty($product['product_name'])): ?>
       <div class="product-card">
-        <img src="img/upload/products/<?php echo htmlspecialchars($product['product_image'] ?? 'default_product.jpg'); ?>" height="250" width="250" alt="Product Image">
-        <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
-        <p>Price: $<?php echo number_format($product['price'], 2); ?></p>
-        <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
+        <?php
+        // Ensure a fallback image if no product image exists
+        $product_image = !empty($product['product_image']) ? htmlspecialchars($product['product_image']) : 'img/upload/products/default_product.jpg';
+        ?>
+
+        <img src="<?= $product_image; ?>" height="250" width="250" alt="Product Image">
+        <h3><?= htmlspecialchars($product['product_name']); ?></h3>
+        <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p> <!-- Price on its own line -->
+        <p><strong>Per:</strong> <?= htmlspecialchars($product['amount_name'] ?? 'unit'); ?></p> <!-- Amount on separate line -->
+        <p><?= nl2br(htmlspecialchars($product['product_description'])); ?></p> <!-- Product description -->
       </div>
     <?php endif; ?>
   <?php endforeach; ?>
 </div>
+
 
 <?php require_once 'private/footer.php'; ?>

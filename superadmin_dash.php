@@ -13,7 +13,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 4) { // 4 = Su
 $sql = "SELECT u.user_id, u.first_name, u.last_name, u.email, u.user_level_id, u.is_active 
         FROM users u 
         WHERE u.user_level_id != 4"; // Exclude super admins
-$stmt = $db->query($sql);
+$stmt = $db->prepare($sql);
+$stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch all vendors (user_level_id = 2)
@@ -21,27 +22,69 @@ $sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email,
         FROM vendor v
         JOIN users u ON v.user_id = u.user_id
         WHERE u.user_level_id = 2"; // Only vendors
-$stmt = $db->query($sql);
+$stmt = $db->prepare($sql);
+$stmt->execute();
 $vendor_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch vendor RSVPs for specific weeks
-$sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email, vm.status AS rsvp_status,
-               mw.week_start, mw.week_end
-        FROM vendor v
-        JOIN users u ON v.user_id = u.user_id
-        JOIN vendor_market vm ON v.vendor_id = vm.vendor_id
+// Fetch vendor RSVPs grouped by vendor
+$sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, vm.status AS rsvp_status
+        FROM vendor_market vm
         JOIN market_week mw ON vm.week_id = mw.week_id
-        WHERE u.user_level_id = 2 AND mw.week_start >= CURDATE()
+        WHERE mw.week_start >= CURDATE()
         ORDER BY mw.week_start ASC";
-$stmt = $db->query($sql);
+$stmt = $db->prepare($sql);
+$stmt->execute();
 $vendor_rsvps = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch market weeks
-$sql = "SELECT mw.week_id, mw.week_start, mw.week_end, mw.confirmation_deadline 
-        FROM market_week mw
+// Organize RSVPs per vendor for easy lookup
+$vendor_rsvp_map = [];
+foreach ($vendor_rsvps as $rsvp) {
+  $vendor_id = $rsvp['vendor_id'];
+  if (!isset($vendor_rsvp_map[$vendor_id])) {
+    $vendor_rsvp_map[$vendor_id] = [];
+  }
+  $vendor_rsvp_map[$vendor_id][] = [
+    'week_id' => $rsvp['week_id'],
+    'week_start' => $rsvp['week_start'],
+    'week_end' => $rsvp['week_end'],
+    'rsvp_status' => $rsvp['rsvp_status']
+  ];
+}
+
+// Fetch available market weeks
+$sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end
+        FROM vendor_market vm
+        JOIN market_week mw ON vm.week_id = mw.week_id
+        WHERE vm.status = 'confirmed'
         ORDER BY mw.week_start ASC";
-$stmt = $db->query($sql);
-$market_weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$vendor_market_weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Organize market weeks per vendor
+$market_weeks_map = [];
+foreach ($vendor_market_weeks as $week) {
+  $market_weeks_map[$week['vendor_id']][] = [
+    'week_id' => $week['week_id'],
+    'week_start' => $week['week_start'],
+    'week_end' => $week['week_end']
+  ];
+}
+
+// Fetch vendor RSVPs grouped by vendor with available market weeks
+$sql = "SELECT vm.vendor_id, vm.week_id, vm.status AS rsvp_status
+        FROM vendor_market vm
+        JOIN market_week mw ON vm.week_id = mw.week_id
+        WHERE mw.week_start >= CURDATE()
+        ORDER BY mw.week_start ASC";
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$vendor_rsvp_map = [];
+foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
+  $vendor_rsvp_map[$rsvp['vendor_id']][$rsvp['week_id']] = $rsvp['rsvp_status'];
+}
+
+
 ?>
 
 <main>
@@ -93,18 +136,34 @@ $market_weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($vendor_rsvps as $vendor): ?>
+        <?php foreach ($vendor_list as $vendor): ?>
           <tr>
             <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
             <td><?= htmlspecialchars($vendor['email']) ?></td>
-            <td><?= htmlspecialchars($vendor['week_start'] . " - " . $vendor['week_end']) ?></td>
             <td>
-              <form method="POST" action="rsvp_action.php">
+              <form method="POST" action="update_rsvp.php">
                 <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
+                <select name="week_id" onchange="this.form.submit()">
+                  <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
+                    <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
+                      <option value="<?= $week['week_id'] ?>">
+                        <?= htmlspecialchars($week['week_start'] . " - " . $week['week_end']) ?>
+                      </option>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <option value="">No Confirmed Weeks</option>
+                  <?php endif; ?>
+                </select>
+              </form>
+            </td>
+            <td>
+              <form method="POST" action="update_rsvp.php">
+                <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
+                <input type="hidden" name="week_id" value="<?= $week['week_id'] ?? '' ?>">
                 <select name="status" onchange="this.form.submit()">
-                  <option value="planned" <?= $vendor['rsvp_status'] == 'planned' ? 'selected' : '' ?>>Planned</option>
-                  <option value="confirmed" <?= $vendor['rsvp_status'] == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
-                  <option value="canceled" <?= $vendor['rsvp_status'] == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+                  <option value="planned" <?= ($vendor_rsvp_map[$vendor['vendor_id']][$week['week_id']] ?? '') == 'planned' ? 'selected' : '' ?>>Planned</option>
+                  <option value="confirmed" <?= ($vendor_rsvp_map[$vendor['vendor_id']][$week['week_id']] ?? '') == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                  <option value="canceled" <?= ($vendor_rsvp_map[$vendor['vendor_id']][$week['week_id']] ?? '') == 'canceled' ? 'selected' : '' ?>>Canceled</option>
                 </select>
               </form>
             </td>
@@ -116,6 +175,7 @@ $market_weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </tbody>
     </table>
   </section>
+
 
   <!-- Manage Admins Section -->
   <section>

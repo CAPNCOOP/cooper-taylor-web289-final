@@ -68,7 +68,7 @@ if ($table_exists) {
     <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="250" width="250">
     <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
     <p><strong>Account Type:</strong> <?= $user_type ?></p>
-    <a href="edit_profile.php" class="btn">Edit Profile</a>
+    <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon.">Edit Details</a>
   </div>
 
   <div id="saved-vendors">
@@ -77,7 +77,7 @@ if ($table_exists) {
       <ul>
         <?php foreach ($favorites as $vendor): ?>
           <li>
-            <img src="img/upload/users/<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
+            <img src="<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
               height="200" width="200" alt="An Image of a Vendor.">
             <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
               <?= htmlspecialchars($vendor['business_name']) ?>

@@ -47,7 +47,7 @@ $rsvp_map = array_column($rsvp_status, 'status', 'week_id');
 ?>
 
 <body>
-  <h1>RSVP for Upcoming Markets</h1>
+  <h2>RSVP for Upcoming Markets</h2>
 
   <?php if (empty($weeks)): ?>
     <p>No upcoming markets available.</p>

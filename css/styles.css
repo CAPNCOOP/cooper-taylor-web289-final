@@ -497,7 +497,8 @@ div#vendorhead {
 }
 /* Vendor Profile */
 
-#vendor-profile-container {
+#vendor-profile-container,
+#user-profile {
   background-color: var(--light);
   border-radius: 5px;
   display: flex;
@@ -524,8 +525,27 @@ div#vendorhead {
   text-decoration: none;
 }
 
+#vendor-profile-card p {
+  font: 18px var(--secondary-text);
+}
+
 #vendor-profile-card a:hover {
   color: var(--light);
+}
+
+.favorite-btn {
+  background-color: var(--main-color);
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  font-size: 20px;
+  height: 50px;
+  width: 50px;
+  transition: all 0.3sec ease-in-out;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
 }
 
 #vendor-upcoming-markets {
@@ -542,9 +562,8 @@ div#vendorhead {
 }
 
 #vendor-profile-card img {
-  border: 5px solid var(--main-color);
+  border: 5px solid var(--secondary-color);
   border-radius: 100%;
-  box-shadow: 0 0 10px var(--dark);
   margin: 0 auto;
 }
 
@@ -553,7 +572,7 @@ div#vendorhead {
   border-radius: 8px;
   font-style: italic;
   margin: 30px auto;
-  max-width: 1000px;
+  max-width: 1200px;
   padding: 15px;
   text-align: center;
 }
@@ -629,7 +648,6 @@ div#vendorhead {
 
 .about-us main section {
   background: #f2f2f2cc;
-  box-shadow: 0 0 10px var(--dark);
   padding: 1.5rem;
   margin: 0 auto;
   width: 70%;
@@ -934,12 +952,6 @@ div#vendorhead {
 
 /* User Dashboard */
 
-#user-profile {
-  color: var(--dark);
-  padding: 1rem;
-  display: flex;
-}
-
 #user-profile h2 {
   font: 48px var(--secondary-text);
   margin: 0;
@@ -950,47 +962,53 @@ div#vendorhead {
 }
 
 #user-card {
-  background-color: var(--tertiary-color);
-  border-radius: 5px;
-  box-shadow: 0 2px 5px var(--dark);
+  color: var(--dark);
   display: inline-flex;
   flex: 1;
   flex-direction: column;
-  height: 600px;
-  padding: 2rem;
+  padding: 1rem;
+  justify-content: center;
+  background-color: var(--light);
+  justify-content: flex-start !important;
+  row-gap: 1rem;
+  height: 300px;
 }
 
 #user-card p {
   font: 24px var(--secondary-text);
   margin: 0;
-  padding: 1rem;
+  padding: 0;
 }
 
-#user-card img {
+#user-card img:nth-of-type(1) {
   border-radius: 100%;
-  box-shadow: 0 0 10px var(--dark);
-  margin-top: 2rem;
 }
 
 .btn {
-  background-color: var(--dark);
-  border-radius: 10px;
-  color: var(--light);
+  align-items: center;
+  background: none !important;
+  color: var(--dark);
+  display: flex;
   font: 14 var(--secondary-text);
+  gap: 0.5rem;
+  justify-content: center;
   padding: 0.75rem;
-  text-align: center;
+  text-align: left;
   text-decoration: none;
   width: 120px;
   transition: 0.2s ease-in-out;
 }
 
+.btn img {
+  border-radius: 0 !important;
+}
+
 .btn:hover {
-  background-color: var(--light);
-  box-shadow: 0 0 10px var(--dark);
-  color: var(--dark);
+  opacity: 0.7;
 }
 
 #saved-vendors {
+  background-color: var(--main-color);
   display: flex;
   flex: 2;
   flex-flow: row wrap;
@@ -1011,17 +1029,23 @@ div#vendorhead {
 }
 
 #saved-vendors li {
-  background: linear-gradient(to bottom, #70a288 0%, #073b3a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background-color: var(--light);
   border-radius: 5px;
-  box-shadow: 0 2px 5px var(--dark);
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  justify-items: center;
   font: 18px;
+  height: 350px;
   list-style-type: none;
-  padding: 1rem;
   margin: 1rem;
+  padding: 1rem;
   text-align: center;
-  height: auto;
+  transition: 0.1s ease-in-out;
   width: 300px;
+}
+
+#saved-vendors li:hover {
+  transform: scale(1.05);
 }
 
 #saved-vendors a {
@@ -1033,15 +1057,10 @@ div#vendorhead {
   text-decoration: none;
 }
 
-#saved-vendors a:first-of-type {
-  background-color: var(--tertiary-color);
-  color: var(--dark);
-  transition: 0.2s ease-in-out;
-}
-
+#saved-vendors a:first-of-type,
 #saved-vendors a:last-of-type {
-  background-color: #c55c50;
-  color: var(--dark);
+  background-color: #333333cc;
+  color: var(--light);
   transition: 0.2s ease-in-out;
 }
 
@@ -1224,9 +1243,62 @@ div#vendorhead {
 }
 
 .manage-products button {
-  background-color: var(--tertiary-color);
+  background-color: var(--dark);
   border: none;
   border-radius: 5px;
+  color: var(--light);
   font: 18px var(--secondary-text);
+  padding: 0.5rem;
+}
+
+/* Vendor Market RSVP */
+
+.market-rsvp h2 {
+  color: var(--dark);
+  font: 48px var(--main-text);
+  text-align: center;
+}
+
+.market-rsvp table {
+  background-color: var(--light);
+  border-spacing: 0;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.market-rsvp th {
+  background-color: var(--dark);
+  color: var(--light);
+  padding: 1rem;
+}
+
+.market-rsvp td {
+  border: 1px solid var(--dark);
+  padding: 1rem;
+}
+
+/* Admin / Super Admin Dash */
+
+.admin-dashboard main,
+.super-admin-dashboard main {
+  margin: 1rem;
+}
+
+.admin-dashboard table,
+.super-admin-dashboard table {
+  background-color: var(--light);
+  border-spacing: 0;
+}
+
+.admin-dashboard td,
+.super-admin-dashboard td {
+  border: 1px solid var(--dark);
+  padding: 0.5rem;
+}
+
+.admin-dashboard th,
+.super-admin-dashboard th {
+  background-color: var(--dark);
+  color: var(--light);
   padding: 0.5rem;
 }

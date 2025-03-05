@@ -39,7 +39,7 @@ $profile_image = !empty($vendor['profile_image']) ? $vendor['profile_image'] : "
     <h2><?php echo htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?></h2>
     <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Vendor Profile Picture" height="250" width="250">
     <span>Business: <?php echo htmlspecialchars($vendor['business_name']); ?></span>
-    <a href="edit_profile.php" class="btn"><img src="img/assets/edit.png" alt="An edit icon." height="50" width="50"></a>
+    <a href="edit_profile.php" class="btn"><img src="img/assets/edit.png" alt="An edit icon." height="40" width="40">Edit Details</a>
   </div>
 
   <div>
