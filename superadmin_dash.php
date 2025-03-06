@@ -18,10 +18,11 @@ $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch all vendors (user_level_id = 2)
-$sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email, u.is_active, v.vendor_status
+$sql = "SELECT v.vendor_id, v.business_name, u.user_id, u.first_name, u.last_name, u.email, u.is_active
         FROM vendor v
         JOIN users u ON v.user_id = u.user_id
         WHERE u.user_level_id = 2";
+
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $vendor_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -198,18 +199,17 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
               </form>
             </td>
 
-            <!-- Status Column -->
-            <td><?= ($vendor['vendor_status'] === 'active') ? 'Active' : 'Inactive' ?></td>
 
+            <!-- Activate/Deactivate Action -->
+            <!-- Status Column -->
+            <td><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
 
             <!-- Activate/Deactivate Action -->
             <td>
               <?php
-              $vendor_id = $vendor['vendor_id'];
-              $vendor_action = ($vendor['vendor_status'] === 'active') ? 'deactivate' : 'activate';
-              $vendor_action = ($vendor_status === 'active') ? 'deactivate' : 'activate';
-              $button_class = ($vendor_status === 'active') ? 'btn btn-danger' : 'btn btn-success';
-              $button_text = ($vendor_status === 'active') ? 'Deactivate' : 'Activate';
+              $vendor_action = $vendor['is_active'] ? 'deactivate' : 'activate';
+              $button_class = $vendor['is_active'] ? 'btn btn-danger' : 'btn btn-success';
+              $button_text = $vendor['is_active'] ? 'Deactivate' : 'Activate';
               ?>
               <a href="toggle_user.php?id=<?= htmlspecialchars($vendor['user_id']) ?>&action=<?= htmlspecialchars($vendor_action) ?>"
                 class="<?= htmlspecialchars($button_class) ?>">

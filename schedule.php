@@ -24,7 +24,7 @@ $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <table>
       <thead>
         <tr>
-          <th>Market Date</th> <!-- This will now be the Saturday of the week -->
+          <th>Market Date</th>
           <th>Vendors Attending</th>
         </tr>
       </thead>
