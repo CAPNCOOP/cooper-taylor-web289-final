@@ -89,6 +89,8 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
 <main>
   <h2>Welcome, Admin</h2>
 
+  <div id="notification" class="hidden"></div>
+
   <!-- Manage Users Section -->
   <section>
     <h3>Manage Users</h3>
@@ -166,6 +168,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
                 </select>
               </form>
             </td>
+
             <td>
               <a href="toggle_vendor.php?id=<?= $vendor['vendor_id'] ?>&action=deactivate">Deactivate</a>
             </td>

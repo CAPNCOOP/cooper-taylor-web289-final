@@ -1279,6 +1279,15 @@ div#vendorhead {
 
 /* Admin / Super Admin Dash */
 
+.notification {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+}
+
 .admin-dashboard main,
 .super-admin-dashboard main {
   margin: 1rem;
@@ -1301,4 +1310,11 @@ div#vendorhead {
   background-color: var(--dark);
   color: var(--light);
   padding: 0.5rem;
+}
+
+.admin-dashboard table td a,
+.super-admin-dashboard table td a {
+  background-color: var(--dark) !important;
+  color: var(--light) !important;
+  text-decoration: none;
 }

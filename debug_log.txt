@@ -1,0 +1,21 @@
+Array
+(
+    [vendor_id] => 17
+    [week_id] => 2
+)
+Array
+(
+    [vendor_id] => 17
+    [week_id] => 2
+)
+Array
+(
+    [vendor_id] => 17
+    [week_id] => 2
+)
+Array
+(
+    [vendor_id] => 17
+    [week_id] => 2
+    [status] => confirmed
+)

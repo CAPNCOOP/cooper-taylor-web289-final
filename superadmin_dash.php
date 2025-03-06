@@ -18,13 +18,14 @@ $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch all vendors (user_level_id = 2)
-$sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email, v.vendor_status
+$sql = "SELECT v.vendor_id, v.business_name, u.first_name, u.last_name, u.email, u.is_active, v.vendor_status
         FROM vendor v
         JOIN users u ON v.user_id = u.user_id
-        WHERE u.user_level_id = 2"; // Only vendors
+        WHERE u.user_level_id = 2";
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $vendor_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Fetch vendor RSVPs grouped by vendor
 $sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, vm.status AS rsvp_status
@@ -72,7 +73,7 @@ foreach ($vendor_market_weeks as $week) {
 }
 
 // Fetch vendor RSVPs grouped by vendor with available market weeks
-$sql = "SELECT vm.vendor_id, vm.week_id, vm.status AS rsvp_status
+$sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, vm.status AS rsvp_status
         FROM vendor_market vm
         JOIN market_week mw ON vm.week_id = mw.week_id
         WHERE mw.week_start >= CURDATE()
@@ -90,6 +91,13 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
 <main>
   <h2>Welcome, Super Admin</h2>
 
+  <?php if (isset($_GET['message'])): ?>
+    <div class="notification">
+      <?= htmlspecialchars($_GET['message']) ?>
+    </div>
+  <?php endif; ?>
+
+  <div id="notification" class="hidden"></div>
   <!-- Manage Users Section -->
   <section>
     <h3>Manage Users</h3>
@@ -113,12 +121,16 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
               <td>Member</td>
               <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
               <td>
-                <a href="toggle_user.php?id=<?= $user['user_id'] ?>&action=deactivate" class="btn btn-danger">Deactivate</a>
+                <a href="toggle_user.php?id=<?= htmlspecialchars($user['user_id']) ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>"
+                  class="btn <?= $user['is_active'] ? 'btn-danger' : 'btn-success' ?>">
+                  <?= $user['is_active'] ? 'Deactivate' : 'Activate' ?>
+                </a>
               </td>
             </tr>
           <?php endif; ?>
         <?php endforeach; ?>
       </tbody>
+
     </table>
   </section>
 
@@ -132,6 +144,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
           <th>Email</th>
           <th>Market Week</th>
           <th>RSVP Status</th>
+          <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -140,10 +153,13 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
           <tr>
             <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
             <td><?= htmlspecialchars($vendor['email']) ?></td>
+
+            <!-- Market Week Selection -->
             <td>
               <form method="POST" action="update_rsvp.php">
                 <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
                 <select name="week_id" onchange="this.form.submit()">
+                  <option value="">Select a Week</option>
                   <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
                     <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
                       <option value="<?= $week['week_id'] ?>">
@@ -156,26 +172,57 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
                 </select>
               </form>
             </td>
+
+            <!-- RSVP Status Selection -->
             <td>
               <form method="POST" action="update_rsvp.php">
                 <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
-                <input type="hidden" name="week_id" value="<?= $week['week_id'] ?? '' ?>">
+                <input type="hidden" name="week_id" value="<?= isset($market_weeks_map[$vendor['vendor_id']][0]['week_id']) ? $market_weeks_map[$vendor['vendor_id']][0]['week_id'] : ''; ?>">
+
+                <?php
+                // Default status if no data is found
+                $default_status = 'planned';
+
+                // Ensure the vendor ID and week ID exist in the array before accessing it
+                $selected_week_id = $market_weeks_map[$vendor['vendor_id']][0]['week_id'] ?? null;
+                $current_status = $selected_week_id && isset($vendor_rsvp_map[$vendor['vendor_id']][$selected_week_id])
+                  ? $vendor_rsvp_map[$vendor['vendor_id']][$selected_week_id]
+                  : $default_status;
+                ?>
+
                 <select name="status" onchange="this.form.submit()">
-                  <option value="planned" <?= ($vendor_rsvp_map[$vendor['vendor_id']][$week['week_id']] ?? '') == 'planned' ? 'selected' : '' ?>>Planned</option>
-                  <option value="confirmed" <?= ($vendor_rsvp_map[$vendor['vendor_id']][$week['week_id']] ?? '') == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
-                  <option value="canceled" <?= ($vendor_rsvp_map[$vendor['vendor_id']][$week['week_id']] ?? '') == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+                  <option value="planned" <?= $current_status == 'planned' ? 'selected' : '' ?>>Planned</option>
+                  <option value="confirmed" <?= $current_status == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                  <option value="canceled" <?= $current_status == 'canceled' ? 'selected' : '' ?>>Canceled</option>
                 </select>
               </form>
             </td>
+
+            <!-- Status Column -->
+            <td><?= ($vendor['vendor_status'] === 'active') ? 'Active' : 'Inactive' ?></td>
+
+
+            <!-- Activate/Deactivate Action -->
             <td>
-              <a href="toggle_vendor.php?id=<?= $vendor['vendor_id'] ?>&action=deactivate">Deactivate</a>
+              <?php
+              $vendor_id = $vendor['vendor_id'];
+              $vendor_action = ($vendor['vendor_status'] === 'active') ? 'deactivate' : 'activate';
+              $vendor_action = ($vendor_status === 'active') ? 'deactivate' : 'activate';
+              $button_class = ($vendor_status === 'active') ? 'btn btn-danger' : 'btn btn-success';
+              $button_text = ($vendor_status === 'active') ? 'Deactivate' : 'Activate';
+              ?>
+              <a href="toggle_user.php?id=<?= htmlspecialchars($vendor['user_id']) ?>&action=<?= htmlspecialchars($vendor_action) ?>"
+                class="<?= htmlspecialchars($button_class) ?>">
+                <?= htmlspecialchars($button_text) ?>
+              </a>
             </td>
+
+
           </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
   </section>
-
 
   <!-- Manage Admins Section -->
   <section>
@@ -200,10 +247,52 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
               <td>Admin</td>
               <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
               <td>
-                <a href="toggle_user.php?id=<?= $user['user_id'] ?>&action=deactivate" class="btn btn-danger">Deactivate</a>
+                <a href="toggle_user.php?id=<?= htmlspecialchars($user['user_id']) ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>"
+                  class="btn <?= $user['is_active'] ? 'btn-danger' : 'btn-success' ?>">
+                  <?= $user['is_active'] ? 'Deactivate' : 'Activate' ?>
+                </a>
+
+
               </td>
             </tr>
           <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Pending Vendor Approvals Section -->
+  <section>
+    <h3>Pending Vendor Requests</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Vendor Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $sql = "SELECT v.vendor_id, v.business_name, u.email 
+                    FROM vendor v
+                    JOIN users u ON v.user_id = u.user_id
+                    WHERE v.vendor_status = 'pending'";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $pending_vendors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($pending_vendors as $vendor):
+        ?>
+          <tr>
+            <td><?= htmlspecialchars($vendor['business_name']) ?></td>
+            <td><?= htmlspecialchars($vendor['email']) ?></td>
+            <td>
+              <a href="approve_vendor.php?id=<?= $vendor['vendor_id'] ?>" class="btn btn-success">Approve</a>
+              <a href="reject_vendor.php?id=<?= $vendor['vendor_id'] ?>" class="btn btn-danger">Reject</a>
+            </td>
+          </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
