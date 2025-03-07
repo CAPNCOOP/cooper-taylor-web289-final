@@ -288,7 +288,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
           <tr>
             <td><?= htmlspecialchars($vendor['business_name']) ?></td>
             <td><?= htmlspecialchars($vendor['email']) ?></td>
-            <td>
+            <td class="request-action-column">
               <a href="approve_vendor.php?id=<?= $vendor['vendor_id'] ?>" class="btn btn-success">Approve</a>
               <a href="reject_vendor.php?id=<?= $vendor['vendor_id'] ?>" class="btn btn-danger">Reject</a>
             </td>

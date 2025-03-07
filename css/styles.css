@@ -29,13 +29,6 @@ body {
   margin: 0;
 }
 
-/* Content Wrapper */
-
-#content-wrapper {
-  margin: 0 auto;
-  width: 90%;
-}
-
 /* Header - Footer */
 
 header {
@@ -46,6 +39,11 @@ header {
   justify-content: space-between;
   padding: 1rem;
   position: static;
+}
+
+header div:first-of-type {
+  align-items: center;
+  display: flex;
 }
 
 nav ul {
@@ -73,10 +71,28 @@ nav a:hover {
   transform: translateY(-3px);
 }
 
-h1 {
+header h1 {
   color: var(--light);
   font: 48px var(--main-text);
   margin: 0;
+}
+
+header h1:nth-of-type(2) {
+  display: none;
+}
+
+.hamburger {
+  cursor: pointer;
+  display: none !important;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburger span {
+  width: 30px;
+  height: 4px;
+  background: var(--light);
+  border-radius: 5px;
 }
 
 footer {
@@ -113,9 +129,9 @@ footer a {
   transform: translate(-50%, -50%);
 }
 
-#text {
+#type-text {
   color: white;
-  font: 48px var(--secondary-text);
+  font: 32px var(--secondary-text);
   left: 50%;
   position: absolute;
   text-align: center;
@@ -326,7 +342,7 @@ div#vendorhead {
   margin: 0;
   padding: 1rem;
   position: sticky;
-  z-index: 999;
+  z-index: 998;
 }
 
 #vendorhead h2 {
@@ -423,10 +439,8 @@ div#vendorhead {
   border: 5px solid var(--dark);
   border-radius: 100%;
   /* box-shadow: 0 0 10px var(--dark); */
-  height: 200px;
-  object-fit: cover;
+  object-fit: contain;
   margin: 0 auto;
-  width: 200px;
 }
 
 .vendor-card p {
@@ -438,6 +452,9 @@ div#vendorhead {
 
 .product-list {
   margin: 1rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 }
 
 .product-card {
@@ -445,11 +462,11 @@ div#vendorhead {
   background-color: var(--light);
   border-radius: 5px;
   display: flex;
-  height: 540px;
-  width: 300px;
-  flex-direction: column;
+  flex-flow: column wrap;
+  height: auto;
   justify-content: flex-start;
   padding: 1rem;
+  width: 300px;
 }
 
 .product-card h3 {
@@ -475,9 +492,9 @@ div#vendorhead {
   padding: 0.5rem;
   margin: 0.5rem auto;
   text-decoration: none;
-  width: 100px;
   text-align: center;
   transition: all 0.1s ease-in-out;
+  width: 100px;
 }
 
 .product-list a:first-of-type {
@@ -515,8 +532,12 @@ div#vendorhead {
 }
 
 #vendor-profile-card h2 {
-  font: 32px var(--secondary-text);
+  font: 36px var(--secondary-text);
   font-variant: small-caps;
+  text-align: center;
+}
+
+.vendor-profile h2:last-of-type {
   text-align: center;
 }
 
@@ -584,9 +605,9 @@ div#vendorhead {
 }
 
 .vendor-testimonial blockquote:before {
-  font: 24px var(--main-text);
   color: var(--secondary-color);
   content: open-quote;
+  font: 24px var(--main-text);
   font-size: 2em;
   vertical-align: -0.3em;
 }
@@ -655,13 +676,12 @@ div#vendorhead {
 
 .aboutus-item {
   align-content: center;
-  border-bottom: 1px solid var(--dark);
   display: flex;
   flex-direction: row;
   gap: 1rem;
 }
 
-.aboutus-item img {
+.aboutus-item picture {
   flex: 1;
   object-fit: contain;
 }
@@ -701,7 +721,7 @@ div#vendorhead {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 2rem auto;
+  margin: 1rem auto;
   padding: 1rem;
   width: 50%;
 }
@@ -786,21 +806,19 @@ div#vendorhead {
 }
 
 .popup-content button {
-  background-color: var(--tertiary-color);
+  background-color: var(--dark);
   border: none;
   border-radius: 5px;
-  box-shadow: 0 2px 5px var(--dark);
   color: var(--light);
   cursor: pointer;
   font: 18px var(--secondary-text);
   margin: 10px;
   padding: 10px;
-  transition: all 0.2s ease-in-out;
+  transition: 0.1s ease-in-out;
 }
 
 .popup-content button:hover {
-  background-color: var(--light);
-  color: var(--dark);
+  opacity: 0.7;
 }
 
 /* User / Vendor Sign Up */
@@ -1017,6 +1035,9 @@ div#vendorhead {
 
 #saved-vendors ul {
   padding-left: 0;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 }
 
 #saved-vendors li {
@@ -1026,7 +1047,6 @@ div#vendorhead {
   flex-direction: column;
   justify-items: center;
   font: 18px;
-  height: 350px;
   list-style-type: none;
   margin: 1rem;
   padding: 1rem;
@@ -1077,7 +1097,7 @@ div#vendorhead {
 }
 
 .edit-profile-details form {
-  background-color: var(--tertiary-color);
+  background-color: var(--light);
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -1090,8 +1110,11 @@ div#vendorhead {
 }
 
 .edit-profile-details input {
+  background-color: var(--main-color);
+  border: none;
   border-radius: 5px;
   margin-top: 0.5rem;
+  padding: 5px;
   width: 300px;
 }
 
@@ -1101,12 +1124,18 @@ div#vendorhead {
 }
 
 .edit-profile-details button {
-  background-color: var(--light);
+  background-color: var(--main-color);
   border: none;
   border-radius: 5px;
   color: var(--dark);
   font: 20px var(--secondary-text);
   margin: 1rem auto;
+  padding: 5px;
+  transition: 0.1s ease-in-out;
+}
+
+.edit-profile-details button:hover {
+  opacity: 0.7;
 }
 
 /* Message styling */
@@ -1298,7 +1327,7 @@ div#vendorhead {
 
 .admin-dashboard th,
 .super-admin-dashboard th {
-  background-color: var(--dark);
+  background-color: var(--secondary-color);
   color: var(--light);
   padding: 0.5rem;
 }
@@ -1308,6 +1337,11 @@ div#vendorhead {
   background-color: var(--dark) !important;
   color: var(--light) !important;
   text-decoration: none;
+  width: 100%;
+}
+
+td.request-action-column {
+  display: flex;
 }
 
 /* Fluid Text */
@@ -1315,17 +1349,16 @@ div#vendorhead {
 @media screen and (max-width: 1400px) {
   /* originally 72px */
   .static-text {
-    font-size: calc(36px + (72 - 36) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(36px + (72 - 36) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 64px */
   .about-us h2 {
-    font-size: calc(32px + (64 - 32) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(32px + (64 - 32) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 48px */
   h1,
-  #text,
   .user-login legend,
   .sign-up legend,
   .vendor-signup h2,
@@ -1334,36 +1367,37 @@ div#vendorhead {
   #vendor-info h2,
   .manage-products h2:first-of-type,
   .market-rsvp h2 {
-    font-size: calc(24px + (48 - 24) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(24px + (48 - 24) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 46px */
   #vendorhead h2 {
-    font-size: calc(23px + (46 - 23) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(23px + (46 - 23) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 36px */
   .market-schedule h2,
+  #vendor-profile-card h2,
   #user-profile h2:last-of-type {
-    font-size: calc(18px + (36 - 18) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(18px + (36 - 18) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 32px */
-  #vendor-profile-card h2,
+  .text,
+  #type-text,
   .aboutus-item p,
   .sign-up label,
   .vendor-signup label,
   .edit-profile-details form label {
-    font-size: calc(16px + (32 - 16) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(16px + (32 - 16) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 28px */
   .vendor-card a h2 {
-    font-size: calc(14px + (28 - 14) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(14px + (28 - 14) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 24px */
-  .text,
   .market-schedule table,
   .market-schedule table th,
   .vendor-card,
@@ -1372,12 +1406,12 @@ div#vendorhead {
   .vendor-testimonial blockquote:after,
   #user-card p,
   .manage-products legend {
-    font-size: calc(16px + (24 - 16) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(16px + (24 - 16) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 22px */
   nav ul li {
-    font-size: calc(14px + (22 - 14) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(14px + (22 - 14) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 20px */
@@ -1385,7 +1419,7 @@ div#vendorhead {
   .about-us div div:last-of-type span,
   .favorite-btn,
   .edit-profile-details button {
-    font-size: calc(14px + (20 - 14) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(14px + (20 - 14) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 18px */
@@ -1403,7 +1437,7 @@ div#vendorhead {
   #saved-vendors li,
   .message,
   .manage-products button {
-    font-size: calc(12px + (18 - 12) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(12px + (18 - 12) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 16px */
@@ -1411,21 +1445,32 @@ div#vendorhead {
   #vendorhead button,
   #notification,
   .custom-file-label {
-    font-size: calc(12px + (16 - 12) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(12px + (16 - 12) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 14px */
   .btn {
-    font-size: calc(11px + (14 - 11) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(11px + (14 - 11) * (100vw - 430px) / (1400 - 430));
   }
 
   /* originally 12px */
   .numbertext {
-    font-size: calc(10px + (12 - 10) * (100vw - 400px) / (1400 - 400));
+    font-size: calc(10px + (12 - 10) * (100vw - 430px) / (1400 - 430));
+  }
+}
+
+@media screen and (max-width: 1240px) {
+  header h1:first-of-type {
+    display: none;
+  }
+
+  header h1:nth-of-type(2) {
+    display: block;
   }
 }
 
 @media screen and (max-width: 1170px) {
+  /* Schedule Page */
   #schedule-map-container {
     flex-direction: column;
   }
@@ -1443,10 +1488,65 @@ div#vendorhead {
   }
 }
 
+@media screen and (max-width: 1080px) {
+  /* User Dash */
+  #user-profile {
+    flex-direction: column;
+  }
+
+  #user-card {
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Vendor Dash */
+  #vendor-info {
+    flex-direction: column;
+  }
+
+  #vendor-info div:nth-of-type(2) {
+    border-left: 0;
+    border-top: 3px solid var(--secondary-color);
+  }
+}
+
 @media screen and (max-width: 950px) {
+  /* Header */
+  .nav-links {
+    background: var(--dark);
+    display: none;
+    margin: 0 auto;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 120px;
+    width: 100%;
+  }
+
+  .nav-links ul {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .nav-links.active {
+    display: block;
+    z-index: 999;
+  }
+
+  .hamburger {
+    display: flex !important;
+  }
+
   /* Our Vendors */
+
+  #vendorhead input {
+    flex: 3;
+    width: 300px;
+  }
+
   #vendorhead button {
-    width: ;
+    width: 70px;
   }
 
   /* About Us */
@@ -1470,5 +1570,60 @@ div#vendorhead {
 
   #contact {
     margin: 0;
+  }
+
+  /* Sign Up forms */
+  .sign-up form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  /* Home */
+  .static-text {
+    top: 40%;
+  }
+
+  /* Our Vendors */
+  #vendor-list {
+    gap: 0.15rem;
+  }
+
+  .vendor-card {
+    height: 325px;
+    width: 250px;
+  }
+
+  /* Vendor Profile */
+  #vendor-profile-container {
+    flex-direction: column;
+  }
+
+  #vendor-upcoming-markets {
+    border-radius: 0 0 5px 5px;
+  }
+
+  .product-card {
+    width: 250px;
+  }
+
+  /* Login */
+  .user-login {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  /* Our Vendors */
+  .vendor-card img {
+    height: 75px;
+    width: 75px;
+  }
+
+  .vendor-card {
+    height: 200px;
+    width: 150px;
   }
 }

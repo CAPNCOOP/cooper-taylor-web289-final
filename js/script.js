@@ -1,5 +1,15 @@
 'use strict';
 
+// Hamburger Menu
+document.addEventListener('DOMContentLoaded', function () {
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+
+  hamburger.addEventListener('click', function () {
+    navLinks.classList.toggle('active');
+  });
+});
+
 // Hero Text Animation
 document.addEventListener('DOMContentLoaded', () => {
   const words = ['Fresh.', 'Local.', 'Sustainable.'];
@@ -9,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const typingSpeed = 75;
   const deletingSpeed = 100;
   const delayBetweenWords = 1250;
-  const textElement = document.getElementById('text');
+  const textElement = document.getElementById('type-text');
 
   function type() {
     if (!textElement) return; // Prevents error if the element doesn't exist
@@ -171,22 +181,22 @@ window.onload = function () {
 
 // Image Preview
 // Get the file input and image preview elements
-document.getElementById('profile-pic').addEventListener('change', function (event) {
-  const file = event.target.files[0];
-  const preview = document.getElementById('image-preview');
-  const fileName = document.getElementById('file-name');
+// document.getElementById('profile-pic').addEventListener('change', function (event) {
+//   const file = event.target.files[0];
+//   const preview = document.getElementById('image-preview');
+//   const fileName = document.getElementById('file-name');
 
-  if (file) {
-    const reader = new FileReader();
+//   if (file) {
+//     const reader = new FileReader();
 
-    reader.onload = function (e) {
-      preview.src = e.target.result;
-      fileName.textContent = file.name; // Show the file name after selection
-    };
+//     reader.onload = function (e) {
+//       preview.src = e.target.result;
+//       fileName.textContent = file.name; // Show the file name after selection
+//     };
 
-    reader.readAsDataURL(file);
-  } else {
-    preview.src = ''; // Clear the preview if no file is selected
-    fileName.textContent = 'No file chosen'; // Reset file name text
-  }
-});
+//     reader.readAsDataURL(file);
+//   } else {
+//     preview.src = ''; // Clear the preview if no file is selected
+//     fileName.textContent = 'No file chosen'; // Reset file name text
+//   }
+// });

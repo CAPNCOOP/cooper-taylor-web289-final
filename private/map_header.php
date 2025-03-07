@@ -20,34 +20,53 @@ if (!isset($page_title)) {
 
 
   <header>
-    <h1>Blue Ridge Bounty</h1>
+    <div>
+      <img src="/img/assets/brblogo.png" height="100" width="100" alt="A logo for Blue Ridge Bounty." />
+      <h1>Blue Ridge Bounty</h1>
+      <h1>BRB</h1>
+    </div>
 
-    <nav>
-      <ul>
-        <li><a href="<?= url_for('/index.php') ?>"><img src="<?= url_for('/img/assets/barn.png') ?>" alt="An icon of a barn" height="25" width="25"></a></li>
-        <li><a href="<?= url_for('/schedule.php') ?>">Schedule</a></li>
-        <li><a href="<?= url_for('/ourvendors.php') ?>">Our Vendors</a></li>
-        <li><a href="<?= url_for('/aboutus.php') ?>">About Us</a></li>
+    <div>
+      <nav class="nav-links">
+        <ul>
+          <li><a href="<?= url_for('/index.php') ?>"><img src="<?= url_for('/img/assets/barn.png') ?>" alt="An icon of a barn" height="25" width="25"></a></li>
+          <li><a href="<?= url_for('/schedule.php') ?>">Schedule</a></li>
 
-        <?php if ($session->is_logged_in()) : ?>
-          <?php if (isset($_SESSION['user_level_id'])) : ?>
-            <?php if ($_SESSION['user_level_id'] == 2) : ?>
-              <li><a href="<?= url_for('/vendor_dash.php') ?>">Dashboard</a></li>
-            <?php elseif ($_SESSION['user_level_id'] == 3) : ?>
-              <li><a href="<?= url_for('/admin_dash.php') ?>">Dashboard</a></li>
-            <?php elseif ($_SESSION['user_level_id'] == 4) : ?>
-              <li><a href="<?= url_for('/superadmin_dash.php') ?>">Dashboard</a></li>
+          <li><a href="<?= url_for('/ourvendors.php') ?>">Our Vendors</a></li>
+
+          <li><a href="<?= url_for('/aboutus.php') ?>">About Us</a></li>
+
+          <?php if ($session->is_logged_in()) : ?>
+            <?php if (isset($_SESSION['user_level_id'])) : ?>
+              <?php if ($_SESSION['user_level_id'] == 2) : ?>
+                <li><a href="<?= url_for('/vendor_dash.php') ?>">Dashboard</a></li>
+
+              <?php elseif ($_SESSION['user_level_id'] == 3) : ?>
+                <li><a href="<?= url_for('/admin_dash.php') ?>">Dashboard</a></li>
+
+              <?php elseif ($_SESSION['user_level_id'] == 4) : ?>
+                <li><a href="<?= url_for('/superadmin_dash.php') ?>">Dashboard</a></li>
+
+              <?php else : ?>
+                <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
+
+              <?php endif; ?>
             <?php else : ?>
               <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
-            <?php endif; ?>
-          <?php else : ?>
-            <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
-          <?php endif; ?>
 
-          <li><a href="<?= url_for('/logout.php') ?>">Logout</a></li>
-        <?php else : ?>
-          <li><a href="<?= url_for('/login.php') ?>"><img src="<?= url_for('/img/assets/user.png') ?>" alt="A user login icon." height="25" width="25"></a></li>
-        <?php endif; ?>
-      </ul>
-    </nav>
+            <?php endif; ?>
+            <li><a href="<?= url_for('/logout.php') ?>">Logout</a></li>
+
+          <?php else : ?>
+            <li><a href="<?= url_for('/login.php') ?>"><img src="<?= url_for('/img/assets/user.png') ?>" alt="A user login icon." height="25" width="25"></a></li>
+
+          <?php endif; ?>
+        </ul>
+      </nav>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
   </header>

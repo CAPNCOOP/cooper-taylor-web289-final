@@ -1,5 +1,5 @@
 <?php
-$page_title = "Vendor - Profile";
+$page_title = "Vendor Profile";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 
@@ -18,7 +18,7 @@ $sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, v.description, v.busi
         LEFT JOIN profile_image pi ON v.user_id = pi.user_id
         LEFT JOIN product p ON v.vendor_id = p.vendor_id
         LEFT JOIN product_image pimg ON p.product_id = pimg.product_id
-        LEFT JOIN amount_offered a ON p.amount_id = a.amount_id  -- ✅ Now joins amount_offered
+        LEFT JOIN amount_offered a ON p.amount_id = a.amount_id  
         LEFT JOIN state s ON v.state_id = s.state_id
         WHERE v.vendor_id = ?";
 
@@ -59,17 +59,18 @@ $vendor = $vendor_data[0];
     <?php endif; ?>
     <p><strong>Location:</strong> <?php echo htmlspecialchars($vendor['city'] . ', ' . $vendor['state_abbr']); ?></p>
 
-    <!-- JavaScript-powered button -->
-    <button class="favorite-btn" data-vendor-id="<?= $vendor['vendor_id'] ?>">♡</button>
+    <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1): ?>
+      <!-- JavaScript-powered button -->
+      <button class="favorite-btn" data-vendor-id="<?= $vendor['vendor_id'] ?>">♡</button>
 
-    <!-- PHP Fallback for Non-JS Browsers -->
-    <noscript>
-      <form action="favorite_vendor.php" method="POST">
-        <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
-        <button type="submit">♡</button>
-      </form>
-    </noscript>
-
+      <!-- PHP Fallback for Non-JS Browsers -->
+      <noscript>
+        <form action="favorite_vendor.php" method="POST">
+          <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
+          <button type="submit">♡</button>
+        </form>
+      </noscript>
+    <?php endif; ?>
     <!-- Notification Element -->
     <div id="notification" class="hidden"></div>
 
@@ -115,10 +116,10 @@ $vendor = $vendor_data[0];
       <div class="product-card">
         <?php
         // Ensure a fallback image if no product image exists
-        $product_image = !empty($product['product_image']) ? htmlspecialchars($product['product_image']) : 'img/upload/products/default_product.jpg';
+        $product_image = !empty($product['product_image']) ? htmlspecialchars($product['product_image']) : 'default_product.png';
         ?>
 
-        <img src="<?= $product_image; ?>" height="250" width="250" alt="Product Image">
+        <img src="img/upload/products/<?= $product_image; ?>" height="250" width="250" alt="Product Image">
         <h3><?= htmlspecialchars($product['product_name']); ?></h3>
         <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p> <!-- Price on its own line -->
         <p><strong>Per:</strong> <?= htmlspecialchars($product['amount_name'] ?? 'unit'); ?></p> <!-- Amount on separate line -->
