@@ -29,7 +29,7 @@ require_once 'private/header.php';
           <source srcset="img/assets/flour-400h.webp" media="(min-width: 480px)">
           <img src="img/assets/flour.webp" alt="A photo of a man preparing bread." width="667" height="1000" loading="lazy" onerror="this.onerror=null;this.src='img/assets/flour.jpg';">
         </picture>
-        <p>Our mission is simple: support local growers, promote sustainable practices, and provide our community with fresh, responsibly sourced food. Every vendor at our markets is dedicated to transparency and quality, ensuring that what ends up on your table is wholesome, nutritious, and grown with care. From the crisp apples harvested in nearby orchards to the artisanal breads baked with locally milled flour, every product tells a story of hard work, passion, and commitment to a better food system.</p>
+        <p><strong>Our mission is simple:</strong> support local growers, promote sustainable practices, and provide our community with fresh, responsibly sourced food. Every vendor at our markets is dedicated to transparency and quality, ensuring that what ends up on your table is wholesome, nutritious, and grown with care. From the crisp apples harvested in nearby orchards to the artisanal breads baked with locally milled flour, every product tells a story of hard work, passion, and commitment to a better food system.</p>
       </div>
 
       <div class="aboutus-item">
@@ -40,7 +40,7 @@ require_once 'private/header.php';
           <source srcset="img/assets/farmer7-400h.webp" media="(min-width: 480px)">
           <img src="img/assets/farmer7.webp" alt="A photo of a local farmer." width="667" height="1000" loading="lazy" onerror="this.onerror=null;this.src='img/assets/farmer7.jpg';">
         </picture>
-        <p>Beyond just a marketplace, Blue Ridge Bounty is a place where relationships are formed—where you can meet the people who grow your food, learn their farming philosophies, and feel good about the choices you make. Whether you're a lifelong advocate for farm-to-table living or just starting your journey toward more mindful eating, we welcome you to be part of our community.</p>
+        <p><strong>Beyond just a marketplace</strong>, Blue Ridge Bounty is a place where relationships are formed—where you can meet the people who grow your food, learn their farming philosophies, and feel good about the choices you make. Whether you're a lifelong advocate for farm-to-table living or just starting your journey toward more mindful eating, we welcome you to be part of our community.</p>
       </div>
 
 

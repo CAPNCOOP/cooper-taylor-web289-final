@@ -675,10 +675,12 @@ div#vendorhead {
 }
 
 .aboutus-item {
-  align-content: center;
+  align-items: flex-start;
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .aboutus-item picture {
@@ -692,8 +694,9 @@ div#vendorhead {
 }
 
 .aboutus-item p {
-  flex: 2;
+  flex: 1;
   font: 32px var(--secondary-text);
+  margin-top: 0;
 }
 
 #contact {
@@ -1469,12 +1472,18 @@ td.request-action-column {
 }
 
 @media screen and (max-width: 1240px) {
+  /* Header */
   header h1:first-of-type {
     display: none;
   }
 
   header h1:nth-of-type(2) {
     display: block;
+  }
+
+  /* About Us */
+  .about-us main section {
+    width: 90%;
   }
 }
 
