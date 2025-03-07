@@ -1340,8 +1340,17 @@ div#vendorhead {
   width: 100%;
 }
 
+.admin-dashboard section:nth-of-type(4) form,
+.super-admin-dashboard section:nth-of-type(5) form {
+  background-color: var(--light);
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 1rem;
+}
+
 td.request-action-column {
   display: flex;
+  gap: 5px;
 }
 
 /* Fluid Text */
@@ -1583,7 +1592,11 @@ td.request-action-column {
 @media screen and (max-width: 780px) {
   /* Home */
   .static-text {
-    top: 40%;
+    top: 50%;
+  }
+
+  .hero-image {
+    height: 65vh;
   }
 
   /* Our Vendors */
@@ -1625,5 +1638,11 @@ td.request-action-column {
   .vendor-card {
     height: 200px;
     width: 150px;
+  }
+}
+
+@media screen and (max-width: 490px) {
+  .hero-image {
+    height: 48vh;
   }
 }

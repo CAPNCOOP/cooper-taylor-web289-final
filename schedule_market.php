@@ -28,6 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $stmt->execute([$week_start, $week_end, $confirmation_deadline]);
 
   // Redirect back to dashboard with success message
-  header("Location: admin_dash.php?message=Market scheduled successfully!");
+  if ($_SESSION['user_level_id'] == 3) {
+    header("Location: admin_dash.php?message=Market scheduled successfully!");
+  } elseif ($_SESSION['user_level_id'] == 4) {
+    header("Location: superadmin_dash.php?message=Market scheduled successfully!");
+  }
   exit;
 }
