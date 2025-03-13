@@ -37,13 +37,28 @@ $totalVendors = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
 $totalPages = ceil($totalVendors / $itemsPerPage);
 
 // Search functionality
+// Search functionality
 $searchTerm = $_GET['search'] ?? '';
 $filteredVendors = [];
 
-if ($searchTerm) {
-  $searchTermLower = strtolower($searchTerm);
+if (!empty($searchTerm)) {
+  $searchTermLower = strtolower(trim($searchTerm)); // Fix strtolower usage
+
   foreach ($vendors as $vendor) {
-    $tags = strtolower($vendor['product_tags'] . ', ' . $vendor['market_weeks'] . ', ' . $vendor['business_name'] . ', ' . $vendor['vendor_bio'] . ', ' . $vendor['state_abbrs'] . ', ' . $vendor['state_names'] . ', ' . $vendor['cities']);
+    // Ensure all fields are concatenated properly for search
+    $tags = strtolower(
+      trim(
+        ($vendor['product_tags'] ?? '') . ' ' .
+          ($vendor['market_weeks'] ?? '') . ' ' .
+          ($vendor['business_name'] ?? '') . ' ' .
+          ($vendor['vendor_bio'] ?? '') . ' ' .
+          ($vendor['state_abbrs'] ?? '') . ' ' .
+          ($vendor['state_names'] ?? '') . ' ' .
+          ($vendor['cities'] ?? '')
+      )
+    );
+
+    // Check if the search term is contained within the tags
     if (strpos($tags, $searchTermLower) !== false) {
       $filteredVendors[] = $vendor;
     }
@@ -79,8 +94,8 @@ if ($searchTerm) {
                       ]);
                       echo htmlspecialchars(implode(', ', $tags));
                       ?>"
-          <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-          <img src="<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="200" width="200" alt="Vendor Image">
+          <h2><?php echo htmlspecialchars($vendor['business_name']); ?>, <?php echo nl2br(htmlspecialchars($vendor['state_abbrs'])); ?></h2>
+          <img src="<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
           <p><?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
         </div>
       </a>

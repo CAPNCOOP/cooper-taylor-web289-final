@@ -19,16 +19,18 @@ if (!isset($page_title)) {
 
 
   <header>
-    <div>
+    <a href="<?= url_for('/index.php') ?>">
       <img src="/img/assets/brblogo.png" height="100" width="100" alt="A logo for Blue Ridge Bounty." />
-      <h1>Blue Ridge Bounty</h1>
-      <h1>BRB</h1>
-    </div>
+      <div>
+        <h1>Blue Ridge Bounty</h1>
+        <h1>BRB</h1>
+        <span>Farmers Market</span>
+      </div>
+    </a>
 
     <div>
       <nav class="nav-links">
         <ul>
-          <li><a href="<?= url_for('/index.php') ?>"><img src="<?= url_for('/img/assets/barn.png') ?>" alt="An icon of a barn" height="25" width="25"></a></li>
 
           <li><a href="<?= url_for('/schedule.php') ?>">Schedule</a></li>
 

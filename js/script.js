@@ -200,3 +200,48 @@ window.onload = function () {
 //     fileName.textContent = 'No file chosen'; // Reset file name text
 //   }
 // });
+
+// Toggle Admin Content
+function toggleSection(header) {
+  let content = header.nextElementSibling;
+  let sectionId = header.dataset.section; // Unique ID for each section
+
+  // Toggle display
+  if (content.style.display === 'none' || content.style.display === '') {
+    content.style.display = 'block';
+    localStorage.setItem(sectionId, 'open'); // Store state
+  } else {
+    content.style.display = 'none';
+    localStorage.setItem(sectionId, 'closed'); // Store state
+  }
+}
+
+// Restore saved state on page load
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.section-header').forEach(header => {
+    let content = header.nextElementSibling;
+    let sectionId = header.dataset.section; // Unique section identifier
+    let savedState = localStorage.getItem(sectionId);
+
+    if (savedState === 'open') {
+      content.style.display = 'block';
+    } else {
+      content.style.display = 'none'; // Default to collapsed
+    }
+  });
+});
+
+// FeedBack Popups
+document.addEventListener('DOMContentLoaded', function () {
+  let popup = document.querySelector('.feedback-popup');
+  if (popup) {
+    popup.style.display = 'block';
+    setTimeout(() => {
+      popup.style.opacity = '1'; // Fades in
+    }, 10);
+    setTimeout(() => {
+      popup.style.opacity = '0'; // Fades out after 3 sec
+      setTimeout(() => (popup.style.display = 'none'), 500);
+    }, 10000);
+  }
+});

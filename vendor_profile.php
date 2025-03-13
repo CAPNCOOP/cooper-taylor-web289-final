@@ -48,37 +48,40 @@ $vendor = $vendor_data[0];
 
 ?>
 
+<h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
 <div id="vendor-profile-container">
   <div id="vendor-profile-card">
-    <h2><?php echo htmlspecialchars($vendor['business_name']); ?></h2>
-    <img src="<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="A Vendor Image.">
-    <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
-    <p><strong>Contact:</strong> <?php echo htmlspecialchars($vendor['business_email']); ?></p>
-    <?php if ($vendor['website']): ?>
-      <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($vendor['website']); ?>" target="_blank">Visit Website</a></p>
-    <?php endif; ?>
-    <p><strong>Location:</strong> <?php echo htmlspecialchars($vendor['city'] . ', ' . $vendor['state_abbr']); ?></p>
+    <img src="<?php echo htmlspecialchars($vendor['profile_image'] ?? 'default.png'); ?>" height="150" width="150" alt="A Vendor Image.">
+    <div>
+      <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($vendor['vendor_bio'])); ?></p>
 
-    <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1): ?>
-      <!-- JavaScript-powered button -->
-      <button class="favorite-btn" data-vendor-id="<?= $vendor['vendor_id'] ?>">♡</button>
+      <p><strong>Contact:</strong> <?php echo htmlspecialchars($vendor['business_email']); ?></p>
 
-      <!-- PHP Fallback for Non-JS Browsers -->
-      <noscript>
-        <form action="favorite_vendor.php" method="POST">
-          <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
-          <button type="submit">♡</button>
-        </form>
-      </noscript>
-    <?php endif; ?>
-    <!-- Notification Element -->
-    <div id="notification" class="hidden"></div>
+      <?php if ($vendor['website']): ?>
+        <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($vendor['website']); ?>" target="_blank">Visit Website</a></p>
+      <?php endif; ?>
 
-    <?php if (isset($_GET['message'])): ?>
-      <div class="notification">
-        <?= htmlspecialchars($_GET['message']) ?>
-      </div>
-    <?php endif; ?>
+      <p><strong>Location:</strong> <?php echo htmlspecialchars($vendor['city'] . ', ' . $vendor['state_abbr']); ?></p>
+      <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1): ?>
+
+        <!-- JavaScript-powered button -->
+        <button class="favorite-btn" data-vendor-id="<?= $vendor['vendor_id'] ?>">♡</button>
+        <!-- PHP Fallback for Non-JS Browsers -->
+        <noscript>
+          <form action="favorite_vendor.php" method="POST">
+            <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
+            <button type="submit">♡</button>
+          </form>
+        </noscript>
+      <?php endif; ?>
+      <!-- Notification Element -->
+      <div id="notification" class="hidden"></div>
+      <?php if (isset($_GET['message'])): ?>
+        <div class="notification">
+          <?= htmlspecialchars($_GET['message']) ?>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 
   <div id="vendor-upcoming-markets">

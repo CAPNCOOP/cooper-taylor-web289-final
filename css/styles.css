@@ -29,6 +29,24 @@ body {
   margin: 0;
 }
 
+.feedback-popup {
+  background-color: var(--dark);
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  color: var(--light);
+  display: none;
+  font-size: 1.2rem;
+  left: 50%;
+  opacity: 0;
+  padding: 15px 25px;
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease-in-out;
+  z-index: 1000;
+}
+
 /* Header - Footer */
 
 header {
@@ -41,9 +59,16 @@ header {
   position: static;
 }
 
-header div:first-of-type {
+header a:first-of-type {
   align-items: center;
+  color: var(--light);
+  cursor: pointer;
   display: flex;
+  text-decoration: none;
+}
+
+header a div span {
+  font: 24px var(--secondary-text);
 }
 
 nav ul {
@@ -388,7 +413,7 @@ div#vendorhead {
   font-weight: bold;
   justify-content: center;
   padding: 0.8rem 1.5rem;
-  transition: all 0.3s ease; /* Smooth transition */
+  transition: all 0.3s ease;
 }
 
 #vendor-list {
@@ -408,18 +433,18 @@ div#vendorhead {
 }
 
 .vendor-card {
-  align-content: space-between;
+  align-content: center;
   background-color: var(--light);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   font: 24px var(--secondary-text);
   gap: 1rem;
-  height: 450px;
-  justify-content: center;
+  height: 500px;
+  justify-content: space-around;
   margin: 1rem;
-  overflow: hidden;
-  padding: 1rem 1.5rem;
+  /* overflow: hidden; */
+  padding: 1rem;
   text-align: center;
   transition: 0.1s ease-in-out;
   width: 300px;
@@ -431,12 +456,13 @@ div#vendorhead {
 
 .vendor-card a h2 {
   font: 28px var(--secondary-text);
+  margin: 1rem;
   text-align: center;
   white-space: wrap;
 }
 
 .vendor-card img {
-  border: 5px solid var(--dark);
+  /* border: 5px solid var(--dark); */
   border-radius: 100%;
   /* box-shadow: 0 0 10px var(--dark); */
   object-fit: contain;
@@ -445,7 +471,7 @@ div#vendorhead {
 
 .vendor-card p {
   font: 18px var(--secondary-text);
-  margin: 0;
+  margin-bottom: 1rem;
 }
 
 /* Vendor Product List */
@@ -523,10 +549,11 @@ div#vendorhead {
 }
 
 #vendor-profile-card {
+  align-items: center;
   color: var(--dark);
   display: flex;
   flex: 1;
-  flex-direction: column;
+  flex-direction: row;
   padding: 1rem;
   justify-content: center;
 }
@@ -537,7 +564,8 @@ div#vendorhead {
   text-align: center;
 }
 
-.vendor-profile h2:last-of-type {
+.vendor-profile h2 {
+  font: 32px var(--secondary-text);
   text-align: center;
 }
 
@@ -583,9 +611,14 @@ div#vendorhead {
 }
 
 #vendor-profile-card img {
-  border: 5px solid var(--secondary-color);
+  /* border: 5px solid var(--secondary-color); */
   border-radius: 100%;
   margin: 0 auto;
+  object-fit: contain;
+}
+
+#vendor-profile-card div:first-of-type {
+  padding: 1rem;
 }
 
 .vendor-testimonial {
@@ -1319,13 +1352,16 @@ div#vendorhead {
 .admin-dashboard table,
 .super-admin-dashboard table {
   background-color: var(--light);
+  border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
 }
 
 .admin-dashboard td,
 .super-admin-dashboard td {
   border: 1px solid var(--dark);
   padding: 0.5rem;
+  text-align: left;
 }
 
 .admin-dashboard th,
@@ -1356,17 +1392,36 @@ td.request-action-column {
   gap: 5px;
 }
 
+.section-header {
+  background-color: #f5f5f5;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.section-header:hover {
+  background-color: #ddd;
+}
+
+.section-content {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 /* Fluid Text */
 
 @media screen and (max-width: 1400px) {
   /* originally 72px */
   .static-text {
-    font-size: calc(36px + (72 - 36) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(36px + (72 - 36) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 64px */
   .about-us h2 {
-    font-size: calc(32px + (64 - 32) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(32px + (64 - 32) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 48px */
@@ -1379,19 +1434,19 @@ td.request-action-column {
   #vendor-info h2,
   .manage-products h2:first-of-type,
   .market-rsvp h2 {
-    font-size: calc(24px + (48 - 24) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(24px + (48 - 24) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 46px */
   #vendorhead h2 {
-    font-size: calc(23px + (46 - 23) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(23px + (46 - 23) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 36px */
   .market-schedule h2,
   #vendor-profile-card h2,
   #user-profile h2:last-of-type {
-    font-size: calc(18px + (36 - 18) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(18px + (36 - 18) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 32px */
@@ -1401,12 +1456,16 @@ td.request-action-column {
   .sign-up label,
   .vendor-signup label,
   .edit-profile-details form label {
-    font-size: calc(16px + (32 - 16) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(16px + (32 - 16) * (100vw - 375px) / (1400 - 430));
+  }
+
+  .vendor-profile h2 {
+    font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 28px */
   .vendor-card a h2 {
-    font-size: calc(14px + (28 - 14) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(14px + (28 - 14) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 24px */
@@ -1418,12 +1477,12 @@ td.request-action-column {
   .vendor-testimonial blockquote:after,
   #user-card p,
   .manage-products legend {
-    font-size: calc(16px + (24 - 16) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(16px + (24 - 16) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 22px */
   nav ul li {
-    font-size: calc(14px + (22 - 14) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(14px + (22 - 14) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 20px */
@@ -1431,7 +1490,7 @@ td.request-action-column {
   .about-us div div:last-of-type span,
   .favorite-btn,
   .edit-profile-details button {
-    font-size: calc(14px + (20 - 14) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(14px + (20 - 14) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 18px */
@@ -1448,8 +1507,9 @@ td.request-action-column {
   .vendor-signup p,
   #saved-vendors li,
   .message,
-  .manage-products button {
-    font-size: calc(12px + (18 - 12) * (100vw - 430px) / (1400 - 430));
+  .manage-products button,
+  #vendor-profile-card p {
+    font-size: calc(12px + (18 - 12) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 16px */
@@ -1457,17 +1517,17 @@ td.request-action-column {
   #vendorhead button,
   #notification,
   .custom-file-label {
-    font-size: calc(12px + (16 - 12) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(12px + (16 - 12) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 14px */
   .btn {
-    font-size: calc(11px + (14 - 11) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(11px + (14 - 11) * (100vw - 375px) / (1400 - 430));
   }
 
   /* originally 12px */
   .numbertext {
-    font-size: calc(10px + (12 - 10) * (100vw - 430px) / (1400 - 430));
+    font-size: calc(10px + (12 - 10) * (100vw - 375px) / (1400 - 430));
   }
 }
 
@@ -1503,6 +1563,13 @@ td.request-action-column {
     margin-bottom: 0.5rem;
     min-height: 400px;
     width: 100%;
+  }
+
+  /* Our Vendors */
+  #vendor-profile-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -1598,6 +1665,66 @@ td.request-action-column {
   }
 }
 
+@media screen and (max-width: 890px) {
+  /* Admin/ Super Admin Dash */
+  .super-admin-dashboard table,
+  .super-admin-dashboard thead,
+  .super-admin-dashboard tbody,
+  .super-admin-dashboard th,
+  .super-admin-dashboard td,
+  .super-admin-dashboard tr,
+  .admin-dashboard table,
+  .admin-dashboard thead,
+  .admin-dashboard tbody,
+  .admin-dashboard th,
+  .admin-dashboard td,
+  .admin-dashboard tr {
+    display: block;
+    width: 100%;
+  }
+
+  .super-admin-dashboard thead {
+    display: none; /* Hide table headers */
+  }
+
+  .super-admin-dashboard tr {
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .super-admin-dashboard td {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .super-admin-dashboard td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    flex-basis: 40%;
+  }
+
+  /* Make buttons full width */
+  .super-admin-dashboard .btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .super-admin-dashboard select {
+    width: 100%;
+    padding: 5px;
+  }
+}
+
 @media screen and (max-width: 780px) {
   /* Home */
   .static-text {
@@ -1618,10 +1745,12 @@ td.request-action-column {
     width: 250px;
   }
 
-  /* Vendor Profile */
-  #vendor-profile-container {
-    flex-direction: column;
+  .vendor-card img {
+    height: 150px;
+    width: 150px;
   }
+
+  /* Vendor Profile */
 
   #vendor-upcoming-markets {
     border-radius: 0 0 5px 5px;
@@ -1640,18 +1769,42 @@ td.request-action-column {
 @media screen and (max-width: 660px) {
   /* Our Vendors */
   .vendor-card img {
-    height: 75px;
-    width: 75px;
+    height: 90px;
+    width: 90px;
   }
 
   .vendor-card {
-    height: 200px;
+    height: 250px;
     width: 150px;
+  }
+
+  #searchBar {
+    width: 150px !important;
   }
 }
 
 @media screen and (max-width: 490px) {
+  /* Home Page */
   .hero-image {
     height: 48vh;
   }
+
+  /* Vendor Profile */
+  .product-card {
+    width: 150px;
+  }
+
+  /* Our Vendors */
+  .vendor-card img {
+    height: 80px;
+    width: 80px;
+  }
+
+  .vendor-card {
+    height: 250px;
+    width: 120px;
+  }
+}
+
+@media screen and (max-width: 380px) {
 }

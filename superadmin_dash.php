@@ -18,7 +18,7 @@ $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch all vendors (user_level_id = 2)
-$sql = "SELECT v.vendor_id, v.business_name, u.user_id, u.first_name, u.last_name, u.email, u.is_active
+$sql = "SELECT v.vendor_id, v.business_name, v.vendor_status, u.user_id, u.first_name, u.last_name, u.email, u.is_active
         FROM vendor v
         JOIN users u ON v.user_id = u.user_id
         WHERE u.user_level_id = 2";
@@ -27,6 +27,13 @@ $stmt = $db->prepare($sql);
 $stmt->execute();
 $vendor_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Fetch all admins separately (user_level_id = 3)
+$sql = "SELECT u.user_id, u.first_name, u.last_name, u.email, u.is_active 
+        FROM users u 
+        WHERE u.user_level_id = 3"; // Only fetch admins
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch vendor RSVPs grouped by vendor
 $sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, vm.status AS rsvp_status
@@ -92,236 +99,246 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
 <main>
   <h2>Welcome, Super Admin</h2>
 
-  <?php if (isset($_GET['message'])): ?>
-    <div class="notification">
-      <?= htmlspecialchars($_GET['message']) ?>
-    </div>
-  <?php endif; ?>
+  <?php require_once 'private/popup_message.php'; ?>
 
-  <div id="notification" class="hidden"></div>
+  <!-- <div id="notification" class="hidden"></div> -->
   <!-- Manage Users Section -->
   <section>
-    <h3>Manage Users</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($users as $user): ?>
-          <?php if ($user['user_level_id'] == 1): // Only display members 
-          ?>
-            <tr>
-              <td><?= htmlspecialchars($user['first_name'] . " " . $user['last_name']) ?></td>
-              <td><?= htmlspecialchars($user['email']) ?></td>
-              <td>Member</td>
-              <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
-              <td>
-                <a href="toggle_user.php?id=<?= htmlspecialchars($user['user_id']) ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>"
-                  class="btn <?= $user['is_active'] ? 'btn-danger' : 'btn-success' ?>">
-                  <?= $user['is_active'] ? 'Deactivate' : 'Activate' ?>
-                </a>
-              </td>
-            </tr>
-          <?php endif; ?>
-        <?php endforeach; ?>
-      </tbody>
-
-    </table>
+    <div class="section-header" data-section="manage-users" onclick="toggleSection(this)">
+      <h3>Manage Users</h3>
+    </div>
+    <div class="section-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($users as $user): ?>
+            <?php if ($user['user_level_id'] == 1): // Only display members
+            ?>
+              <tr>
+                <td><?= htmlspecialchars($user['first_name'] . " " . $user['last_name']) ?></td>
+                <td><?= htmlspecialchars($user['email']) ?></td>
+                <td>Member</td>
+                <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
+                <td>
+                  <a href="toggle_entity.php?id=<?= $user['user_id'] ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>&type=user">
+                    <?= $user['is_active'] ? 'Deactivate User' : 'Activate User' ?>
+                  </a>
+                </td>
+              </tr>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- Manage Vendors Section -->
   <section>
-    <h3>Manage Vendors</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Vendor Name</th>
-          <th>Email</th>
-          <th>Market Week</th>
-          <th>RSVP Status</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($vendor_list as $vendor): ?>
+    <div class="section-header" data-section="manage-vendors" onclick="toggleSection(this)">
+      <h3>Manage Vendors</h3>
+    </div>
+    <div class="section-content">
+      <table>
+        <thead>
           <tr>
-            <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
-            <td><?= htmlspecialchars($vendor['email']) ?></td>
-
-            <!-- Market Week Selection -->
-            <td>
-              <form method="POST" action="update_rsvp.php">
-                <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
-                <select name="week_id" onchange="this.form.submit()">
-                  <option value="">Select a Week</option>
-                  <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
-                    <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
-                      <option value="<?= $week['week_id'] ?>">
-                        <?= htmlspecialchars($week['week_start'] . " - " . $week['week_end']) ?>
-                      </option>
-                    <?php endforeach; ?>
-                  <?php else: ?>
-                    <option value="">No Confirmed Weeks</option>
-                  <?php endif; ?>
-                </select>
-              </form>
-            </td>
-
-            <!-- RSVP Status Selection -->
-            <td>
-              <form method="POST" action="update_rsvp.php">
-                <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
-                <input type="hidden" name="week_id" value="<?= isset($market_weeks_map[$vendor['vendor_id']][0]['week_id']) ? $market_weeks_map[$vendor['vendor_id']][0]['week_id'] : ''; ?>">
-
-                <?php
-                // Default status if no data is found
-                $default_status = 'planned';
-
-                // Ensure the vendor ID and week ID exist in the array before accessing it
-                $selected_week_id = $market_weeks_map[$vendor['vendor_id']][0]['week_id'] ?? null;
-                $current_status = $selected_week_id && isset($vendor_rsvp_map[$vendor['vendor_id']][$selected_week_id])
-                  ? $vendor_rsvp_map[$vendor['vendor_id']][$selected_week_id]
-                  : $default_status;
-                ?>
-
-                <select name="status" onchange="this.form.submit()">
-                  <option value="planned" <?= $current_status == 'planned' ? 'selected' : '' ?>>Planned</option>
-                  <option value="confirmed" <?= $current_status == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
-                  <option value="canceled" <?= $current_status == 'canceled' ? 'selected' : '' ?>>Canceled</option>
-                </select>
-              </form>
-            </td>
-
-
-            <!-- Activate/Deactivate Action -->
-            <!-- Status Column -->
-            <td><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
-
-            <!-- Activate/Deactivate Action -->
-            <td>
-              <?php
-              $vendor_action = $vendor['is_active'] ? 'deactivate' : 'activate';
-              $button_class = $vendor['is_active'] ? 'btn btn-danger' : 'btn btn-success';
-              $button_text = $vendor['is_active'] ? 'Deactivate' : 'Activate';
-              ?>
-              <a href="toggle_user.php?id=<?= htmlspecialchars($vendor['user_id']) ?>&action=<?= htmlspecialchars($vendor_action) ?>"
-                class="<?= htmlspecialchars($button_class) ?>">
-                <?= htmlspecialchars($button_text) ?>
-              </a>
-            </td>
-
-
+            <th>Vendor Name</th>
+            <th>Email</th>
+            <th>Market Week</th>
+            <th>RSVP Status</th>
+            <th>Status</th>
+            <th>Action</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <?php foreach ($vendor_list as $vendor): ?>
+            <tr>
+              <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
+              <td><?= htmlspecialchars($vendor['email']) ?></td>
+              <!-- Market Week Selection -->
+              <td>
+                <form method="POST" action="update_rsvp.php">
+                  <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
+                  <select name="week_id" onchange="this.form.submit()">
+                    <option value="">Select a Week</option>
+                    <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
+                      <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
+                        <option value="<?= $week['week_id'] ?>">
+                          <?= htmlspecialchars($week['week_start'] . " - " . $week['week_end']) ?>
+                        </option>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <option value="">No Confirmed Weeks</option>
+                    <?php endif; ?>
+                  </select>
+                </form>
+              </td>
+              <!-- RSVP Status Selection -->
+              <td>
+                <form method="POST" action="update_rsvp.php">
+                  <input type="hidden" name="vendor_id" value="<?= htmlspecialchars($vendor['vendor_id']) ?>">
+                  <select name="week_id" required>
+                    <option value="">Select a Week</option>
+                    <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
+                      <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
+                        <option value="<?= htmlspecialchars($week['week_id']) ?>"
+                          <?= isset($selected_week_id) && $selected_week_id == $week['week_id'] ? 'selected' : '' ?>>
+                          <?= htmlspecialchars($week['week_start'] . " - " . $week['week_end']) ?>
+                        </option>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <option value="">No Confirmed Weeks</option>
+                    <?php endif; ?>
+                  </select>
+                  <?php
+                  // Ensure $current_status is always set
+                  $selected_week_id = $market_weeks_map[$vendor['vendor_id']][0]['week_id'] ?? null;
+                  $default_status = 'planned'; // Set default status
+                  $current_status = $selected_week_id && isset($vendor_rsvp_map[$vendor['vendor_id']][$selected_week_id])
+                    ? $vendor_rsvp_map[$vendor['vendor_id']][$selected_week_id]
+                    : $default_status;
+                  ?>
+                  <select name="status" required>
+                    <option value="planned" <?= $current_status == 'planned' ? 'selected' : '' ?>>Planned</option>
+                    <option value="confirmed" <?= $current_status == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                    <option value="canceled" <?= $current_status == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+                  </select>
+                  <button type="submit">Update</button>
+                </form>
+              </td>
+
+              <!-- Status Column -->
+              <td><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
+              <!-- Activate/Deactivate Action -->
+              <td>
+                <?php
+                $vendor_action = $vendor['is_active'] ? 'deactivate' : 'activate';
+                $button_class = $vendor['is_active'] ? 'btn btn-danger' : 'btn btn-success';
+                $button_text = $vendor['is_active'] ? 'Deactivate' : 'Activate';
+                ?>
+                <a href="toggle_entity.php?id=<?= $vendor['vendor_id'] ?>&action=<?= $vendor['vendor_status'] === 'active' ? 'deactivate' : 'activate' ?>&type=vendor">
+                  <?= $vendor['vendor_status'] === 'active' ? 'Deactivate Vendor' : 'Activate Vendor' ?>
+                </a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- Manage Admins Section -->
   <section>
-    <h3>Manage Admins</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($users as $user): ?>
-          <?php if ($user['user_level_id'] == 3): // Only display admins 
-          ?>
+    <div class="section-header" data-section="manage-admins" onclick="toggleSection(this)">
+      <h3>Manage Admins</h3>
+    </div>
+    <div class="section-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($admins as $admin): ?>
             <tr>
-              <td><?= htmlspecialchars($user['first_name'] . " " . $user['last_name']) ?></td>
-              <td><?= htmlspecialchars($user['email']) ?></td>
+              <td><?= htmlspecialchars($admin['first_name'] . " " . $admin['last_name']) ?></td>
+              <td><?= htmlspecialchars($admin['email']) ?></td>
               <td>Admin</td>
-              <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
+              <td><?= $admin['is_active'] ? 'Active' : 'Inactive' ?></td>
               <td>
-                <a href="toggle_user.php?id=<?= htmlspecialchars($user['user_id']) ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>"
-                  class="btn <?= $user['is_active'] ? 'btn-danger' : 'btn-success' ?>">
-                  <?= $user['is_active'] ? 'Deactivate' : 'Activate' ?>
+                <a href="toggle_entity.php?id=<?= htmlspecialchars($admin['user_id']) ?>&action=<?= $admin['is_active'] ? 'deactivate' : 'activate' ?>&type=admin"
+                  class="btn <?= $admin['is_active'] ? 'btn-danger' : 'btn-success' ?>">
+                  <?= $admin['is_active'] ? 'Deactivate' : 'Activate' ?>
                 </a>
-
-
               </td>
             </tr>
-          <?php endif; ?>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- Pending Vendor Approvals Section -->
   <section>
-    <h3>Pending Vendor Requests</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Vendor Name</th>
-          <th>Email</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $sql = "SELECT v.vendor_id, v.business_name, u.email 
-                    FROM vendor v
-                    JOIN users u ON v.user_id = u.user_id
-                    WHERE v.vendor_status = 'pending'";
-
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $pending_vendors = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($pending_vendors as $vendor):
-        ?>
+    <div class="section-header" data-section="pending-approvals" onclick="toggleSection(this)">
+      <h3>Pending Vendor Requests</h3>
+    </div>
+    <div class="section-content">
+      <table>
+        <thead>
           <tr>
-            <td><?= htmlspecialchars($vendor['business_name']) ?></td>
-            <td><?= htmlspecialchars($vendor['email']) ?></td>
-            <td class="request-action-column">
-              <a href="approve_vendor.php?id=<?= $vendor['vendor_id'] ?>" class="btn btn-success">Approve</a>
-              <a href="reject_vendor.php?id=<?= $vendor['vendor_id'] ?>" class="btn btn-danger">Reject</a>
-            </td>
+            <th>Vendor Name</th>
+            <th>Email</th>
+            <th>Action</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <?php
+          $sql = "SELECT v.vendor_id, v.business_name, u.email 
+                  FROM vendor v
+                  JOIN users u ON v.user_id = u.user_id
+                  WHERE v.vendor_status = 'pending' OR v.vendor_status = 'denied'";
+          $stmt = $db->prepare($sql);
+          $stmt->execute();
+          $pending_vendors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($pending_vendors as $vendor):
+          ?>
+            <tr>
+              <td><?= htmlspecialchars($vendor['business_name']) ?></td>
+              <td><?= htmlspecialchars($vendor['email']) ?></td>
+              <td class="request-action-column">
+                <a href="approve_vendor.php?vendor_id=<?= htmlspecialchars($vendor['vendor_id']) ?>&action=approve" class="btn btn-success">Approve</a>
+                <a href="approve_vendor.php?vendor_id=<?= htmlspecialchars($vendor['vendor_id']) ?>&action=reject" class="btn btn-danger">Reject</a>
+              </td>
+
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- Schedule Market Week Section -->
   <section>
-    <h3>Schedule a Market Week</h3>
-    <form action="schedule_market.php" method="POST">
-      <label for="week_start">Week Start:</label>
-      <input type="date" id="week_start" name="week_start" required>
-
-      <label for="week_end">Week End:</label>
-      <input type="date" id="week_end" name="week_end" required>
-
-      <label for="confirmation_deadline">RSVP Deadline:</label>
-      <input type="date" id="confirmation_deadline" name="confirmation_deadline" required>
-
-      <button type="submit">Schedule Market</button>
-    </form>
+    <div class="section-header" data-section="schedule-market" onclick="toggleSection(this)">
+      <h3>Schedule a Market Week</h3>
+    </div>
+    <div class="section-content">
+      <form action="schedule_market.php" method="POST">
+        <label for="week_start">Week Start:</label>
+        <input type="date" id="week_start" name="week_start" required>
+        <label for="week_end">Week End:</label>
+        <input type="date" id="week_end" name="week_end" required>
+        <label for="confirmation_deadline">RSVP Deadline:</label>
+        <input type="date" id="confirmation_deadline" name="confirmation_deadline" required>
+        <button type="submit">Schedule Market</button>
+      </form>
+    </div>
   </section>
 
   <!-- Update Homepage Content Section -->
   <section>
-    <h3>Update Homepage Content</h3>
-    <form action="update_homepage.php" method="POST">
-      <textarea name="homepage_content" rows="5" required></textarea>
-      <button type="submit">Update Content</button>
-    </form>
+    <div class="section-header" data-section="update-content" onclick="toggleSection(this)">
+      <h3>Update Homepage Content</h3>
+    </div>
+    <div class="section-content">
+      <form action="update_homepage.php" method="POST">
+        <textarea name="homepage_content" rows="5" required></textarea>
+        <button type="submit">Update Content</button>
+      </form>
+    </div>
   </section>
 </main>
 

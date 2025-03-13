@@ -12,20 +12,26 @@ if (isset($_GET['vendor_id']) && isset($_GET['action'])) {
   $action = $_GET['action'];
 
   if ($action === "approve") {
-    $sql = "UPDATE vendor SET vendor_status = 'approved' WHERE vendor_id = ?";
+    $sql = "UPDATE vendor SET vendor_status = ? WHERE vendor_id = ?";
+    $params = ['approved', $vendor_id];
   } elseif ($action === "reject") {
-    $sql = "UPDATE vendor SET vendor_status = 'denied' WHERE vendor_id = ?";
-  } elseif ($action === "reset") {
-    $sql = "UPDATE vendor SET vendor_status = 'pending' WHERE vendor_id = ?";
+    $sql = "UPDATE vendor SET vendor_status = ? WHERE vendor_id = ?";
+    $params = ['denied', $vendor_id];
   } else {
-    header("Location: admin_dash.php"); // 🚀 Keep this so invalid actions don’t break things
+    $_SESSION['message'] = "❌ Invalid action.";
+    header("Location: admin_dash.php");
     exit();
   }
 
   $stmt = $db->prepare($sql);
-  $stmt->execute([$vendor_id]);
+  if ($stmt->execute($params)) {
+    $_SESSION['message'] = "✅ Vendor status updated successfully!";
+  } else {
+    $_SESSION['message'] = "❌ Error updating vendor status.";
+  }
 }
 
 // Redirect back to the dashboard
-header("Location: admin_dash.php");
+$redirect_page = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
+header("Location: $redirect_page");
 exit();
