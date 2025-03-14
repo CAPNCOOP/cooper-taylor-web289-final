@@ -55,12 +55,8 @@ if ($table_exists) {
 }
 ?>
 
-<?php if (isset($_SESSION['message'])): ?>
-  <div class="message">
-    <p><?= htmlspecialchars($_SESSION['message']) ?></p>
-  </div>
-  <?php unset($_SESSION['message']); ?>
-<?php endif; ?>
+<?php require_once 'private/popup_message.php'; ?>
+
 
 <div id="user-profile">
   <div id="user-card">

@@ -7,34 +7,25 @@ require_login();
 
 // Ensure only vendors can access
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 2) {
-  header("Location: index.php");
-  exit("Access Denied: You must be a vendor.");
+  header("Location: index.php?message=error_unauthorized");
+  exit();
 }
 
-// Fetch vendor_id
-$sql = "SELECT vendor_id FROM vendor WHERE user_id = ?";
+// Fetch vendor_id and product details in a **single** query
+$sql = "SELECT v.vendor_id, p.name, p.price, p.amount_id, p.description 
+        FROM vendor v
+        JOIN product p ON v.vendor_id = p.vendor_id
+        WHERE v.user_id = ? AND p.product_id = ?";
 $stmt = $db->prepare($sql);
-$stmt->execute([$_SESSION['user_id']]);
-$vendor = $stmt->fetch(PDO::FETCH_ASSOC);
-$vendor_id = $vendor['vendor_id'];
-
-// Check if product_id is set
-if (!isset($_GET['id'])) {
-  die("❌ No product selected.");
-}
-$product_id = h($_GET['id']);
-
-// Fetch product details
-$sql = "SELECT * FROM product WHERE product_id = ? AND vendor_id = ?";
-$stmt = $db->prepare($sql);
-$stmt->execute([$product_id, $vendor_id]);
+$stmt->execute([$_SESSION['user_id'], $_GET['id'] ?? null]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$product) {
-  die("❌ Product not found or you do not have permission to edit this.");
+  header("Location: manage_products.php?message=error_product_not_found");
+  exit();
 }
 
-// Fetch existing product tags
+$product_id = h($_GET['id']);
 $product_tags = get_existing_tags($product_id);
 
 // Handle form submission
@@ -44,96 +35,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $amount_id = h($_POST['amount_id']);
   $description = h($_POST['description']);
 
-  // Update product details
-  $sql = "UPDATE product SET name = ?, price = ?, amount_id = ?, description = ? WHERE product_id = ? AND vendor_id = ?";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$product_name, $price, $amount_id, $description, $product_id, $vendor_id]);
-
-  // Handle image upload (if a new image is provided)
-  // Fetch current image BEFORE updating
-  $sql = "SELECT file_path FROM product_image WHERE product_id = ?";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$product_id]);
-  $current_image = $stmt->fetchColumn();
-
-  // If a new image is uploaded, process it, otherwise retain the existing image
-  if (!empty($_FILES['product_image']['name'])) {
-    $product_image = upload_image($_FILES['product_image'], 'products', $product_name);
-  } else {
-    $product_image = $current_image; // Keep existing image
+  if (empty($product_name) || empty($price) || empty($description)) {
+    header("Location: edit_product.php?id=$product_id&message=error_empty_fields");
+    exit();
   }
 
-  // Insert new image or update the existing one
-  if (!empty($_FILES['product_image']['name'])) {
-    $product_image = upload_image($_FILES['product_image'], 'products', $product_name);
-
-    // Check if an image exists
-    $sql = "SELECT COUNT(*) FROM product_image WHERE product_id = ?";
+  $db->beginTransaction();
+  try {
+    // ✅ Update product details
+    $sql = "UPDATE product SET name = ?, price = ?, amount_id = ?, description = ? 
+                WHERE product_id = ?";
     $stmt = $db->prepare($sql);
-    $stmt->execute([$product_id]);
-    $image_exists = $stmt->fetchColumn();
+    $stmt->execute([$product_name, $price, $amount_id, $description, $product_id]);
 
-    if ($image_exists) {
-      // ✅ Update only if image already exists
-      $sql = "UPDATE product_image SET file_path = ? WHERE product_id = ?";
-    } else {
-      // ✅ Insert only if no existing image
-      $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?)";
-    }
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$product_image, $product_id]);
-  }
-
-
-
-  // Handle product tags
-  if (!empty($_POST['tags'])) {
-    $tags = explode(',', strtolower($_POST['tags']));
-
-    // Delete existing tags for the product
-    $sql = "DELETE FROM product_tag_map WHERE product_id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$product_id]);
-
-    // Add new tags
-    foreach ($tags as $tag) {
-      $tag = trim($tag);
-
-      // Check if tag exists
-      $sql = "SELECT tag_id FROM product_tag WHERE tag_name = ?";
-      $stmt = $db->prepare($sql);
-      $stmt->execute([$tag]);
-      $existing_tag = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      if ($existing_tag) {
-        $tag_id = $existing_tag['tag_id'];
+    // ✅ Process Image Upload
+    if (!empty($_FILES['product_image']['name'])) {
+      $product_image = upload_image($_FILES['product_image'], 'products', $product_name);
+      if ($product_image) {
+        $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?) 
+                        ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$product_id, $product_image]);
       } else {
-        // Insert new tag
-        $sql = "INSERT INTO product_tag (tag_name) VALUES (?)";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$tag]);
-        $tag_id = $db->lastInsertId();
-      }
-
-      // Check if this product already has this tag
-      $sql = "SELECT COUNT(*) FROM product_tag_map WHERE product_id = ? AND tag_id = ?";
-      $stmt = $db->prepare($sql);
-      $stmt->execute([$product_id, $tag_id]);
-      $tag_exists = $stmt->fetchColumn();
-
-      if (!$tag_exists) {
-        $sql = "INSERT INTO product_tag_map (product_id, tag_id) VALUES (?, ?)";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$product_id, $tag_id]);
+        throw new Exception("error_upload");
       }
     }
-  }
 
-  if ($stmt->rowCount() > 0) {
-    header("Location: manage_products.php?success=product_updated");
-    exit;
-  } else {
-    echo "⚠️ Warning: No changes were made.";
+    // ✅ Handle Product Tags only if new tags exist
+    if (!empty($_POST['tags'])) {
+      $tags = array_map('trim', explode(',', strtolower($_POST['tags'])));
+      $sql = "DELETE FROM product_tag_map WHERE product_id = ?";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$product_id]);
+
+      foreach ($tags as $tag) {
+        if (!empty($tag)) {
+          $sql = "SELECT tag_id FROM product_tag WHERE tag_name = ?";
+          $stmt = $db->prepare($sql);
+          $stmt->execute([$tag]);
+          $existing_tag = $stmt->fetch(PDO::FETCH_ASSOC);
+
+          $tag_id = $existing_tag['tag_id'] ?? null;
+          if (!$tag_id) {
+            $sql = "INSERT INTO product_tag (tag_name) VALUES (?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$tag]);
+            $tag_id = $db->lastInsertId();
+          }
+
+          $sql = "INSERT INTO product_tag_map (product_id, tag_id) VALUES (?, ?)";
+          $stmt = $db->prepare($sql);
+          $stmt->execute([$product_id, $tag_id]);
+        }
+      }
+    }
+
+    // ✅ Commit Changes
+    $db->commit();
+    header("Location: manage_products.php?message=product_updated");
+    exit();
+  } catch (Exception $e) {
+    $db->rollBack();
+    header("Location: edit_product.php?id=$product_id&message=" . $e->getMessage());
+    exit();
   }
 }
 ?>

@@ -2,12 +2,7 @@
 $page_title = "Market RSVP";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-
-// Ensure user is logged in and is a vendor
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit("Redirecting to login...");
-}
+require_login(); // Ensure the user is logged in
 
 $user_id = $_SESSION['user_id'];
 
@@ -31,10 +26,6 @@ $sql = "SELECT mw.week_id, mw.week_start, mw.week_end, mw.confirmation_deadline
         ORDER BY mw.week_start ASC";
 
 $stmt = $db->query($sql);
-$markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-$stmt = $db->query($sql);
 $weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch vendor's existing RSVPs
@@ -43,11 +34,12 @@ $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
 $rsvp_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $rsvp_map = array_column($rsvp_status, 'status', 'week_id');
-
 ?>
 
-<body>
+<main>
   <h2>RSVP for Upcoming Markets</h2>
+
+  <?php require_once 'private/popup_message.php'; ?>
 
   <?php if (empty($weeks)): ?>
     <p>No upcoming markets available.</p>
@@ -72,7 +64,7 @@ $rsvp_map = array_column($rsvp_status, 'status', 'week_id');
           <td>
             <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
               <form method="post" action="rsvp_action.php">
-                <input type="hidden" name="week_id" value="<?php echo $week['week_id']; ?>">
+                <input type="hidden" name="week_id" value="<?= $week['week_id']; ?>">
                 <select name="status" onchange="this.form.submit()">
                   <option value="planned" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'planned' ? 'selected' : ''; ?>>Planned</option>
                   <option value="confirmed" <?= isset($rsvp_map[$week['week_id']]) && $rsvp_map[$week['week_id']] == 'confirmed' ? 'selected' : ''; ?>>Confirmed</option>
@@ -83,11 +75,12 @@ $rsvp_map = array_column($rsvp_status, 'status', 'week_id');
               <span style="color: gray;">RSVP Closed</span>
             <?php endif; ?>
           </td>
-
         </tr>
       <?php endforeach; ?>
 
     </table>
   <?php endif; ?>
 
-  <?php require_once 'private/footer.php'; ?>
+</main>
+
+<?php require_once 'private/footer.php'; ?>

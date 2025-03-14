@@ -131,21 +131,37 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            showNotification(data.message);
+            showNotification(getMessageText(data.message)); // Convert message key to readable text
+
             // Toggle button style based on action
-            if (data.message.includes('removed')) {
+            if (data.message === 'favorite_removed') {
               buttonElement.textContent = '♡'; // Unfavorite icon
-            } else {
+            } else if (data.message === 'favorite_added') {
               buttonElement.textContent = '❤️'; // Favorited icon
             }
           } else {
-            showNotification(data.message, true);
+            showNotification(getMessageText(data.message), true);
           }
         })
         .catch(error => console.error('Error:', error));
     });
   });
 });
+
+/**
+ * Converts message keys to readable text.
+ */
+function getMessageText(messageKey) {
+  const messages = {
+    favorite_added: '✅ Vendor added to favorites!',
+    favorite_removed: '✅ Vendor removed from favorites!',
+    error_invalid_vendor: '❌ Error: Invalid vendor selected.',
+    error_not_logged_in: '❌ Error: You must be logged in to favorite a vendor.',
+    error_add_failed: '❌ Error: Failed to add vendor to favorites.',
+    error_remove_failed: '❌ Error: Failed to remove vendor from favorites.',
+  };
+  return messages[messageKey] || '❌ Unknown error occurred.';
+}
 
 // Notification Function
 function showNotification(message, isError = false) {
@@ -179,27 +195,20 @@ window.onload = function () {
   }
 };
 
-// Image Preview
-// Get the file input and image preview elements
-// document.getElementById('profile-pic').addEventListener('change', function (event) {
-//   const file = event.target.files[0];
-//   const preview = document.getElementById('image-preview');
-//   const fileName = document.getElementById('file-name');
+// image preview
+function previewImage() {
+  const input = document.getElementById('profile-pic');
+  const preview = document.getElementById('image-preview');
+  const file = input.files[0];
 
-//   if (file) {
-//     const reader = new FileReader();
-
-//     reader.onload = function (e) {
-//       preview.src = e.target.result;
-//       fileName.textContent = file.name; // Show the file name after selection
-//     };
-
-//     reader.readAsDataURL(file);
-//   } else {
-//     preview.src = ''; // Clear the preview if no file is selected
-//     fileName.textContent = 'No file chosen'; // Reset file name text
-//   }
-// });
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
 // Toggle Admin Content
 function toggleSection(header) {
@@ -242,6 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
       popup.style.opacity = '0'; // Fades out after 3 sec
       setTimeout(() => (popup.style.display = 'none'), 500);
-    }, 10000);
+    }, 3000);
   }
 });

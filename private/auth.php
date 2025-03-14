@@ -11,8 +11,20 @@ $username = $password = $confirm_password = $email = "";
 $fname = $lname = $is_vendor = $ein = null;
 $profile_image = 'img/upload/users/default.png';
 
-// Handle user registration
+// Ensure CSRF token is set
+if (!isset($_SESSION['token'])) {
+  $_SESSION['token'] = bin2hex(random_bytes(32)); // Secure 32-byte token
+}
+
+// Handle User Registration
 if (is_post_request() && isset($_POST['register'])) {
+  // Validate CSRF Token
+  if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+    $_SESSION['message'] = "error_csrf_invalid";
+    header("Location: ../signup.php");
+    exit();
+  }
+
   $username = h($_POST['username'] ?? '');
   $fname = h($_POST['fname'] ?? '');
   $lname = h($_POST['lname'] ?? '');
@@ -24,19 +36,29 @@ if (is_post_request() && isset($_POST['register'])) {
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
-    die("❌ Required fields cannot be blank.");
+    $_SESSION['message'] = "error_fields_blank";
+    header("Location: ../signup.php");
+    exit();
   }
   if (!has_length($password, ['min' => 8])) {
-    die("❌ Password must be at least 8 characters.");
+    $_SESSION['message'] = "error_password_short";
+    header("Location: ../signup.php");
+    exit();
   }
   if ($password !== $confirm_password) {
-    die("❌ Passwords do not match.");
+    $_SESSION['message'] = "error_password_mismatch";
+    header("Location: ../signup.php");
+    exit();
   }
   if (!has_valid_email_format($email)) {
-    die("❌ Invalid email format.");
+    $_SESSION['message'] = "error_invalid_email";
+    header("Location: ../signup.php");
+    exit();
   }
   if (!has_unique_username($username)) {
-    die("❌ Username already taken.");
+    $_SESSION['message'] = "error_username_taken";
+    header("Location: ../signup.php");
+    exit();
   }
 
   if (empty($errors)) {
@@ -44,22 +66,10 @@ if (is_post_request() && isset($_POST['register'])) {
 
     // Insert into Users Table
     $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id, is_active) 
-            VALUES (?, ?, ?, ?, ?, ?, 1)";
+                VALUES (?, ?, ?, ?, ?, ?, 1)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
     $user_id = $db->lastInsertId();
-
-    // Image Upload Handling
-    if (!empty($_FILES['profile_image']['name'])) {
-      $full_name = strtolower($_POST['fname'] . '_' . $_POST['lname']);
-      $profile_image = upload_image($_FILES['profile_image'], 'users', $full_name);
-    }
-
-    // Save profile image path
-    $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?) 
-        ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$user_id, $profile_image]);
 
     // Insert into Vendor Table if Vendor
     if ($is_vendor) {
@@ -75,12 +85,16 @@ if (is_post_request() && isset($_POST['register'])) {
       $vendor_bio = h($_POST['vendor_bio']);
 
       $sql = "INSERT INTO vendor (user_id, business_name, contact_number, business_EIN, business_email, website, city, state_id, street_address, zip_code, description, vendor_bio, vendor_status) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
       $stmt = $db->prepare($sql);
       $stmt->execute([$user_id, $business_name, $contact_number, $ein, $business_email, $website, $city, $state_id, $street_address, $zip_code, $description, $vendor_bio]);
-    }
 
-    ob_end_clean(); // Clear output before redirecting
+      $_SESSION['message'] = "vendor_pending";
+      $redirect_url = "/vendor_dash.php";
+    } else {
+      $_SESSION['message'] = "user_registered";
+      $redirect_url = "/dashboard.php";
+    }
 
     // Set Session Variables
     $_SESSION['user_id'] = $user_id;
@@ -88,77 +102,76 @@ if (is_post_request() && isset($_POST['register'])) {
     $_SESSION['user_level_id'] = $is_vendor ? 2 : 1;
     $_SESSION['profile_image'] = $profile_image;
 
-    // Redirect Based on User Level
-    $redirect_url = ($is_vendor) ? "/vendor_dash.php" : "/dashboard.php";
     header("Location: " . $redirect_url);
-    exit;
+    exit();
   }
 }
 
-// Handle User Login
+// 🚀 Handle User Login
 if (is_post_request() && isset($_POST['login'])) {
+  // Validate CSRF Token
+  if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+    $_SESSION['message'] = "error_csrf_invalid";
+    header("Location: ../login.php");
+    exit();
+  }
+
   $username = h($_POST['username']);
   $password = $_POST['password'];
 
   if (is_blank($username) || is_blank($password)) {
-    header("Location: login.php?error=invalid_credentials");
-    exit;
+    $_SESSION['message'] = "error_invalid_login";
+    header("Location: ../login.php");
+    exit();
   }
 
-  $sql = "SELECT user_id, username, password, user_level_id, is_active FROM users WHERE username = ?";
   $sql = "SELECT u.user_id, u.username, u.password, u.user_level_id, u.is_active, v.vendor_status
-  FROM users u
-  LEFT JOIN vendor v ON u.user_id = v.user_id
-  WHERE u.username = ?";
-
+            FROM users u
+            LEFT JOIN vendor v ON u.user_id = v.user_id
+            WHERE u.username = ?";
   $stmt = $db->prepare($sql);
   $stmt->execute([$username]);
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($user && password_verify($password, $user['password'])) {
     if ($user['is_active'] == 0) {
-      header("Location: login.php?error=account_inactive");
-      exit;
+      $_SESSION['message'] = "error_account_inactive";
+      header("Location: ../login.php");
+      exit();
     }
 
     session_regenerate_id(true);
 
-    // Set Correct Session Variables
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['user_level_id'] = $user['user_level_id'];
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
 
-    // Redirect Based on User Level
-    if ($_SESSION['user_level_id'] == 2) {
-      header("Location: /vendor_dash.php");
-    } elseif ($_SESSION['user_level_id'] == 3) { // Admin
-      header("Location: /admin_dash.php");
-    } elseif ($_SESSION['user_level_id'] == 4) { // Super Admin
-      header("Location: /superadmin_dash.php");
-    } else {
-      header("Location: /dashboard.php");
-    }
-    exit;
-  } else {
-    header("Location: login.php?error=invalid_credentials");
-    exit;
-  }
-}
+    $_SESSION['message'] = "login_success";
 
-if ($_SESSION['user_level_id'] == 2 && isset($user['vendor_status'])) {
-  if ($user['vendor_status'] == 'pending') {
-    die("❌ Error: Your vendor account is pending approval.");
-  } elseif ($user['vendor_status'] == 'denied') {
-    die("❌ Error: Your vendor application was denied. Contact support for more info.");
+    if ($_SESSION['user_level_id'] == 2) {
+      header("Location: ../vendor_dash.php");
+    } elseif ($_SESSION['user_level_id'] == 3) {
+      header("Location: ../admin_dash.php");
+    } elseif ($_SESSION['user_level_id'] == 4) {
+      header("Location: ../superadmin_dash.php");
+    } else {
+      header("Location: ../dashboard.php");
+    }
+    exit();
+  } else {
+    $_SESSION['message'] = "error_invalid_login";
+    header("Location: ../login.php");
+    exit();
   }
 }
 
 // Handle Logout
 if (is_get_request() && isset($_GET['logout'])) {
   session_destroy();
-  header("Location: login.php");
-  exit;
+  $_SESSION['message'] = "logout_success";
+  header("Location: ../login.php");
+  exit();
 }
 
 // Function to Get Profile Image

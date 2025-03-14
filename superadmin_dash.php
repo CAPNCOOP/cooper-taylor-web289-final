@@ -219,14 +219,16 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
               <!-- Activate/Deactivate Action -->
               <td>
                 <?php
-                $vendor_action = $vendor['is_active'] ? 'deactivate' : 'activate';
-                $button_class = $vendor['is_active'] ? 'btn btn-danger' : 'btn btn-success';
-                $button_text = $vendor['is_active'] ? 'Deactivate' : 'Activate';
+                $vendor_action = ($vendor['is_active'] == 1) ? 'deactivate' : 'activate';
+                $button_class = ($vendor['is_active'] == 1) ? 'btn btn-danger' : 'btn btn-success';
+                $button_text = ($vendor['is_active'] == 1) ? 'Deactivate Vendor' : 'Activate Vendor';
                 ?>
-                <a href="toggle_entity.php?id=<?= $vendor['vendor_id'] ?>&action=<?= $vendor['vendor_status'] === 'active' ? 'deactivate' : 'activate' ?>&type=vendor">
-                  <?= $vendor['vendor_status'] === 'active' ? 'Deactivate Vendor' : 'Activate Vendor' ?>
+                <a href="toggle_entity.php?id=<?= $vendor['user_id'] ?>&action=<?= $vendor_action ?>&type=vendor"
+                  class="<?= $button_class ?>">
+                  <?= $button_text ?>
                 </a>
               </td>
+
             </tr>
           <?php endforeach; ?>
         </tbody>
@@ -317,6 +319,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
     </div>
     <div class="section-content">
       <form action="schedule_market.php" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <label for="week_start">Week Start:</label>
         <input type="date" id="week_start" name="week_start" required>
         <label for="week_end">Week End:</label>
