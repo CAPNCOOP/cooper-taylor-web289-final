@@ -7,11 +7,12 @@ require_once 'private/map_header.php';
 $sql = "SELECT 
     mw.week_id, 
     mw.week_start, 
-    DATE_ADD(mw.week_start, INTERVAL 6 DAY) AS saturday_market_date, 
+    DATE_FORMAT(DATE_ADD(mw.week_start, INTERVAL 6 DAY), '%b-%d-%Y') AS saturday_market_date, 
     mw.confirmation_deadline
 FROM market_week mw
 ORDER BY mw.week_start ASC;
 ";
+
 $stmt = $db->query($sql);
 $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -19,6 +20,7 @@ $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <h2>Markets are every Saturday 8am-2pm, Pack Square Park</h2>
 
 <div id="schedule-map-container">
+  <div id="map"></div>
   <div id="schedule-div">
     <h2>Upcoming Markets</h2>
     <table>
@@ -41,7 +43,6 @@ $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </table>
   </div>
 
-  <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>

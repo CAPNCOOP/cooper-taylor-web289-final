@@ -2,6 +2,7 @@
 $page_title = "Member - Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+require_once 'private/functions.php';
 require_login(); // Ensure the user is logged in
 $user_level = $_SESSION['user_level_id'] ?? null;
 
@@ -55,14 +56,18 @@ if ($table_exists) {
 }
 ?>
 
-<?php require_once 'private/popup_message.php'; ?>
-
+<?php if (isset($_SESSION['message'])): ?>
+  <div class="message">
+    <p><?= h($_SESSION['message']) ?></p>
+  </div>
+  <?php unset($_SESSION['message']); ?>
+<?php endif; ?>
 
 <div id="user-profile">
   <div id="user-card">
-    <h2>Hello, <strong><?= htmlspecialchars($user['username']) ?></strong>!</h2>
-    <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" height="250" width="250">
-    <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+    <h2>Hello, <strong><?= h($user['username']) ?></strong>!</h2>
+    <img src="<?= h($profile_image) ?>" alt="Profile Picture" height="250" width="250">
+    <p><strong>Email:</strong> <?= h($user['email']) ?></p>
     <p><strong>Account Type:</strong> <?= $user_type ?></p>
     <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon.">Edit Details</a>
   </div>
@@ -73,10 +78,10 @@ if ($table_exists) {
       <ul>
         <?php foreach ($favorites as $vendor): ?>
           <li>
-            <img src="<?= htmlspecialchars($vendor['profile_image'] ?? 'default.png') ?>"
+            <img src="<?= h($vendor['profile_image'] ?? 'default.png') ?>"
               height="200" width="200" alt="An Image of a Vendor.">
             <a href="vendor_profile.php?vendor_id=<?= $vendor['vendor_id'] ?>">
-              <?= htmlspecialchars($vendor['business_name']) ?>
+              <?= h($vendor['business_name']) ?>
             </a>
             <!-- Add the Remove link -->
             <a href="remove_vendor.php?vendor_id=<?= $vendor['vendor_id'] ?>" class="remove-link">Remove</a>

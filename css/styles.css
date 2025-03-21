@@ -6,7 +6,6 @@
   --secondary-text: 'Montserrat';
   --main-color: #cdd1cb;
   --secondary-color: #073b3a;
-  /* --tertiary-color: #ff8811; */
   --light: #f2f2f2;
   --dark: #333;
 }
@@ -27,6 +26,7 @@ img {
 body {
   background-color: var(--main-color);
   margin: 0;
+  padding-top: 163px;
 }
 
 .feedback-popup {
@@ -74,23 +74,33 @@ body {
 }
 
 .disabled-link {
-  cursor: not-allowed; /* Changes cursor to indicate restriction */
-  opacity: 0.5; /* Makes it look inactive */
-  pointer-events: none; /* Disables clicking */
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* Header - Footer */
-
 header {
   align-items: center;
   background-color: var(--secondary-color);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  left: 0;
   padding: 1rem;
-  position: static;
+  position: fixed;
+  top: 0;
+  transition: transform 0.3s ease;
+  width: 100%;
+  z-index: 1000;
 }
 
+/* Class added when scrolling down - moves header off-screen */
+header.header-hidden {
+  transform: translateY(-100%);
+}
+
+/* Keep your other header styles as they were */
 header a:first-of-type {
   align-items: center;
   color: var(--light);
@@ -103,16 +113,12 @@ header a div span {
   font: 24px var(--secondary-text);
 }
 
-nav ul {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-}
-
 nav ul li {
+  display: flex;
   font: 22px var(--secondary-text);
+  justify-content: center;
   list-style-type: none;
-  padding: 0 0.5rem;
+  padding: 0.5rem;
 }
 
 nav a {
@@ -138,18 +144,67 @@ header h1:nth-of-type(2) {
   display: none;
 }
 
-.hamburger {
-  cursor: pointer;
-  display: none !important;
-  flex-direction: column;
-  gap: 5px;
+header div:first-of-type span {
+  font-size: 18px;
 }
 
-.hamburger span {
-  width: 30px;
-  height: 4px;
-  background: var(--light);
+.nav-links {
+  background: var(--dark);
+  display: none;
+  margin: 0 auto;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 100%;
+  width: 100%;
+}
+
+.nav-links ul {
+  flex-direction: column;
+  padding: 0;
+}
+
+.nav-links.active {
+  display: block;
+  z-index: 999;
+}
+
+#menu {
+  color: var(--light);
+  cursor: pointer;
+  font: 32px var(--secondary-text);
+  transition: all 0.2s ease-in-out;
+}
+
+#menu:hover {
+  opacity: 0.7;
+}
+
+div#nav-history {
   border-radius: 5px;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-start;
+  padding: 0;
+  width: 230px;
+}
+
+#nav-history button {
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  border: 1px solid var(--main-color);
+  color: var(--light);
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0;
+  padding: 0.25rem 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+#nav-history button:hover {
+  opacity: 0.7;
+  transform: scale(1.025);
 }
 
 footer {
@@ -315,6 +370,7 @@ footer a {
 #schedule-map-container {
   align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin: 1rem;
 }
@@ -324,12 +380,11 @@ footer a {
   background-color: var(--light);
   border: 3px solid var(--dark);
   display: flex;
-  flex: 1;
   flex-direction: column;
+  width: 100%;
 }
 
 #map {
-  flex: 2;
   height: 430px;
   margin: 0;
   width: 100%;
@@ -387,6 +442,39 @@ footer a {
   color: var(--light);
   cursor: pointer;
   opacity: 0.7;
+}
+
+/* Market Vendors */
+
+.vendors-attending h2 {
+  font: 36px var(--main-text);
+  text-align: center;
+}
+
+.week-vendor {
+  background-color: var(--light);
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.vendor-item {
+  align-items: center;
+  border-bottom: 3px solid var(--secondary-color);
+  display: flex;
+  font: 24px var(--secondary-text);
+  gap: 1rem;
+  list-style-type: none;
+  padding: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.vendor-item img {
+  border-radius: 100%;
+}
+
+.vendor-item:hover {
+  color: var(--light);
+  background-color: var(--secondary-color);
 }
 
 /* Our Vendors */
@@ -454,7 +542,7 @@ div#vendorhead {
   flex-flow: row wrap;
   gap: 1rem;
   justify-content: center;
-  margin: 0 auto 0 auto;
+  margin: 0 auto;
   padding: 1rem;
   width: 90%;
 }
@@ -486,7 +574,7 @@ div#vendorhead {
   scale: 1.025;
 }
 
-.vendor-card a h2 {
+.vendor-card h2 {
   font: 28px var(--secondary-text);
   margin: 1rem;
   text-align: center;
@@ -504,6 +592,26 @@ div#vendorhead {
 .vendor-card p {
   font: 18px var(--secondary-text);
   margin-bottom: 1rem;
+}
+
+.pagination {
+  background-color: var(--light);
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.pagination a {
+  color: var(--dark);
+  text-decoration: none;
+}
+
+.pagination a {
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  color: var(--light);
+  padding: 1rem;
 }
 
 /* Vendor Product List */
@@ -585,7 +693,7 @@ div#vendorhead {
   color: var(--dark);
   display: flex;
   flex: 1;
-  flex-direction: row;
+  flex-flow: column wrap;
   padding: 1rem;
   justify-content: center;
 }
@@ -902,7 +1010,7 @@ div#vendorhead {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .vendor-signup form {
@@ -913,11 +1021,95 @@ div#vendorhead {
   justify-content: center;
 }
 
+.sign-up div:nth-of-type(2) fieldset {
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.signup-button {
+  background-color: var(--dark);
+  border: none;
+  border-radius: 5px;
+  color: var(--light);
+  font: 18px var(--secondary-text);
+  padding: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.signup-button:hover {
+  opacity: 0.7;
+  transform: translateY(-3px);
+}
+
+.sign-up div:nth-of-type(2) div,
+.vendor-signup div:nth-of-type(3) fieldset + div {
+  display: flex;
+  justify-content: center;
+}
+
+.vendor-signup div:nth-of-type(3) div fieldset {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vendor-signup div:nth-of-type(2) div {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  width: 300px;
+}
+
+#description,
+#vendor-bio {
+  width: 300px;
+  height: 100px;
+}
+
+/* Hide the default file input appearance */
+#profile-pic {
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 0.1px;
+  z-index: -1;
+}
+
+/* Style the label that will act as our button */
+label[for='profile-pic'] {
+  background-color: var(--secondary-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--light);
+  cursor: pointer;
+  display: inline-block;
+  font: 32px var(--secondary-text);
+  font-family: Arial, sans-serif;
+  margin: 0.5rem;
+  padding: 10px 15px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effect */
+label[for='profile-pic']:hover {
+  opacity: 0.7;
+  transform: scaleY(-3px);
+}
+
+#profile-preview {
+  background: url('../img/assets/add-photo.svg') center / cover;
+  border-radius: 5px;
+}
+
 .sign-up fieldset,
 .vendor-signup fieldset {
   border: none;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   padding: 1rem;
 }
@@ -936,13 +1128,7 @@ div#vendorhead {
 
 .vendor-signup p {
   font: 18px var(--secondary-text);
-}
-
-#img-preview {
-  border-radius: 0;
-  display: none;
-  margin: 1rem;
-  padding: 1rem;
+  flex-basis: 100%;
 }
 
 .sign-up label,
@@ -967,17 +1153,7 @@ div#vendorhead {
   padding: 10px;
 }
 
-.sign-up button,
-.vendor-signup button {
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px var(--dark);
-  font: 18px var(--secondary-text);
-  margin: 1rem;
-  padding: 0.5rem;
-}
-
-.vendor-signup div {
+.vendor-signup main div {
   padding: 1rem;
 }
 
@@ -1048,7 +1224,7 @@ div#vendorhead {
   background-color: var(--light);
   justify-content: flex-start !important;
   row-gap: 1rem;
-  height: 300px;
+  height: auto;
 }
 
 #user-card p {
@@ -1448,16 +1624,17 @@ td.request-action-column {
 @media screen and (max-width: 1400px) {
   /* originally 72px */
   .static-text {
-    font-size: calc(36px + (72 - 36) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(36px + (72 - 36) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 64px */
   .about-us h2 {
-    font-size: calc(32px + (64 - 32) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(32px + (64 - 32) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 48px */
-  h1,
+  header h1,
+  header h1:nth-of-type(2),
   .user-login legend,
   .sign-up legend,
   .vendor-signup h2,
@@ -1466,41 +1643,43 @@ td.request-action-column {
   #vendor-info h2,
   .manage-products h2:first-of-type,
   .market-rsvp h2 {
-    font-size: calc(24px + (48 - 24) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(24px + (48 - 24) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 46px */
   #vendorhead h2 {
-    font-size: calc(23px + (46 - 23) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(23px + (46 - 23) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 36px */
+  .vendors-attending h2,
   .market-schedule h2,
   #vendor-profile-card h2,
   #user-profile h2:last-of-type {
-    font-size: calc(18px + (36 - 18) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(18px + (36 - 18) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 32px */
+  label[for='profile-pic'],
+  .vendor-profile h2,
+  #menu {
+    font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 375));
+  }
+
   .text,
   #type-text,
   .aboutus-item p,
-  .sign-up label,
-  .vendor-signup label,
   .edit-profile-details form label {
-    font-size: calc(16px + (32 - 16) * (100vw - 375px) / (1400 - 430));
-  }
-
-  .vendor-profile h2 {
-    font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(16px + (32 - 16) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 28px */
-  .vendor-card a h2 {
-    font-size: calc(14px + (28 - 14) * (100vw - 375px) / (1400 - 430));
+  .vendor-card h2 {
+    font-size: calc(14px + (28 - 14) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 24px */
+  .week-vendor li,
   .market-schedule table,
   .market-schedule table th,
   .vendor-card,
@@ -1509,12 +1688,12 @@ td.request-action-column {
   .vendor-testimonial blockquote:after,
   #user-card p,
   .manage-products legend {
-    font-size: calc(16px + (24 - 16) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(16px + (24 - 16) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 22px */
   nav ul li {
-    font-size: calc(14px + (22 - 14) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(14px + (22 - 14) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 20px */
@@ -1523,10 +1702,12 @@ td.request-action-column {
   .about-us div div:last-of-type span,
   .favorite-btn,
   .edit-profile-details button {
-    font-size: calc(14px + (20 - 14) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(14px + (20 - 14) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 18px */
+  #nav-history button,
+  header div:first-of-type span,
   .frozen-popup,
   footer,
   .prev,
@@ -1543,7 +1724,7 @@ td.request-action-column {
   .message,
   .manage-products button,
   #vendor-profile-card p {
-    font-size: calc(12px + (18 - 12) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(12px + (18 - 12) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 16px */
@@ -1551,17 +1732,17 @@ td.request-action-column {
   #vendorhead button,
   #notification,
   .custom-file-label {
-    font-size: calc(12px + (16 - 12) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(12px + (16 - 12) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 14px */
   .btn {
-    font-size: calc(11px + (14 - 11) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(11px + (14 - 11) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 12px */
   .numbertext {
-    font-size: calc(10px + (12 - 10) * (100vw - 375px) / (1400 - 430));
+    font-size: calc(10px + (12 - 10) * (100vw - 375px) / (1400 - 375));
   }
 }
 
@@ -1582,28 +1763,17 @@ td.request-action-column {
 }
 
 @media screen and (max-width: 1170px) {
-  /* Schedule Page */
-  #schedule-map-container {
-    flex-direction: column;
-  }
-
-  #schedule-div {
-    order: 2;
-    width: 100%;
-  }
-
-  #map {
-    height: 400px;
-    margin-bottom: 0.5rem;
-    min-height: 400px;
-    width: 100%;
-  }
-
   /* Our Vendors */
   #vendor-profile-container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  /* Vendor Signup */
+
+  .vendor-signup form {
+    flex-flow: row wrap;
   }
 }
 
@@ -1630,33 +1800,6 @@ td.request-action-column {
 }
 
 @media screen and (max-width: 950px) {
-  /* Header */
-  .nav-links {
-    background: var(--dark);
-    display: none;
-    margin: 0 auto;
-    padding: 10px;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    top: 120px;
-    width: 100%;
-  }
-
-  .nav-links ul {
-    flex-direction: column;
-    padding: 0;
-  }
-
-  .nav-links.active {
-    display: block;
-    z-index: 999;
-  }
-
-  .hamburger {
-    display: flex !important;
-  }
-
   /* Our Vendors */
 
   #vendorhead input {
@@ -1760,6 +1903,11 @@ td.request-action-column {
 }
 
 @media screen and (max-width: 780px) {
+  /* Body */
+  body {
+    padding-top: 152px;
+  }
+
   /* Home */
   .static-text {
     top: 50%;
@@ -1838,7 +1986,16 @@ td.request-action-column {
     height: 250px;
     width: 120px;
   }
+
+  /* sign up */
+  .sign-up input {
+    width: 300px;
+  }
 }
 
 @media screen and (max-width: 380px) {
+  /* Body */
+  body {
+    padding-top: 148px;
+  }
 }

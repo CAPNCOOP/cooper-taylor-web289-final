@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['user_level_id'] != 3 && $_SESSIO
 }
 
 // Validate parameters
-if (!isset($_GET['id'], $_GET['action'], $_GET['type'], $_GET['csrf_token'])) {
+if (!isset($_GET['id'], $_GET['action'], $_GET['type'])) {
   $_SESSION['message'] = "❌ Missing parameters.";
   header("Location: superadmin_dash.php");
   exit();
@@ -18,40 +18,31 @@ if (!isset($_GET['id'], $_GET['action'], $_GET['type'], $_GET['csrf_token'])) {
 $entity_id = intval($_GET['id']);
 $action = $_GET['action'];
 $type = $_GET['type']; // "user", "vendor", "admin"
-$csrf_token = $_GET['csrf_token'];
-
-// 🔐 CSRF Protection: Ensure the token matches the one in the session
-if (!isset($_SESSION['csrf_token']) || $csrf_token !== $_SESSION['csrf_token']) {
-  $_SESSION['message'] = "❌ Security check failed. Try again.";
-  header("Location: superadmin_dash.php");
-  exit();
-}
-
-// Determine table, ID column, and status column dynamically
-switch ($type) {
-  case "user":
-  case "admin":
-    $table = "users";
-    $id_column = "user_id";
-    $status_column = "is_active";
-    break;
-
-  case "vendor":
-    $table = "users"; // ✅ Vendors should be toggled in `users` table
-    $id_column = "user_id"; // ✅ Vendors are users, toggle their `user_id`
-    $status_column = "is_active"; // ✅ Change activation (1 = active, 0 = inactive)
-    break;
-
-  default:
-    $_SESSION['message'] = "❌ Invalid entity type.";
-    header("Location: superadmin_dash.php");
-    exit();
-}
-
-// Redirect page based on admin level
-$redirect_page = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
 
 try {
+  // Determine table, ID column, and status column dynamically
+  switch ($type) {
+    case "user":
+    case "admin":
+      $table = "users";
+      $id_column = "user_id";
+      $status_column = "is_active";
+      $redirect_page = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
+      break;
+
+    case "vendor":
+      $table = "users"; // ✅ Vendors should be toggled in `users` table
+      $id_column = "user_id"; // ✅ Vendors are users, toggle their `user_id`
+      $status_column = "is_active"; // ✅ Change activation (1 = active, 0 = inactive)
+      $redirect_page = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
+      break;
+
+    default:
+      $_SESSION['message'] = "❌ Invalid entity type.";
+      header("Location: superadmin_dash.php");
+      exit();
+  }
+
   // ✅ Fetch current status
   $sql = "SELECT $status_column FROM $table WHERE $id_column = ?";
   $stmt = $db->prepare($sql);
@@ -67,7 +58,7 @@ try {
   // ✅ Determine new status (ONLY 1 or 0 for activation)
   $new_status = ($current_status == 1) ? 0 : 1;
 
-  // ✅ Update entity activation status
+  // ✅ Update entity activation status (ONLY is_active, NOT vendor_status)
   $sql = "UPDATE $table SET $status_column = ? WHERE $id_column = ?";
   $stmt = $db->prepare($sql);
   $result = $stmt->execute([$new_status, $entity_id]);

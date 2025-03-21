@@ -11,20 +11,8 @@ $username = $password = $confirm_password = $email = "";
 $fname = $lname = $is_vendor = $ein = null;
 $profile_image = 'img/upload/users/default.png';
 
-// Ensure CSRF token is set
-if (!isset($_SESSION['token'])) {
-  $_SESSION['token'] = bin2hex(random_bytes(32)); // Secure 32-byte token
-}
-
 // Handle User Registration
 if (is_post_request() && isset($_POST['register'])) {
-  // Validate CSRF Token
-  if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-    $_SESSION['message'] = "error_csrf_invalid";
-    header("Location: ../signup.php");
-    exit();
-  }
-
   $username = h($_POST['username'] ?? '');
   $fname = h($_POST['fname'] ?? '');
   $lname = h($_POST['lname'] ?? '');
@@ -36,27 +24,27 @@ if (is_post_request() && isset($_POST['register'])) {
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
-    $_SESSION['message'] = "error_fields_blank";
+    $_SESSION['message'] = "❌ Required fields cannot be blank.";
     header("Location: ../signup.php");
     exit();
   }
   if (!has_length($password, ['min' => 8])) {
-    $_SESSION['message'] = "error_password_short";
+    $_SESSION['message'] = "❌ Password must be at least 8 characters.";
     header("Location: ../signup.php");
     exit();
   }
   if ($password !== $confirm_password) {
-    $_SESSION['message'] = "error_password_mismatch";
+    $_SESSION['message'] = "❌ Passwords do not match.";
     header("Location: ../signup.php");
     exit();
   }
   if (!has_valid_email_format($email)) {
-    $_SESSION['message'] = "error_invalid_email";
+    $_SESSION['message'] = "❌ Invalid email format.";
     header("Location: ../signup.php");
     exit();
   }
   if (!has_unique_username($username)) {
-    $_SESSION['message'] = "error_username_taken";
+    $_SESSION['message'] = "❌ Username already taken.";
     header("Location: ../signup.php");
     exit();
   }
@@ -66,7 +54,7 @@ if (is_post_request() && isset($_POST['register'])) {
 
     // Insert into Users Table
     $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id, is_active) 
-                VALUES (?, ?, ?, ?, ?, ?, 1)";
+            VALUES (?, ?, ?, ?, ?, ?, 1)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
     $user_id = $db->lastInsertId();
@@ -85,14 +73,14 @@ if (is_post_request() && isset($_POST['register'])) {
       $vendor_bio = h($_POST['vendor_bio']);
 
       $sql = "INSERT INTO vendor (user_id, business_name, contact_number, business_EIN, business_email, website, city, state_id, street_address, zip_code, description, vendor_bio, vendor_status) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
       $stmt = $db->prepare($sql);
       $stmt->execute([$user_id, $business_name, $contact_number, $ein, $business_email, $website, $city, $state_id, $street_address, $zip_code, $description, $vendor_bio]);
 
-      $_SESSION['message'] = "vendor_pending";
+      $_SESSION['message'] = "✅ Approval pending. Check your email for confirmation in the next 24-48h.";
       $redirect_url = "/vendor_dash.php";
     } else {
-      $_SESSION['message'] = "user_registered";
+      $_SESSION['message'] = "✅ Account created successfully! Welcome to the site.";
       $redirect_url = "/dashboard.php";
     }
 
@@ -107,35 +95,29 @@ if (is_post_request() && isset($_POST['register'])) {
   }
 }
 
-// 🚀 Handle User Login
+// Handle User Login
 if (is_post_request() && isset($_POST['login'])) {
-  // Validate CSRF Token
-  if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-    $_SESSION['message'] = "error_csrf_invalid";
-    header("Location: ../login.php");
-    exit();
-  }
-
   $username = h($_POST['username']);
   $password = $_POST['password'];
 
   if (is_blank($username) || is_blank($password)) {
-    $_SESSION['message'] = "error_invalid_login";
+    $_SESSION['message'] = "❌ Invalid username or password.";
     header("Location: ../login.php");
     exit();
   }
 
   $sql = "SELECT u.user_id, u.username, u.password, u.user_level_id, u.is_active, v.vendor_status
-            FROM users u
-            LEFT JOIN vendor v ON u.user_id = v.user_id
-            WHERE u.username = ?";
+          FROM users u
+          LEFT JOIN vendor v ON u.user_id = v.user_id
+          WHERE u.username = ?";
+
   $stmt = $db->prepare($sql);
   $stmt->execute([$username]);
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($user && password_verify($password, $user['password'])) {
     if ($user['is_active'] == 0) {
-      $_SESSION['message'] = "error_account_inactive";
+      $_SESSION['message'] = "❌ Your account has been deactivated. Contact support.";
       header("Location: ../login.php");
       exit();
     }
@@ -147,7 +129,7 @@ if (is_post_request() && isset($_POST['login'])) {
     $_SESSION['user_level_id'] = $user['user_level_id'];
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
 
-    $_SESSION['message'] = "login_success";
+    $_SESSION['message'] = "✅ Welcome back, " . htmlspecialchars($user['username']) . "!";
 
     if ($_SESSION['user_level_id'] == 2) {
       header("Location: ../vendor_dash.php");
@@ -160,18 +142,10 @@ if (is_post_request() && isset($_POST['login'])) {
     }
     exit();
   } else {
-    $_SESSION['message'] = "error_invalid_login";
+    $_SESSION['message'] = "❌ Invalid username or password.";
     header("Location: ../login.php");
     exit();
   }
-}
-
-// Handle Logout
-if (is_get_request() && isset($_GET['logout'])) {
-  session_destroy();
-  $_SESSION['message'] = "logout_success";
-  header("Location: ../login.php");
-  exit();
 }
 
 // Function to Get Profile Image

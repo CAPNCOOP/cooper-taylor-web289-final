@@ -2,63 +2,118 @@
 $page_title = "Vendor Signup";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-require_once 'private/popup_message.php';
 ?>
 
 <main>
   <h2>Vendor Sign Up</h2>
 
+  <p>Becoming a vendor with us requires the submission of a valid Employer Identification Number (EIN) for verification. Once your EIN has been successfully approved, you will gain access to our platform, allowing you to register for upcoming market dates and showcase your products to our community. We strive to ensure a smooth and efficient approval process, but please allow up to 48 hours for confirmation. This step is essential for maintaining a high standard of service and ensuring all vendors meet our operational requirements.</p>
+
   <form action="private/auth.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="is_vendor" value="1">
-    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
 
-    <fieldset>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-    </fieldset>
+    <!-- Personal Info -->
+    <div>
 
-    <fieldset>
-      <label for="fname">First Name:</label>
-      <input type="text" id="fname" name="fname" required>
-    </fieldset>
+      <fieldset>
+        <input type="text" id="username" name="username" required aria-label="Username" placeholder="Username">
+      </fieldset>
 
-    <fieldset>
-      <label for="lname">Last Name:</label>
-      <input type="text" id="lname" name="lname" required>
-    </fieldset>
+      <fieldset>
+        <input type="text" id="fname" name="fname" required aria-label="First Name" placeholder="First Name">
+      </fieldset>
 
-    <fieldset>
-      <label for="email">Email Address:</label>
-      <input type="email" id="email" name="email" required>
-    </fieldset>
+      <fieldset>
+        <input type="text" id="lname" name="lname" required aria-label="Last Name" placeholder="Last Name">
+      </fieldset>
 
-    <fieldset>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-    </fieldset>
+      <fieldset>
+        <input type="email" id="email" name="email" required aria-label="Email Address" placeholder="Email Address">
+      </fieldset>
 
-    <fieldset>
-      <label for="confirm-pass">Confirm Password:</label>
-      <input type="password" id="confirm-pass" name="confirm-pass" required>
-    </fieldset>
+      <fieldset>
+        <input type="password" id="password" name="password" required aria-label="Password" placeholder="Password">
+      </fieldset>
 
-    <fieldset>
-      <label for="business-name">Business Name:</label>
-      <input type="text" id="business-name" name="business_name" required>
-    </fieldset>
+      <fieldset>
+        <input type="password" id="confirm-pass" name="confirm-pass" required aria-label="Confirm Password" placeholder="Confirm Password">
+      </fieldset>
 
-    <fieldset>
-      <label for="business-ein">Business EIN (XX-XXXXXXX):</label>
-      <input type="text" id="business-ein" name="business_EIN" required pattern="\d{2}-\d{7}">
-    </fieldset>
+      <fieldset>
+        <input type="text" id="business-name" name="business_name" required aria-label="Business Name" placeholder="Business Name">
+      </fieldset>
 
-    <fieldset>
-      <label for="profile-pic">Profile Picture:</label>
-      <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" required onchange="previewImage()">
-      <img id="image-preview" src="" alt="Image Preview" height="250" width="250">
-    </fieldset>
+      <fieldset>
+        <input type="text" id="contact-number" name="contact_number" required aria-label="Contact Number" placeholder="Contact Number">
+      </fieldset>
 
-    <button type="submit" name="register" value="1">Sign Up</button>
+      <fieldset>
+        <input type="text" id="business-ein" name="business_EIN" required aria-label="Business EIN" placeholder="Business EIN">
+      </fieldset>
+    </div>
+
+    <div>
+      <fieldset>
+        <input type="email" id="business-email" name="business_email" required aria-label="Business Email" placeholder="Business Email">
+      </fieldset>
+
+      <fieldset>
+        <input type="url" id="website" name="website" aria-label="Website" placeholder="Website (optional)">
+      </fieldset>
+
+      <fieldset>
+        <input type="text" id="city" name="city" required aria-label="City" placeholder="City">
+      </fieldset>
+
+      <fieldset>
+        <select id="state" name="state_id" required aria-label="State">
+          <option value="">Select State</option>
+          <?php
+          // Fetch states from the database
+          $state_sql = "SELECT state_id, state_abbr FROM state ORDER BY state_abbr ASC";
+          $state_stmt = $db->prepare($state_sql);
+          $state_stmt->execute();
+          $states = $state_stmt->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($states as $state) {
+            echo "<option value=\"" . $state['state_id'] . "\">" . htmlspecialchars($state['state_abbr']) . "</option>";
+          }
+          ?>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <input type="text" id="street-address" name="street_address" required aria-label="Street Address" placeholder="Street Address">
+      </fieldset>
+
+      <fieldset>
+        <input type="text" id="zip-code" name="zip_code" required aria-label="Zip Code" placeholder="Zip Code">
+      </fieldset>
+
+      <div>
+        <fieldset>
+          <textarea id="description" name="description" required aria-label="Business Description" placeholder="Business Description"></textarea>
+        </fieldset>
+
+        <fieldset>
+          <textarea id="vendor-bio" name="vendor_bio" required aria-label="Vendor Bio" placeholder="Vendor Bio"></textarea>
+        </fieldset>
+      </div>
+
+    </div>
+
+    <div>
+
+      <div>
+        <fieldset>
+          <label for="profile-pic">Choose File</label>
+          <img id="profile-preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="temporary hidden image." height="300" width="300">
+          <input type="file" id="profile-pic" data-preview="profile-preview" name="profile-pic" accept="image/png, image/jpeg, image/webp" aria-label="Profile Picture" onchange="previewImage(event)" required>
+        </fieldset>
+        <div>
+          <button class="signup-button" type="submit" name="register" value="1">Sign Up</button>
+        </div>
+      </div>
+    </div>
   </form>
 </main>
 

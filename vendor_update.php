@@ -2,13 +2,17 @@
 $page_title = "Vendor - Update";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+require_once 'private/functions.php';
 
-require_login(); // Ensure the user is logged in
+// Ensure user is logged in and is a vendor
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit("Redirecting to login...");
+}
 
 // Fetch vendor details
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT v.vendor_id, v.business_name, v.contact_number, v.business_email, v.website, 
-               v.city, v.state_id, v.street_address, v.zip_code, pi.file_path AS profile_image
+$sql = "SELECT v.vendor_id, v.business_name, v.contact_number, v.business_email, v.website, v.city, v.state_id, v.street_address, v.zip_code, pi.file_path AS profile_image
         FROM vendor v
         LEFT JOIN profile_image pi ON v.user_id = pi.user_id
         WHERE v.user_id = ?";
@@ -17,95 +21,52 @@ $stmt->execute([$user_id]);
 $vendor = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$vendor) {
-  $_SESSION['message'] = "❌ Vendor not found.";
   header("Location: index.php");
-  exit;
+  exit("Access denied: Vendor approval required.");
 }
 
-// ✅ Handle Form Submission
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // CSRF Protection
-  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    $_SESSION['message'] = "❌ CSRF token mismatch. Try again.";
-    header("Location: vendor_update.php");
-    exit;
-  }
+  $business_name = $_POST['business_name'] ?? '';
+  $contact_number = $_POST['contact_number'] ?? '';
+  $business_email = $_POST['business_email'] ?? '';
+  $website = $_POST['website'] ?? '';
+  $city = $_POST['city'] ?? '';
+  $state_id = $_POST['state_id'] ?? '';
+  $street_address = $_POST['street_address'] ?? '';
+  $zip_code = $_POST['zip_code'] ?? '';
 
-  // ✅ Sanitize & Validate Input
-  $business_name = trim($_POST['business_name'] ?? '');
-  $contact_number = trim($_POST['contact_number'] ?? '');
-  $business_email = filter_var($_POST['business_email'] ?? '', FILTER_VALIDATE_EMAIL);
-  $website = filter_var($_POST['website'] ?? '', FILTER_SANITIZE_URL);
-  $city = trim($_POST['city'] ?? '');
-  $state_id = filter_var($_POST['state_id'] ?? '', FILTER_VALIDATE_INT);
-  $street_address = trim($_POST['street_address'] ?? '');
-  $zip_code = trim($_POST['zip_code'] ?? '');
-
-  if (!$business_name || !$business_email || !$city || !$state_id || !$zip_code) {
-    $_SESSION['message'] = "❌ All required fields must be filled correctly.";
-    header("Location: vendor_update.php");
-    exit;
-  }
-
-  // ✅ Ensure Vendor Exists
-  $stmt = $db->prepare("SELECT vendor_id FROM vendor WHERE user_id = ?");
-  $stmt->execute([$user_id]);
-  if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
-    $_SESSION['message'] = "❌ Vendor not found.";
-    header("Location: index.php");
-    exit;
-  }
-
-  // ✅ Update Vendor Details
-  $sql = "UPDATE vendor SET business_name = ?, contact_number = ?, business_email = ?, website = ?, 
-                city = ?, state_id = ?, street_address = ?, zip_code = ? WHERE user_id = ?";
+  $sql = "UPDATE vendor SET business_name = ?, contact_number = ?, business_email = ?, website = ?, city = ?, state_id = ?, street_address = ?, zip_code = ? WHERE user_id = ?";
   $stmt = $db->prepare($sql);
-  $stmt->execute([
-    $business_name,
-    $contact_number,
-    $business_email,
-    $website,
-    $city,
-    $state_id,
-    $street_address,
-    $zip_code,
-    $user_id
-  ]);
+  $stmt->execute([$business_name, $contact_number, $business_email, $website, $city, $state_id, $street_address, $zip_code, $user_id]);
 
-  $_SESSION['message'] = "✅ Vendor profile updated successfully!";
-  header("Location: vendor_update.php");
+  header("Location: update_profile.php?success=1");
   exit;
 }
 
-require_once 'private/popup_message.php';
 ?>
 
 <body>
-  <h1>Update Your Vendor Profile</h1>
-
+  <h1>Update Your Profile</h1>
+  <?php if (isset($_GET['success'])): ?>
+    <p>Profile updated successfully!</p>
+  <?php endif; ?>
   <form method="post">
-    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
+    <label>Business Name: <input type="text" name="business_name" value="<?php echo h($vendor['business_name']); ?>" required></label><br>
 
-    <label for="business_name">Business Name:</label>
-    <input type="text" id="business_name" name="business_name" value="<?= htmlspecialchars($vendor['business_name']); ?>" required>
+    <label>Contact Number: <input type="text" name="contact_number" value="<?php echo h($vendor['contact_number']); ?>"></label><br>
 
-    <label for="contact_number">Contact Number:</label>
-    <input type="text" id="contact_number" name="contact_number" value="<?= htmlspecialchars($vendor['contact_number']); ?>">
+    <label>Business Email: <input type="email" name="business_email" value="<?php echo h($vendor['business_email']); ?>" required></label><br>
 
-    <label for="business_email">Business Email:</label>
-    <input type="email" id="business_email" name="business_email" value="<?= htmlspecialchars($vendor['business_email']); ?>" required>
+    <label>Website: <input type="text" name="website" value="<?php echo h($vendor['website']); ?>"></label><br>
 
-    <label for="website">Website:</label>
-    <input type="url" id="website" name="website" value="<?= htmlspecialchars($vendor['website']); ?>">
+    <label>City: <input type="text" name="city" value="<?php echo h($vendor['city']); ?>" required></label><br>
 
-    <label for="city">City:</label>
-    <input type="text" id="city" name="city" value="<?= htmlspecialchars($vendor['city']); ?>" required>
+    <label>State ID: <input type="text" name="state_id" value="<?php echo h($vendor['state_id']); ?>" required></label><br>
 
-    <label for="state_id">State:</label>
-    <input type="text" id="state_id" name="state_id" value="<?= htmlspecialchars($vendor['state_id']); ?>" required>
+    <label>Street Address: <input type="text" name="street_address" value="<?php echo h($vendor['street_address']); ?>"></label><br>
 
-    <label for="zip_code">ZIP Code:</label>
-    <input type="text" id="zip_code" name="zip_code" value="<?= htmlspecialchars($vendor['zip_code']); ?>" required>
+    <label>ZIP Code: <input type="text" name="zip_code" value="<?php echo h($vendor['zip_code']); ?>" required></label><br>
 
     <button type="submit">Update Profile</button>
   </form>

@@ -13,37 +13,39 @@ ob_end_flush(); // End output buffering
     <div>
       <legend>User Sign up</legend>
       <fieldset>
-        <input type="text" id="username" name="username" required aria-label="Username" placeholder="Username">
+        <input type="text" id="username" name="username" aria-label="Username" placeholder="Username" required>
       </fieldset>
 
       <fieldset>
-        <input type="text" id="fname" name="fname" required aria-label="First Name" placeholder="First Name">
+        <input type="text" id="fname" name="fname" aria-label="First Name" placeholder="First Name" required>
       </fieldset>
 
       <fieldset>
-        <input type="text" id="lname" name="lname" required aria-label="Last Name" placeholder="Last Name">
+        <input type="text" id="lname" name="lname" aria-label="Last Name" placeholder="Last Name" required>
       </fieldset>
 
       <fieldset>
-        <input type="email" id="email" name="email" required aria-label="Email Address" placeholder="Email Address">
+        <input type="email" id="email" name="email" aria-label="Email Address" placeholder="Email Address" required>
       </fieldset>
 
       <fieldset>
-        <input type="password" id="password" name="password" required aria-label="Password" placeholder="Password">
+        <input type="password" id="password" name="password" aria-label="Password" placeholder="Password" required>
       </fieldset>
 
       <fieldset>
-        <input type="password" id="confirm-pass" name="confirm-pass" required aria-label="Confirm Password" placeholder="Confirm Password">
+        <input type="password" id="confirm-pass" name="confirm-pass" aria-label="Confirm Password" placeholder="Confirm Password" required>
       </fieldset>
     </div>
 
     <div>
       <fieldset>
-        <label for="profile-pic">Profile Picture:</label>
-        <input type="file" id="profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" required aria-label="Profile Picture">
-        <img id="image-preview" src="" alt="Image Preview">
+        <label for="profile-pic">Choose File</label>
+        <img id="profile-preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" height="300" width="300">
+        <input type="file" id="profile-pic" data-preview="profile-preview" name="profile-pic" accept="image/png, image/jpeg, image/webp" aria-label="Profile Picture" onchange="previewImage(event)" required>
       </fieldset>
-      <button type="submit" name="register" value="1">Sign Up</button>
+      <div>
+        <button class="signup-button" type="submit" name="register" value="1">Sign Up</button>
+      </div>
     </div>
 
   </form>

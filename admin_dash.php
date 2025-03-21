@@ -2,6 +2,7 @@
 $page_title = "Admin Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+require_once 'private/functions.php';
 
 // Restrict access to admins only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 3) { // 4 = Super Admin
@@ -69,6 +70,7 @@ foreach ($vendor_market_weeks as $week) {
 
   <?php require_once 'private/popup_message.php'; ?>
 
+  <!-- <div id="notification" class="hidden"></div> -->
   <!-- Manage Users Section -->
   <section>
     <div class="section-header" data-section="manage-users" onclick="toggleSection(this)">
@@ -90,8 +92,8 @@ foreach ($vendor_market_weeks as $week) {
             <?php if ($user['user_level_id'] == 1): // Only display members
             ?>
               <tr>
-                <td><?= htmlspecialchars($user['first_name'] . " " . $user['last_name']) ?></td>
-                <td><?= htmlspecialchars($user['email']) ?></td>
+                <td><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
+                <td><?= h($user['email']) ?></td>
                 <td>Member</td>
                 <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
                 <td>
@@ -118,7 +120,6 @@ foreach ($vendor_market_weeks as $week) {
           <tr>
             <th>Vendor Name</th>
             <th>Email</th>
-            <th>Market Week</th>
             <th>RSVP Status</th>
             <th>Status</th>
             <th>Action</th>
@@ -127,37 +128,19 @@ foreach ($vendor_market_weeks as $week) {
         <tbody>
           <?php foreach ($vendor_list as $vendor): ?>
             <tr>
-              <td><?= htmlspecialchars($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
-              <td><?= htmlspecialchars($vendor['email']) ?></td>
-              <!-- Market Week Selection -->
-              <td>
-                <form method="POST" action="update_rsvp.php">
-                  <input type="hidden" name="vendor_id" value="<?= $vendor['vendor_id'] ?>">
-                  <select name="week_id" onchange="this.form.submit()">
-                    <option value="">Select a Week</option>
-                    <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
-                      <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
-                        <option value="<?= $week['week_id'] ?>">
-                          <?= htmlspecialchars($week['week_start'] . " - " . $week['week_end']) ?>
-                        </option>
-                      <?php endforeach; ?>
-                    <?php else: ?>
-                      <option value="">No Confirmed Weeks</option>
-                    <?php endif; ?>
-                  </select>
-                </form>
-              </td>
+              <td><?= h($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
+              <td><?= h($vendor['email']) ?></td>
               <!-- RSVP Status Selection -->
               <td>
                 <form method="POST" action="update_rsvp.php">
-                  <input type="hidden" name="vendor_id" value="<?= htmlspecialchars($vendor['vendor_id']) ?>">
+                  <input type="hidden" name="vendor_id" value="<?= h($vendor['vendor_id']) ?>">
                   <select name="week_id" required>
                     <option value="">Select a Week</option>
                     <?php if (!empty($market_weeks_map[$vendor['vendor_id']])): ?>
                       <?php foreach ($market_weeks_map[$vendor['vendor_id']] as $week): ?>
-                        <option value="<?= htmlspecialchars($week['week_id']) ?>"
+                        <option value="<?= h($week['week_id']) ?>"
                           <?= isset($selected_week_id) && $selected_week_id == $week['week_id'] ? 'selected' : '' ?>>
-                          <?= htmlspecialchars($week['week_start'] . " - " . $week['week_end']) ?>
+                          <?= h($week['week_start'] . " - " . $week['week_end']) ?>
                         </option>
                       <?php endforeach; ?>
                     <?php else: ?>
@@ -229,11 +212,11 @@ foreach ($vendor_market_weeks as $week) {
           foreach ($pending_vendors as $vendor):
           ?>
             <tr>
-              <td><?= htmlspecialchars($vendor['business_name']) ?></td>
-              <td><?= htmlspecialchars($vendor['email']) ?></td>
+              <td><?= h($vendor['business_name']) ?></td>
+              <td><?= h($vendor['email']) ?></td>
               <td class="request-action-column">
-                <a href="approve_vendor.php?vendor_id=<?= htmlspecialchars($vendor['vendor_id']) ?>&action=approve" class="btn btn-success">Approve</a>
-                <a href="approve_vendor.php?vendor_id=<?= htmlspecialchars($vendor['vendor_id']) ?>&action=reject" class="btn btn-danger">Reject</a>
+                <a href="approve_vendor.php?vendor_id=<?= h($vendor['vendor_id']) ?>&action=approve" class="btn btn-success">Approve</a>
+                <a href="approve_vendor.php?vendor_id=<?= h($vendor['vendor_id']) ?>&action=reject" class="btn btn-danger">Reject</a>
               </td>
 
             </tr>
@@ -250,7 +233,6 @@ foreach ($vendor_market_weeks as $week) {
     </div>
     <div class="section-content">
       <form action="schedule_market.php" method="POST">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <label for="week_start">Week Start:</label>
         <input type="date" id="week_start" name="week_start" required>
         <label for="week_end">Week End:</label>

@@ -2,12 +2,6 @@
 $page_title = "Log In";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-
-// 🚀 Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
-  header("Location: dashboard.php");
-  exit;
-}
 ?>
 
 <main>
@@ -22,25 +16,23 @@ if (isset($_SESSION['user_id'])) {
       <div class="popup-content">
         <h2>Sign Up</h2>
         <p>Choose your account type:</p>
-        <button type="button" onclick="window.location.href='signup.php'">Member Signup</button>
-        <button type="button" onclick="window.location.href='vendorsignup.php'">Vendor Signup</button>
-        <button type="button" id="closeSignup">Cancel</button>
+        <button onclick="window.location.href='signup.php'">Member Signup</button>
+        <button onclick="window.location.href='vendorsignup.php'">Vendor Signup</button>
+        <button id="closeSignup">Cancel</button>
       </div>
     </div>
 
-    <!-- CSRF Protection (Security Best Practice) -->
-    <input type="hidden" name="token" value="<?= $_SESSION['token'] ?? '' ?>">
+    <input type="hidden" name="login" value="1">
 
-    <img src="/img/upload/users/default.png" alt="User Icon" height="250" width="250">
-
+    <img src="/img/upload/users/default.png" alt="A stylized user icon." height="250" width="250">
     <fieldset>
-      <label for="login-username">Username</label>
-      <input type="text" id="login-username" name="username" placeholder="Enter your username" aria-label="Username" required>
+      <label for="login-username"></label>
+      <input type="text" id="login-username" name="username" placeholder="Username" aria-label="Username" required>
     </fieldset>
 
     <fieldset>
-      <label for="login-password">Password</label>
-      <input type="password" id="login-password" name="password" placeholder="Enter your password" aria-label="Password" required>
+      <label for="login-password"></label>
+      <input type="password" id="login-password" name="password" placeholder="Password" aria-label="Password" required>
     </fieldset>
 
     <button type="submit" name="login" value="1" id="login">Log In</button>

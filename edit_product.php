@@ -7,25 +7,36 @@ require_login();
 
 // Ensure only vendors can access
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 2) {
-  header("Location: index.php?message=error_unauthorized");
-  exit();
+  header("Location: index.php");
+  exit("❌ Access Denied: You must be a vendor.");
 }
 
-// Fetch vendor_id and product details in a **single** query
-$sql = "SELECT v.vendor_id, p.name, p.price, p.amount_id, p.description 
-        FROM vendor v
-        JOIN product p ON v.vendor_id = p.vendor_id
-        WHERE v.user_id = ? AND p.product_id = ?";
+// Fetch vendor_id
+$sql = "SELECT vendor_id FROM vendor WHERE user_id = ?";
 $stmt = $db->prepare($sql);
-$stmt->execute([$_SESSION['user_id'], $_GET['id'] ?? null]);
+$stmt->execute([$_SESSION['user_id']]);
+$vendor = $stmt->fetch(PDO::FETCH_ASSOC);
+$vendor_id = $vendor['vendor_id'];
+
+// Check if product_id is set
+if (!isset($_GET['id'])) {
+  header("Location: manage_products.php?message=error_invalid_product");
+  exit;
+}
+$product_id = h($_GET['id']);
+
+// Fetch product details
+$sql = "SELECT * FROM product WHERE product_id = ? AND vendor_id = ?";
+$stmt = $db->prepare($sql);
+$stmt->execute([$product_id, $vendor_id]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$product) {
-  header("Location: manage_products.php?message=error_product_not_found");
-  exit();
+  header("Location: manage_products.php?message=error_unauthorized");
+  exit;
 }
 
-$product_id = h($_GET['id']);
+// Fetch existing product tags
 $product_tags = get_existing_tags($product_id);
 
 // Handle form submission
@@ -35,69 +46,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $amount_id = h($_POST['amount_id']);
   $description = h($_POST['description']);
 
+  // 🚨 Check for Empty Fields
   if (empty($product_name) || empty($price) || empty($description)) {
     header("Location: edit_product.php?id=$product_id&message=error_empty_fields");
-    exit();
+    exit;
   }
 
-  $db->beginTransaction();
-  try {
-    // ✅ Update product details
-    $sql = "UPDATE product SET name = ?, price = ?, amount_id = ?, description = ? 
-                WHERE product_id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$product_name, $price, $amount_id, $description, $product_id]);
+  // ✅ Update product details
+  $sql = "UPDATE product SET name = ?, price = ?, amount_id = ?, description = ? WHERE product_id = ? AND vendor_id = ?";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$product_name, $price, $amount_id, $description, $product_id, $vendor_id]);
 
-    // ✅ Process Image Upload
-    if (!empty($_FILES['product_image']['name'])) {
-      $product_image = upload_image($_FILES['product_image'], 'products', $product_name);
-      if ($product_image) {
-        $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?) 
-                        ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$product_id, $product_image]);
-      } else {
-        throw new Exception("error_upload");
-      }
-    }
+  // ✅ Fetch current image BEFORE updating
+  $sql = "SELECT file_path FROM product_image WHERE product_id = ?";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$product_id]);
+  $current_image = $stmt->fetchColumn();
 
-    // ✅ Handle Product Tags only if new tags exist
-    if (!empty($_POST['tags'])) {
-      $tags = array_map('trim', explode(',', strtolower($_POST['tags'])));
-      $sql = "DELETE FROM product_tag_map WHERE product_id = ?";
+  // ✅ Process Image Upload
+  if (!empty($_FILES['product_image']['name'])) {
+    $product_image = upload_image($_FILES['product_image'], 'products', $product_name);
+
+    if ($product_image) {
+      $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?) 
+                    ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
       $stmt = $db->prepare($sql);
-      $stmt->execute([$product_id]);
-
-      foreach ($tags as $tag) {
-        if (!empty($tag)) {
-          $sql = "SELECT tag_id FROM product_tag WHERE tag_name = ?";
-          $stmt = $db->prepare($sql);
-          $stmt->execute([$tag]);
-          $existing_tag = $stmt->fetch(PDO::FETCH_ASSOC);
-
-          $tag_id = $existing_tag['tag_id'] ?? null;
-          if (!$tag_id) {
-            $sql = "INSERT INTO product_tag (tag_name) VALUES (?)";
-            $stmt = $db->prepare($sql);
-            $stmt->execute([$tag]);
-            $tag_id = $db->lastInsertId();
-          }
-
-          $sql = "INSERT INTO product_tag_map (product_id, tag_id) VALUES (?, ?)";
-          $stmt = $db->prepare($sql);
-          $stmt->execute([$product_id, $tag_id]);
-        }
-      }
+      $stmt->execute([$product_id, $product_image]);
+    } else {
+      header("Location: edit_product.php?id=$product_id&message=error_upload");
+      exit;
     }
+  }
 
-    // ✅ Commit Changes
-    $db->commit();
+  // ✅ Handle Product Tags
+  if (!empty($_POST['tags'])) {
+    $tags = explode(',', strtolower($_POST['tags']));
+
+    // Delete existing tags for the product
+    $sql = "DELETE FROM product_tag_map WHERE product_id = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$product_id]);
+
+    foreach ($tags as $tag) {
+      $tag = trim($tag);
+
+      // Check if tag exists
+      $sql = "SELECT tag_id FROM product_tag WHERE tag_name = ?";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$tag]);
+      $existing_tag = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($existing_tag) {
+        $tag_id = $existing_tag['tag_id'];
+      } else {
+        // Insert new tag
+        $sql = "INSERT INTO product_tag (tag_name) VALUES (?)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$tag]);
+        $tag_id = $db->lastInsertId();
+      }
+
+      // Insert into product_tag_map
+      $sql = "INSERT INTO product_tag_map (product_id, tag_id) VALUES (?, ?)";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$product_id, $tag_id]);
+    }
+  }
+
+  if ($stmt->rowCount() > 0) {
     header("Location: manage_products.php?message=product_updated");
-    exit();
-  } catch (Exception $e) {
-    $db->rollBack();
-    header("Location: edit_product.php?id=$product_id&message=" . $e->getMessage());
-    exit();
+    exit;
+  } else {
+    header("Location: edit_product.php?id=$product_id&message=warning_no_changes");
+    exit;
   }
 }
 ?>
@@ -106,12 +127,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <form action="edit_product.php?id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
   <fieldset>
     <label for="product_name">Product Name:</label>
-    <input type="text" id="product_name" name="product_name" value="<?= htmlspecialchars($product['name']) ?>" required>
+    <input type="text" id="product_name" name="product_name" value="<?= h($product['name']) ?>" required>
   </fieldset>
 
   <fieldset>
     <label for="price">Price ($):</label>
-    <input type="number" step="0.01" id="price" name="price" value="<?= htmlspecialchars($product['price']) ?>" required>
+    <input type="number" step="0.01" id="price" name="price" value="<?= h($product['price']) ?>" required>
   </fieldset>
 
   <fieldset>
@@ -122,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $amount_stmt = $db->query($amount_sql);
       while ($amount = $amount_stmt->fetch(PDO::FETCH_ASSOC)) {
         $selected = ($amount['amount_id'] == $product['amount_id']) ? "selected" : "";
-        echo "<option value='{$amount['amount_id']}' $selected>" . htmlspecialchars($amount['amount_name']) . "</option>";
+        echo "<option value='{$amount['amount_id']}' $selected>" . h($amount['amount_name']) . "</option>";
       }
       ?>
     </select>
@@ -130,12 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <fieldset>
     <label for="description">Description:</label>
-    <textarea id="description" name="description" spellcheck="true"><?= htmlspecialchars($product['description']) ?></textarea>
+    <textarea id="description" name="description" spellcheck="true"><?= h($product['description']) ?></textarea>
   </fieldset>
 
   <fieldset>
     <label for="tags">Tags (comma-separated):</label>
-    <input type="text" id="tags" name="tags" value="<?= htmlspecialchars(implode(', ', $product_tags)) ?>" spellcheck="true">
+    <input type="text" id="tags" name="tags" value="<?= h(implode(', ', $product_tags)) ?>" spellcheck="true">
   </fieldset>
 
   <fieldset>

@@ -1,11 +1,11 @@
 'use strict';
 
-// Hamburger Menu
+// Header Menu
 document.addEventListener('DOMContentLoaded', function () {
-  const hamburger = document.querySelector('.hamburger');
+  const menu = document.getElementById('menu');
   const navLinks = document.querySelector('.nav-links');
 
-  hamburger.addEventListener('click', function () {
+  menu.addEventListener('click', function () {
     navLinks.classList.toggle('active');
   });
 });
@@ -50,48 +50,98 @@ document.addEventListener('DOMContentLoaded', () => {
   if (textElement) setTimeout(type, typingSpeed);
 });
 
-// Slideshow
-let slideIndex = 1;
-
 document.addEventListener('DOMContentLoaded', () => {
   showSlides(slideIndex);
+  addSwipeListeners(); // Ensure swipe functionality is active
 });
 
-function plusSlides(n) {
-  showSlides((slideIndex += n));
-}
+let slideIndex = 1;
 
-function currentSlide(n) {
-  showSlides((slideIndex = n));
-}
-
+// Function to show the correct slide
 function showSlides(n) {
   let slides = document.getElementsByClassName('mySlides');
   let dots = document.getElementsByClassName('dot');
 
-  if (slides.length === 0) return; // Prevents error if no slides exist
+  if (slides.length === 0) return; // Prevents errors if no slides exist
 
-  if (n > slides.length) {
-    slideIndex = 1;
-  }
-  if (n < 1) {
-    slideIndex = slides.length;
-  }
+  if (n > slides.length) slideIndex = 1;
+  if (n < 1) slideIndex = slides.length;
 
   for (let i = 0; i < slides.length; i++) {
     slides[i].style.display = 'none';
   }
-
   for (let i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(' active', '');
   }
 
-  if (slides[slideIndex - 1]) {
-    slides[slideIndex - 1].style.display = 'block';
+  slides[slideIndex - 1].style.display = 'block';
+  dots[slideIndex - 1].className += ' active';
+}
+
+// Function to change slides
+function plusSlides(n) {
+  showSlides((slideIndex += n));
+}
+
+// Function to add swipe support
+function addSwipeListeners() {
+  const slider = document.querySelector('.slideshow-container'); // Adjust based on your slideshow container
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  if (!slider) {
+    console.error('Swipe listener failed: .slideshow-container not found.');
+    return;
   }
 
-  if (dots[slideIndex - 1]) {
-    dots[slideIndex - 1].className += ' active';
+  slider.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX; // Store the starting X position
+  });
+
+  slider.addEventListener('touchmove', e => {
+    touchEndX = e.touches[0].clientX; // Update the X position as the finger moves
+  });
+
+  slider.addEventListener('touchend', () => {
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const swipeDistance = touchStartX - touchEndX;
+    const minSwipeDistance = 50; // Adjust this threshold if needed
+
+    if (swipeDistance > minSwipeDistance) {
+      plusSlides(1); // Swipe left → Next Slide
+    } else if (swipeDistance < -minSwipeDistance) {
+      plusSlides(-1); // Swipe right → Previous Slide
+    }
+  }
+}
+
+// Add Swipe Gesture Support
+function addSwipeListeners() {
+  const slider = document.querySelector('.mySlides').parentElement; // Get slideshow container
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  slider.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].clientX;
+  });
+
+  slider.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const swipeDistance = touchStartX - touchEndX;
+    const minSwipeDistance = 50; // Adjust threshold for sensitivity
+
+    if (swipeDistance > minSwipeDistance) {
+      plusSlides(1); // Swipe left → Next Slide
+    } else if (swipeDistance < -minSwipeDistance) {
+      plusSlides(-1); // Swipe right → Previous Slide
+    }
   }
 }
 
@@ -196,12 +246,13 @@ window.onload = function () {
 };
 
 // image preview
-function previewImage() {
-  const input = document.getElementById('profile-pic');
-  const preview = document.getElementById('image-preview');
+function previewImage(event) {
+  const input = event.target; // Get the input field that triggered the event
+  const previewId = input.getAttribute('data-preview'); // Get the ID of the preview element from a custom attribute
+  const preview = document.getElementById(previewId);
   const file = input.files[0];
 
-  if (file) {
+  if (file && preview) {
     const reader = new FileReader();
     reader.onload = function (e) {
       preview.src = e.target.result;
@@ -253,4 +304,43 @@ document.addEventListener('DOMContentLoaded', function () {
       setTimeout(() => (popup.style.display = 'none'), 500);
     }, 3000);
   }
+});
+
+// Smart Scroll Header
+
+document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('header');
+  let lastScrollTop = 0;
+  const scrollThreshold = 5; // Minimum scroll amount to trigger header show/hide
+
+  function handleSmartScroll() {
+    const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    // Make sure enough scrolling has occurred
+    if (Math.abs(lastScrollTop - currentScrollTop) <= scrollThreshold) {
+      return;
+    }
+
+    // Scrolling down AND not at the very top of the page
+    if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
+      header.classList.add('header-hidden');
+    }
+    // Scrolling up
+    else {
+      header.classList.remove('header-hidden');
+    }
+
+    lastScrollTop = currentScrollTop;
+  }
+
+  // Listen for scroll events with throttling for better performance
+  let scrollTimeout;
+  window.addEventListener('scroll', function () {
+    if (!scrollTimeout) {
+      scrollTimeout = setTimeout(function () {
+        handleSmartScroll();
+        scrollTimeout = null;
+      }, 10); // Small timeout for performance
+    }
+  });
 });
