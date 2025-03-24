@@ -32,8 +32,8 @@ $first_name = $user_info['first_name'];
 $last_name = $user_info['last_name'];
 
 // Fetch current session values
-$username = h($_POST['username'] ?? '');
-$email = h($_POST['email'] ?? '');
+$username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $profile_image = $_SESSION['profile_image'] ?? 'img/upload/users/default.png'; // Default profile image
 
 // ✅ Update user profile
@@ -93,10 +93,10 @@ if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'
 
 // ✅ If Vendor, Update Vendor-Specific Details
 if ($user_level == 2) {
-  $business_name = h($_POST['business_name']);
-  $business_ein = h($_POST['business_ein']);
-  $contact_number = h($_POST['contact_number']);
-  $description = h($_POST['description']);
+  $business_name = trim($_POST['business_name']);
+  $business_ein = trim($_POST['business_ein']);
+  $contact_number = trim($_POST['contact_number']);
+  $description = trim($_POST['description']);
 
   $sql = "UPDATE vendor SET business_name = ?, business_EIN = ?, contact_number = ?, description = ? WHERE user_id = ?";
   $stmt = $db->prepare($sql);

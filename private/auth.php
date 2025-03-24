@@ -1,10 +1,7 @@
 <?php
-ob_start();
 require_once 'initialize.php';
 require_once 'validation_functions.php';
 require_once 'functions.php';
-
-ob_end_flush();
 
 $errors = [];
 $username = $password = $confirm_password = $email = "";
@@ -13,14 +10,14 @@ $profile_image = 'img/upload/users/default.png';
 
 // Handle User Registration
 if (is_post_request() && isset($_POST['register'])) {
-  $username = h($_POST['username'] ?? '');
-  $fname = h($_POST['fname'] ?? '');
-  $lname = h($_POST['lname'] ?? '');
-  $email = h($_POST['email'] ?? '');
+  $username = $_POST['username'] ?? '';
+  $fname = $_POST['fname'] ?? '';
+  $lname = $_POST['lname'] ?? '';
+  $email = $_POST['email'] ?? '';
   $password = $_POST['password'] ?? '';
   $confirm_password = $_POST['confirm-pass'] ?? '';
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
-  $ein = $is_vendor ? h($_POST['business_EIN'] ?? '') : NULL;
+  $ein = $is_vendor ? $_POST['business_EIN'] ?? '' : NULL;
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
@@ -61,16 +58,16 @@ if (is_post_request() && isset($_POST['register'])) {
 
     // Insert into Vendor Table if Vendor
     if ($is_vendor) {
-      $business_name = h($_POST['business_name']);
-      $contact_number = h($_POST['contact_number']);
-      $business_email = h($_POST['business_email']);
-      $website = h($_POST['website']);
-      $city = h($_POST['city']);
-      $state_id = h($_POST['state_id']);
-      $street_address = h($_POST['street_address']);
-      $zip_code = h($_POST['zip_code']);
-      $description = h($_POST['description']);
-      $vendor_bio = h($_POST['vendor_bio']);
+      $business_name = $_POST['business_name'];
+      $contact_number = $_POST['contact_number'];
+      $business_email = $_POST['business_email'];
+      $website = $_POST['website'];
+      $city = $_POST['city'];
+      $state_id = $_POST['state_id'];
+      $street_address = $_POST['street_address'];
+      $zip_code = $_POST['zip_code'];
+      $description = $_POST['description'];
+      $vendor_bio = $_POST['vendor_bio'];
 
       $sql = "INSERT INTO vendor (user_id, business_name, contact_number, business_EIN, business_email, website, city, state_id, street_address, zip_code, description, vendor_bio, vendor_status) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
@@ -97,7 +94,7 @@ if (is_post_request() && isset($_POST['register'])) {
 
 // Handle User Login
 if (is_post_request() && isset($_POST['login'])) {
-  $username = h($_POST['username']);
+  $username = $_POST['username'];
   $password = $_POST['password'];
 
   if (is_blank($username) || is_blank($password)) {
@@ -129,7 +126,7 @@ if (is_post_request() && isset($_POST['login'])) {
     $_SESSION['user_level_id'] = $user['user_level_id'];
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
 
-    $_SESSION['message'] = "✅ Welcome back, " . htmlspecialchars($user['username']) . "!";
+    $_SESSION['message'] = "✅ Welcome back, " . h($user['username']) . "!";
 
     if ($_SESSION['user_level_id'] == 2) {
       header("Location: ../vendor_dash.php");

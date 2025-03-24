@@ -43,6 +43,12 @@ require_once 'private/header.php';
         <p><strong>Beyond just a marketplace</strong>, Blue Ridge Bounty is a place where relationships are formed—where you can meet the people who grow your food, learn their farming philosophies, and feel good about the choices you make. Whether you're a lifelong advocate for farm-to-table living or just starting your journey toward more mindful eating, we welcome you to be part of our community.</p>
       </div>
 
+      <div class="aboutus-item">
+        <h2>Want to join our community?</h2>
+        <p>If you're a local <strong>grower, maker, or artisan</strong> with something special to share, we'd love to hear from you. We're always looking for passionate new vendors to join our vibrant market family. Apply today and help us keep the spirit of local thriving — one booth at a time. Whether you're harvesting heirloom tomatoes, baking sourdough at sunrise, or crafting something completely unique, there's a place for you here. Our market isn't just a place to sell — it's a space to connect, share your story, and grow right alongside the community.</p>
+        <a href=<?= url_for('/vendorsignup.php') ?>>Apply Now!</a>
+      </div>
+
 
       <div id="contact">
         <h3>Contact Us</h3>

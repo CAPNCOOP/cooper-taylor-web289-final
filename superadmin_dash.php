@@ -124,10 +124,10 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
             <?php if ($user['user_level_id'] == 1): // Only display members
             ?>
               <tr>
-                <td><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
-                <td><?= h($user['email']) ?></td>
-                <td>Member</td>
-                <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
+                <td><span class="card-info">Name: </span><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
+                <td><span class="card-info">Email: </span><?= h($user['email']) ?></td>
+                <td><span class="card-info">Role: </span>Member</td>
+                <td><span class="card-info">Status: </span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
                 <td>
                   <a href="toggle_entity.php?id=<?= $user['user_id'] ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>&type=user">
                     <?= $user['is_active'] ? 'Deactivate User' : 'Activate User' ?>
@@ -160,10 +160,11 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
         <tbody>
           <?php foreach ($vendor_list as $vendor): ?>
             <tr>
-              <td><?= h($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
-              <td><?= h($vendor['email']) ?></td>
+              <td><span class="card-info">Name: </span><?= h($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
+              <td><span class="card-info">Email: </span><?= h($vendor['email']) ?></td>
               <!-- RSVP Status Selection -->
               <td>
+                <span class="card-info">Market Status: </span>
                 <form method="POST" action="update_rsvp.php">
                   <input type="hidden" name="vendor_id" value="<?= h($vendor['vendor_id']) ?>">
                   <select name="week_id" required>
@@ -197,7 +198,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
               </td>
 
               <!-- Status Column -->
-              <td><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
+              <td><span class="card-info">Status: </span><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
               <!-- Activate/Deactivate Action -->
               <td>
                 <?php
@@ -237,10 +238,10 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $rsvp) {
         <tbody>
           <?php foreach ($admins as $admin): ?>
             <tr>
-              <td><?= h($admin['first_name'] . " " . $admin['last_name']) ?></td>
-              <td><?= h($admin['email']) ?></td>
-              <td>Admin</td>
-              <td><?= $admin['is_active'] ? 'Active' : 'Inactive' ?></td>
+              <td><span class="card-info">Name: </span><?= h($admin['first_name'] . " " . $admin['last_name']) ?></td>
+              <td><span class="card-info">Email: </span><?= h($admin['email']) ?></td>
+              <td><span class="card-info">Role: </span>Admin</td>
+              <td><span class="card-info">Status: </span><?= $admin['is_active'] ? 'Active' : 'Inactive' ?></td>
               <td>
                 <a href="toggle_entity.php?id=<?= h($admin['user_id']) ?>&action=<?= $admin['is_active'] ? 'deactivate' : 'activate' ?>&type=admin"
                   class="btn <?= $admin['is_active'] ? 'btn-danger' : 'btn-success' ?>">

@@ -5,12 +5,12 @@ require_once 'private/header.php';
 ?>
 
 <div class="hero-image">
-  <section class="typewriter-wrapper">
-    <span class="static-text">We Are...</span>
-    <div class="typewriter">
-      <span id="type-text"></span>
-    </div>
-  </section>
+  <div>
+    <h2>Welcome to the Heart of the Harvest</h2>
+
+    <p><strong>Blue Ridge Bounty</strong> isn’t just a market. It’s a community. A tradition. A Saturday morning ritual where roots run deep — in the ground, and between neighbors. We're glad you're here. Let’s grow something together. Want to know more?</p>
+    <div><a href="aboutus.php">Click here!</a></div>
+  </div>
 </div>
 
 <main>

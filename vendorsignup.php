@@ -2,6 +2,7 @@
 $page_title = "Vendor Signup";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+require_once 'private/functions.php';
 ?>
 
 <main>
@@ -75,7 +76,7 @@ require_once 'private/header.php';
           $state_stmt->execute();
           $states = $state_stmt->fetchAll(PDO::FETCH_ASSOC);
           foreach ($states as $state) {
-            echo "<option value=\"" . $state['state_id'] . "\">" . htmlspecialchars($state['state_abbr']) . "</option>";
+            echo "<option value=\"" . $state['state_id'] . "\">" . h($state['state_abbr']) . "</option>";
           }
           ?>
         </select>

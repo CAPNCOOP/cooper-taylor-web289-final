@@ -41,10 +41,10 @@ $product_tags = get_existing_tags($product_id);
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $product_name = h($_POST['product_name']);
-  $price = h($_POST['price']);
-  $amount_id = h($_POST['amount_id']);
-  $description = h($_POST['description']);
+  $product_name = trim($_POST['product_name']);
+  $price = trim($_POST['price']);
+  $amount_id = trim($_POST['amount_id']);
+  $description = trim($_POST['description']);
 
   // 🚨 Check for Empty Fields
   if (empty($product_name) || empty($price) || empty($description)) {

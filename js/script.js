@@ -10,46 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Hero Text Animation
-document.addEventListener('DOMContentLoaded', () => {
-  const words = ['Fresh.', 'Local.', 'Sustainable.'];
-  let currentWordIndex = 0;
-  let currentCharIndex = 0;
-  let isDeleting = false;
-  const typingSpeed = 75;
-  const deletingSpeed = 100;
-  const delayBetweenWords = 1250;
-  const textElement = document.getElementById('type-text');
-
-  function type() {
-    if (!textElement) return; // Prevents error if the element doesn't exist
-
-    const currentWord = words[currentWordIndex];
-
-    if (isDeleting) {
-      currentCharIndex--;
-      if (currentCharIndex < 0) {
-        isDeleting = false;
-        currentWordIndex = (currentWordIndex + 1) % words.length;
-        setTimeout(type, typingSpeed);
-        return;
-      }
-    } else {
-      currentCharIndex++;
-      if (currentCharIndex > currentWord.length) {
-        isDeleting = true;
-        setTimeout(type, delayBetweenWords);
-        return;
-      }
-    }
-
-    textElement.innerHTML = currentWord.substring(0, currentCharIndex);
-    setTimeout(type, isDeleting ? deletingSpeed : typingSpeed);
-  }
-
-  if (textElement) setTimeout(type, typingSpeed);
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   showSlides(slideIndex);
   addSwipeListeners(); // Ensure swipe functionality is active

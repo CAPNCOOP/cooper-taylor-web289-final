@@ -66,7 +66,7 @@ foreach ($vendor_market_weeks as $week) {
 ?>
 
 <main>
-  <h2>Welcome, Super Admin</h2>
+  <h2>Welcome, Admin</h2>
 
   <?php require_once 'private/popup_message.php'; ?>
 
@@ -92,10 +92,10 @@ foreach ($vendor_market_weeks as $week) {
             <?php if ($user['user_level_id'] == 1): // Only display members
             ?>
               <tr>
-                <td><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
-                <td><?= h($user['email']) ?></td>
-                <td>Member</td>
-                <td><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
+                <td><span class="card-info">Name: </span><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
+                <td><span class="card-info">Email: </span><?= h($user['email']) ?></td>
+                <td><span class="card-info">Role: </span>Member</td>
+                <td><span class="card-info">Status: </span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
                 <td>
                   <a href="toggle_entity.php?id=<?= $user['user_id'] ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>&type=user">
                     <?= $user['is_active'] ? 'Deactivate User' : 'Activate User' ?>
@@ -128,10 +128,11 @@ foreach ($vendor_market_weeks as $week) {
         <tbody>
           <?php foreach ($vendor_list as $vendor): ?>
             <tr>
-              <td><?= h($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
-              <td><?= h($vendor['email']) ?></td>
+              <td><span class="card-info">Name: </span><?= h($vendor['first_name'] . " " . $vendor['last_name']) ?></td>
+              <td><span class="card-info">Email: </span><?= h($vendor['email']) ?></td>
               <!-- RSVP Status Selection -->
               <td>
+                <span class="card-info">Market Status: </span>
                 <form method="POST" action="update_rsvp.php">
                   <input type="hidden" name="vendor_id" value="<?= h($vendor['vendor_id']) ?>">
                   <select name="week_id" required>
@@ -165,7 +166,7 @@ foreach ($vendor_market_weeks as $week) {
               </td>
 
               <!-- Status Column -->
-              <td><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
+              <td><span class="card-info">Status: </span><?= $vendor['is_active'] ? 'Active' : 'Inactive' ?></td>
               <!-- Activate/Deactivate Action -->
               <td>
                 <?php

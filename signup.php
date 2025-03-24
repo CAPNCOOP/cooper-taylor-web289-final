@@ -1,9 +1,7 @@
 <?php
 $page_title = "Sign Up";
-ob_start(); // Start output buffering
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-ob_end_flush(); // End output buffering
 ?>
 
 <main>

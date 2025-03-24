@@ -31,10 +31,10 @@ $amounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle Product Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $product_name = h($_POST['product_name']);
-  $price = h($_POST['price']);
-  $amount_id = h($_POST['amount_id']);
-  $description = h($_POST['description']);
+  $product_name = trim($_POST['product_name']);
+  $price = trim($_POST['price']);
+  $amount_id = trim($_POST['amount_id']);
+  $description = trim($_POST['description']);
   $custom_tags = strtolower(trim($_POST['custom_tags'] ?? '')); // Convert to lowercase
 
   if (empty($product_name) || empty($price) || empty($amount_id) || empty($description)) {
