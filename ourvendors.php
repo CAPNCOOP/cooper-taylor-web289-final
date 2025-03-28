@@ -5,7 +5,7 @@ require_once 'private/header.php';
 require_once 'private/functions.php';
 
 // Pagination settings
-$itemsPerPage = 10;
+$itemsPerPage = 12;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $itemsPerPage;
 
@@ -133,9 +133,10 @@ if (!empty($searchTerm)) {
                       ]);
                       echo h(implode(', ', $tags));
                       ?>">
-          <h2><?php echo h($vendor['business_name']); ?>, <?php echo nl2br(h($vendor['state_abbrs'])); ?></h2>
-          <img src="<?php echo h($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="Vendor Image">
-          <p><?php echo nl2br(h($vendor['vendor_bio'])); ?></p>
+          <div><img src="<?php echo h($vendor['profile_image'] ?? 'default.png'); ?>" alt="Vendor Image"></div>
+          <div>
+            <h2><?php echo h($vendor['business_name']); ?>, <?php echo h($vendor['state_abbrs']); ?> </h2>
+          </div>
         </div>
       </a>
     <?php endforeach; ?>

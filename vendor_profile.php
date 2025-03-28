@@ -58,7 +58,7 @@ $vendor = $vendor_data[0];
       <p><strong>Contact:</strong> <?php echo h($vendor['business_email']); ?></p>
 
       <?php if ($vendor['website']): ?>
-        <p><strong>Website:</strong> <a href="<?php echo h($vendor['website']); ?>" target="_blank">Visit Website</a></p>
+        <p><strong>Website:</strong> <a href="https://www.linkedin.com/in/tcooper1412/" target="_blank">Visit Website</a></p>
       <?php endif; ?>
 
       <p><strong>Location:</strong> <?php echo h($vendor['city']); ?></p>

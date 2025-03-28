@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// Slideshow
+
 document.addEventListener('DOMContentLoaded', () => {
   showSlides(slideIndex);
   addSwipeListeners(); // Ensure swipe functionality is active

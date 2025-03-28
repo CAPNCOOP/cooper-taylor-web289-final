@@ -197,12 +197,16 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div>
     <fieldset>
       <label for="product_image">Product Image:</label>
-      <input type="file" id="product_image" name="product_image" data-preview="product_image_preview" accept="image/png, image/jpeg, image/webp" height="300" width="300" required>
-      <img id="product_image_preview" src="" alt="An uploaded product image.">
-    </fieldset>
 
-    <!-- Hidden field to store success/error messages -->
-    <!-- <input type="hidden" name="message" id="message"> -->
+      <img id="product-image-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+        alt="Product Preview" width="300" height="300">
+
+      <input type="file" id="product_image" name="product_image"
+        accept="image/png, image/jpeg, image/webp"
+        data-preview="product-image-preview"
+        onchange="previewImage(event)"
+        required>
+    </fieldset>
 
     <button type="submit">Add Product</button>
   </div>
