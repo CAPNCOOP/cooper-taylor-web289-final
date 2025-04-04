@@ -6,7 +6,6 @@ require_once 'private/header.php';
 
 <main>
   <form action="private/auth.php" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="register" value="0">
 
     <div>
       <legend>User Sign up</legend>

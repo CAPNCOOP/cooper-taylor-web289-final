@@ -94,3 +94,6 @@ if (!isset($page_title)) {
         </nav>
       </div>
     </header>
+    <button id="backToTop" aria-label="Back to Top">
+      <img src="img/assets/back-to-top.svg" alt="A back to top button." height="100" width="100">
+    </button>

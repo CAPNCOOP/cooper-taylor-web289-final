@@ -10,6 +10,24 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// Back to top Button
+const backToTopBtn = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+  if (window.pageYOffset > 300) {
+    backToTopBtn.classList.add('show');
+  } else {
+    backToTopBtn.classList.remove('show');
+  }
+});
+
+backToTopBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+});
+
 // Slideshow
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function getMessageText(messageKey) {
   const messages = {
     favorite_added: '✅ Vendor added to favorites!',
-    favorite_removed: '✅ Vendor removed from favorites!',
+    favorite_removed: '❌ Vendor removed from favorites!',
     error_invalid_vendor: '❌ Error: Invalid vendor selected.',
     error_not_logged_in: '❌ Error: You must be logged in to favorite a vendor.',
     error_add_failed: '❌ Error: Failed to add vendor to favorites.',
@@ -269,7 +287,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Smart Scroll Header
-
 document.addEventListener('DOMContentLoaded', function () {
   const header = document.querySelector('header');
   let lastScrollTop = 0;

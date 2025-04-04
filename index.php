@@ -2,9 +2,42 @@
 $page_title = "Home";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+
+// Get homepage welcome message
+$stmt = $db->prepare("SELECT content FROM homepage_content WHERE section = 'welcome' LIMIT 1");
+$stmt->execute();
+$homepage_welcome = $stmt->fetchColumn();
+
+// Get next upcoming market
+$stmt = $db->prepare("SELECT week_end, market_status FROM market_week WHERE week_end >= CURDATE() ORDER BY week_end ASC LIMIT 1");
+$stmt->execute();
+$next_market = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$market_message = '';
+if ($next_market) {
+  $date = date("F j, Y", strtotime($next_market['week_end']));
+  $status = $next_market['market_status'];
+  if ($status === 'confirmed') {
+    $market_message = "✅ The upcoming market for Saturday, {$date} is confirmed.";
+  } else {
+    $market_message = "❌ The upcoming market for Saturday, {$date} has been cancelled.";
+  }
+}
 ?>
 
+
 <div class="hero-image">
+
+  <div class="homepage-content">
+    <div class="welcome-message">
+      <p><?= nl2br(h($homepage_welcome)) ?></p>
+    </div>
+
+    <div class="market-status-message">
+      <p><?= h($market_message) ?></p>
+    </div>
+  </div>
+
   <div>
     <h2>Welcome to the Heart of the Harvest</h2>
 

@@ -48,9 +48,9 @@ body {
 }
 
 .frozen-popup {
-  background-color: #f44336;
+  background-color: var(--dark);
   border-radius: 10px;
-  color: white;
+  color: var(--light);
   font-size: 18px;
   left: 50%;
   padding: 20px;
@@ -59,7 +59,7 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
-  z-index: 1000;
+  z-index: 990;
 }
 
 .frozen-popup::after {
@@ -77,6 +77,33 @@ body {
   cursor: not-allowed;
   opacity: 0.5;
   pointer-events: none;
+}
+
+#backToTop {
+  background-color: var(--dark);
+  bottom: 30px;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: none;
+  height: 100px;
+  padding: 10px;
+  position: fixed;
+  right: 30px;
+  transition: opacity 0.3s ease-in-out;
+  width: 100px;
+  z-index: 999;
+}
+
+#backToTop.show {
+  display: block !important;
+}
+
+#backToTop img {
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
 }
 
 /* Header - Footer */
@@ -253,12 +280,29 @@ footer a {
 
 /* Home */
 
-/* Hero Image Section */
+/* Hero Image Section & market message */
+
+.homepage-content {
+  padding: 0 !important;
+}
+
+.homepage-content p {
+  padding: 0.25rem;
+}
+
+.market-status-message {
+  background-color: #333333cc;
+  color: var(--light);
+  padding: 0 !important;
+  width: 100%;
+}
 
 .hero-image {
   align-items: center;
   background: url('../img/assets/hero.jpg') center / cover no-repeat;
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
   height: 45vw;
   justify-content: center;
   position: relative;
@@ -273,18 +317,18 @@ footer a {
   flex-direction: column;
   justify-content: center;
   gap: 0.5rem;
-  padding: 1rem 3rem;
+  padding: 1rem;
   width: 70%;
 }
 
 .hero-image > div h2 {
-  font: 32px var(--main-text);
+  font: 24px var(--main-text);
   margin: 0;
   text-align: center;
 }
 
 .hero-image > div p {
-  font: 22px var(--secondary-text);
+  font: 18px var(--secondary-text);
   margin: 0.5rem;
   text-align: center;
 }
@@ -734,8 +778,7 @@ div#vendorhead {
 }
 /* Vendor Profile */
 
-#vendor-profile-container,
-#user-profile {
+#vendor-profile-container {
   background-color: var(--light);
   border-radius: 5px;
   display: flex;
@@ -746,20 +789,14 @@ div#vendorhead {
   align-items: center;
   color: var(--dark);
   display: flex;
-  flex: 1;
-  flex-flow: column wrap;
-  padding: 1rem;
-  justify-content: center;
-}
-
-#vendor-profile-card h2 {
-  font: 36px var(--secondary-text);
-  font-variant: small-caps;
-  text-align: center;
+  flex: 2;
+  flex-flow: row;
+  padding: 0 1rem 0 0;
+  justify-content: flex-start !important;
 }
 
 .vendor-profile h2 {
-  font: 32px var(--secondary-text);
+  font: 32px var(--main-text);
   text-align: center;
 }
 
@@ -770,10 +807,7 @@ div#vendorhead {
 
 #vendor-profile-card p {
   font: 18px var(--secondary-text);
-}
-
-#vendor-profile-card a:hover {
-  color: var(--light);
+  text-indent: 1rem;
 }
 
 .favorite-btn {
@@ -796,7 +830,7 @@ div#vendorhead {
   background-color: var(--secondary-color);
   border-radius: 0 5px 5px 0;
   color: var(--light);
-  flex: 2;
+  flex: 1;
   padding: 1rem;
 }
 
@@ -805,9 +839,8 @@ div#vendorhead {
 }
 
 #vendor-profile-card img {
-  /* border: 5px solid var(--secondary-color); */
   border-radius: 100%;
-  margin: 0 auto;
+  margin: 1rem;
   object-fit: contain;
 }
 
@@ -815,43 +848,39 @@ div#vendorhead {
   padding: 1rem;
 }
 
-.vendor-testimonial {
-  background: var(--light);
-  border-radius: 8px;
-  font-style: italic;
-  margin: 30px auto;
-  max-width: 1200px;
-  padding: 15px;
-  text-align: center;
+#vendor-contact-info {
+  background-color: var(--light);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
 }
 
-.vendor-testimonial blockquote {
-  font-size: 1.5em;
-  line-height: 1.5;
-  quotes: '“' '”';
+#vendor-contact-info div {
+  display: flex;
+  gap: 1rem;
+  margin: 0 auto;
 }
 
-.vendor-testimonial blockquote:before {
-  color: var(--secondary-color);
-  content: open-quote;
-  font: 24px var(--main-text);
-  font-size: 2em;
-  vertical-align: -0.3em;
+#vendor-contact-info div p {
+  border: 1px solid var(--secondary-color);
+  background-color: var(--light);
+  border-radius: 5px;
+  font: 18px var(--secondary-text);
+  padding: 1rem;
 }
 
-.vendor-testimonial blockquote:after {
-  font: 24px var(--main-text);
-  color: var(--secondary-color);
-  content: close-quote;
-  font-size: 2em;
-  vertical-align: -0.3em;
+#vendor-contact-info div a {
+  background-color: var(--dark);
+  border-radius: 5px;
+  color: var(--light);
+  padding: 0.5rem;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
 }
 
-.testimonial-author {
-  font-size: 1.1em;
-  color: var(--dark);
-  font-weight: bold;
-  margin-top: 10px;
+#vendor-contact-info div a:hover {
+  opacity: 0.7;
 }
 
 .product-list {
@@ -862,7 +891,7 @@ div#vendorhead {
 }
 
 #notification {
-  background: #4caf50;
+  background: var(--dark);
   border-radius: 5px;
   color: white;
   display: none; /* Initially hidden */
@@ -1180,8 +1209,7 @@ label[for='profile-pic']:hover {
   transform: scaleY(-3px);
 }
 
-#profile-preview,
-#product-image-preview {
+#profile-preview {
   background: url('../img/assets/add-photo.svg') center / cover;
   border-radius: 5px;
 }
@@ -1286,6 +1314,12 @@ label[for='profile-pic']:hover {
 
 /* User Dashboard */
 
+#user-profile {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
 #user-profile h2 {
   font: 48px var(--secondary-text);
   margin: 0;
@@ -1296,16 +1330,20 @@ label[for='profile-pic']:hover {
 }
 
 #user-card {
+  align-items: center;
+  border-radius: 5px;
   color: var(--dark);
   display: inline-flex;
   flex: 1;
   flex-direction: column;
+  margin: 1rem;
   padding: 1rem;
   justify-content: center;
   background-color: var(--light);
   justify-content: flex-start !important;
   row-gap: 1rem;
   height: auto;
+  width: 50%;
 }
 
 #user-card p {
@@ -1422,10 +1460,14 @@ label[for='profile-pic']:hover {
 }
 
 .edit-profile-details form {
+  align-items: center;
   background-color: var(--light);
+  border-radius: 5px;
   display: flex;
   flex-flow: column;
   justify-content: center;
+  margin: 1rem auto;
+  width: 50%;
 }
 
 .edit-profile-details form fieldset {
@@ -1449,10 +1491,10 @@ label[for='profile-pic']:hover {
 }
 
 .edit-profile-details button {
-  background-color: var(--main-color);
+  background-color: var(--dark);
   border: none;
   border-radius: 5px;
-  color: var(--dark);
+  color: var(--light);
   font: 20px var(--secondary-text);
   margin: 1rem auto;
   padding: 5px;
@@ -1672,9 +1714,23 @@ label[for='profile-pic']:hover {
 .admin-dashboard section:nth-of-type(4) form,
 .super-admin-dashboard section:nth-of-type(5) form {
   background-color: var(--light);
-  display: inline-block;
-  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.5rem auto;
   padding: 1rem;
+}
+
+.admin-dashboard textarea,
+.super-admin-dashboard textarea {
+  border: none;
+  border-radius: 5px;
+}
+
+div.section-content:last-of-type {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .card-info {
@@ -1688,11 +1744,11 @@ td.request-action-column {
 
 .section-header {
   background-color: #f5f5f5;
-  padding: 10px;
-  cursor: pointer;
   border: 1px solid #ccc;
-  margin-bottom: 5px;
   border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 10px;
 }
 
 .section-header:hover {
@@ -1700,9 +1756,9 @@ td.request-action-column {
 }
 
 .section-content {
-  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  padding: 10px;
 }
 
 /* Fluid Text */
@@ -1750,7 +1806,6 @@ td.request-action-column {
 
   /* originally 32px */
   .aboutus-item:nth-of-type(4) a,
-  .hero-image > div h2,
   label[for='profile-pic'],
   .vendor-profile h2 {
     font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 375));
@@ -1763,17 +1818,13 @@ td.request-action-column {
     font-size: calc(16px + (32 - 16) * (100vw - 375px) / (1400 - 375));
   }
 
-  /* originally 30px  */
-  blockquote {
-    font-size: calc(16px + (30 - 16) * (100vw - 375px) / (1400 - 375)) !important;
-  }
-
   /* originally 28px */
   .vendor-card h2 {
     font-size: calc(14px + (28 - 14) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 24px */
+  .hero-image > div h2,
   .week-vendor li,
   .market-schedule table,
   .market-schedule table th,
@@ -1785,8 +1836,7 @@ td.request-action-column {
   }
 
   /* originally 22px */
-  nav ul li,
-  .hero-image > div p {
+  nav ul li {
     font-size: calc(14px + (22 - 14) * (100vw - 375px) / (1400 - 375));
   }
 
@@ -1800,6 +1850,8 @@ td.request-action-column {
   }
 
   /* originally 18px */
+  .hero-image > div p,
+  #vendor-contact-info div p,
   #nav-history button,
   .frozen-popup,
   footer,
@@ -1855,8 +1907,11 @@ td.request-action-column {
     align-items: center;
   }
 
-  /* Vendor Signup */
+  #vendor-upcoming-markets {
+    border-radius: 0 0 5px;
+  }
 
+  /* Vendor Signup */
   .vendor-signup form {
     flex-flow: row wrap;
   }
@@ -1866,16 +1921,6 @@ td.request-action-column {
   /* Our Vendors */
   .vendor-card {
     height: 300px;
-  }
-
-  /* User Dash */
-  #user-profile {
-    flex-direction: column;
-  }
-
-  #user-card {
-    align-items: center;
-    justify-content: center;
   }
 
   /* Vendor Dash */
@@ -1948,6 +1993,30 @@ td.request-action-column {
   /* Our Vendors */
   #vendor-list {
     justify-content: space-around;
+  }
+
+  /* Vendor Profile */
+  #vendor-profile-card {
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem; /* Adjust padding for mobile view */
+  }
+
+  #vendor-profile-card div {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* User Dash */
+  #user-card {
+    width: 90%;
+  }
+
+  /* Edit profile details */
+  .edit-profile-details form {
+    width: 90%;
   }
 
   /* Admin/ Super Admin Dash */
@@ -2034,10 +2103,27 @@ td.request-action-column {
     height: 65vh;
   }
 
+  /* Back To Top Button */
+
+  #backToTop {
+    height: 75px;
+    width: 75px;
+  }
+
   /* Vendor Profile */
 
   #vendor-upcoming-markets {
     border-radius: 0 0 5px 5px;
+  }
+
+  #vendor-contact-info div {
+    flex-direction: column;
+    margin: 1rem;
+  }
+
+  #vendor-contact-info div p {
+    margin: 0;
+    text-align: center;
   }
 
   .product-card {
@@ -2069,10 +2155,14 @@ td.request-action-column {
 @media screen and (max-width: 490px) {
   /* Home Page */
   .hero-image {
-    height: 48vh;
+    height: 60vh;
   }
 
   /* Our Vendors */
+  #vendor-list {
+    justify-content: center;
+  }
+
   .vendor-card {
     height: 200px;
     width: 100px;

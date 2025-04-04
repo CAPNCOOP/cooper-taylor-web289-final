@@ -31,7 +31,7 @@ $vendor_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, vm.status AS rsvp_status
         FROM vendor_market vm
         JOIN market_week mw ON vm.week_id = mw.week_id
-        WHERE mw.week_start >= CURDATE()
+        WHERE mw.week_start >= CURDATE() AND mw.is_deleted = 0
         ORDER BY mw.week_start ASC";
 $stmt = $db->prepare($sql);
 $stmt->execute();
@@ -47,8 +47,8 @@ foreach ($vendor_rsvps as $rsvp) {
 $sql = "SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end
         FROM vendor_market vm
         JOIN market_week mw ON vm.week_id = mw.week_id
-        WHERE vm.status = 'confirmed'
-        ORDER BY mw.week_start ASC";
+        WHERE vm.status = 'confirmed' AND mw.is_deleted = 0
+        ORDER BY mw.week_start ASC ";
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $vendor_market_weeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -63,6 +63,25 @@ foreach ($vendor_market_weeks as $week) {
   ];
 }
 
+// Fetch all upcoming market weeks (week_end in future)
+$sql = "SELECT week_id, week_start, week_end, market_status 
+        FROM market_week 
+        WHERE week_end >= CURDATE() AND is_deleted = 0
+        ORDER BY week_end ASC";
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$upcoming_markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch homepage welcome message
+$sql = "SELECT content FROM homepage_content WHERE section = 'welcome' LIMIT 1";
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$homepage_content = $stmt->fetchColumn();
+if (!$homepage_content) {
+  $homepage_content = "Welcome to Blue Ridge Bounty! 🌻";
+}
+
+
 ?>
 
 <main>
@@ -70,7 +89,6 @@ foreach ($vendor_market_weeks as $week) {
 
   <?php require_once 'private/popup_message.php'; ?>
 
-  <!-- <div id="notification" class="hidden"></div> -->
   <!-- Manage Users Section -->
   <section>
     <div class="section-header" data-section="manage-users" onclick="toggleSection(this)">
@@ -82,27 +100,22 @@ foreach ($vendor_market_weeks as $week) {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Role</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <?php foreach ($users as $user): ?>
-            <?php if ($user['user_level_id'] == 1): // Only display members
-            ?>
-              <tr>
-                <td><span class="card-info">Name: </span><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
-                <td><span class="card-info">Email: </span><?= h($user['email']) ?></td>
-                <td><span class="card-info">Role: </span>Member</td>
-                <td><span class="card-info">Status: </span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
-                <td>
-                  <a href="toggle_entity.php?id=<?= $user['user_id'] ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>&type=user">
-                    <?= $user['is_active'] ? 'Deactivate User' : 'Activate User' ?>
-                  </a>
-                </td>
-              </tr>
-            <?php endif; ?>
+            <tr>
+              <td><span class="card-info">Name: </span><?= h($user['first_name'] . " " . $user['last_name']) ?></td>
+              <td><span class="card-info">Email: </span><?= h($user['email']) ?></td>
+              <td><span class="card-info">Status: </span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></td>
+              <td>
+                <a href="toggle_entity.php?id=<?= $user['user_id'] ?>&action=<?= $user['is_active'] ? 'deactivate' : 'activate' ?>&type=user">
+                  <?= $user['is_active'] ? 'Deactivate User' : 'Activate User' ?>
+                </a>
+              </td>
+            </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
@@ -234,29 +247,84 @@ foreach ($vendor_market_weeks as $week) {
     </div>
     <div class="section-content">
       <form action="schedule_market.php" method="POST">
-        <label for="week_start">Week Start:</label>
-        <input type="date" id="week_start" name="week_start" required>
-        <label for="week_end">Week End:</label>
-        <input type="date" id="week_end" name="week_end" required>
-        <label for="confirmation_deadline">RSVP Deadline:</label>
-        <input type="date" id="confirmation_deadline" name="confirmation_deadline" required>
+        <fieldset>
+          <label for="week_start">Week Start:</label>
+          <input type="date" id="week_start" name="week_start" required>
+        </fieldset>
+        <fieldset>
+          <label for="week_end">Week End:</label>
+          <input type="date" id="week_end" name="week_end" required>
+        </fieldset>
+        <fieldset>
+          <label for="confirmation_deadline">RSVP Deadline:</label>
+          <input type="date" id="confirmation_deadline" name="confirmation_deadline" required>
+        </fieldset>
         <button type="submit">Schedule Market</button>
       </form>
     </div>
   </section>
 
-  <!-- Update Homepage Content Section -->
+  <!-- Manage Markets Section -->
   <section>
-    <div class="section-header" data-section="update-content" onclick="toggleSection(this)">
-      <h3>Update Homepage Content</h3>
+    <div class="section-header" data-section="manage-markets" onclick="toggleSection(this)">
+      <h3>Manage Scheduled Markets</h3>
     </div>
     <div class="section-content">
-      <form action="update_homepage.php" method="POST">
-        <textarea name="homepage_content" rows="5" required></textarea>
+      <table>
+        <thead>
+          <tr>
+            <th>Week Start</th>
+            <th>Market Day</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($upcoming_markets as $market): ?>
+            <tr>
+              <td><?= h($market['week_start']) ?></td>
+              <td><?= h($market['week_end']) ?></td>
+              <td><?= ucfirst(h($market['market_status'])) ?></td>
+              <td>
+                <?php if ($market['market_status'] === 'confirmed'): ?>
+                  <form action="toggle_market_status.php" method="POST" style="display:inline-block">
+                    <input type="hidden" name="week_id" value="<?= h($market['week_id']) ?>">
+                    <input type="hidden" name="new_status" value="cancelled">
+                    <button type="submit" class="btn btn-warning">Cancel Market</button>
+                  </form>
+                <?php elseif ($market['market_status'] === 'cancelled'): ?>
+                  <form action="toggle_market_status.php" method="POST" style="display:inline-block">
+                    <input type="hidden" name="week_id" value="<?= h($market['week_id']) ?>">
+                    <input type="hidden" name="new_status" value="confirmed">
+                    <button type="submit" class="btn btn-success">Reconfirm Market</button>
+                  </form>
+                <?php endif; ?>
+
+                <form action="delete_market.php" method="POST" style="display:inline-block" onsubmit="return confirm('Are you sure you want to permanently delete this market?');">
+                  <input type="hidden" name="week_id" value="<?= h($market['week_id']) ?>">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Edit Homepage Message -->
+  <section>
+    <div class="section-header" data-section="update-content" onclick="toggleSection(this)">
+      <h3>Edit Homepage Welcome Message</h3>
+    </div>
+    <div class="section-content">
+      <form method="POST" action="update_homepage.php">
+        <textarea name="content" rows="5" cols="50" required><?= h($homepage_content) ?></textarea>
+        <input type="hidden" name="section" value="welcome">
         <button type="submit">Update Content</button>
       </form>
     </div>
   </section>
-</main>
 
-<?php require_once 'private/footer.php'; ?>
+  <?php require_once 'private/footer.php'; ?>

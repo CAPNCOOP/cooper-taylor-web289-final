@@ -32,7 +32,8 @@ $sql = "SELECT mw.week_start, mw.week_end, mw.market_status
         FROM vendor_market vm
         LEFT JOIN market_week mw ON vm.week_id = mw.week_id
         WHERE vm.vendor_id = ? AND mw.week_start >= CURDATE()
-        ORDER BY mw.week_start ASC";
+        ORDER BY mw.week_start ASC
+        LIMIT 5";
 $stmt = $db->prepare($sql);
 $stmt->execute([$vendor_id]);
 $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,16 +53,9 @@ $vendor = $vendor_data[0];
 <h2><?php echo h($vendor['business_name']); ?></h2>
 <div id="vendor-profile-container">
   <div id="vendor-profile-card">
-    <img src="<?php echo h($vendor['profile_image'] ?? 'default.png'); ?>" height="150" width="150" alt="A Vendor Image.">
+    <img src="<?php echo h($vendor['profile_image'] ?? 'default.png'); ?>" height="250" width="250" alt="A Vendor Image.">
     <div>
-      <p><strong>Bio:</strong> <?php echo nl2br(h($vendor['vendor_bio'])); ?></p>
-      <p><strong>Contact:</strong> <?php echo h($vendor['business_email']); ?></p>
-
-      <?php if ($vendor['website']): ?>
-        <p><strong>Website:</strong> <a href="https://www.linkedin.com/in/tcooper1412/" target="_blank">Visit Website</a></p>
-      <?php endif; ?>
-
-      <p><strong>Location:</strong> <?php echo h($vendor['city']); ?></p>
+      <p>"<?php echo nl2br(h($vendor['vendor_bio'])); ?>"</p>
 
       <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1): ?>
         <button class="favorite-btn" data-vendor-id="<?= $vendor['vendor_id'] ?>">♡</button>
@@ -74,6 +68,7 @@ $vendor = $vendor_data[0];
       <?php endif; ?>
 
       <div id="notification" class="hidden"></div>
+
       <?php if (isset($_GET['message'])): ?>
         <div class="notification">
           <?= h($_GET['message']) ?>
@@ -81,6 +76,7 @@ $vendor = $vendor_data[0];
       <?php endif; ?>
     </div>
   </div>
+
 
   <div id="vendor-upcoming-markets">
     <h2>Upcoming Markets</h2>
@@ -94,23 +90,26 @@ $vendor = $vendor_data[0];
           ?>
         </li>
       <?php endforeach; ?>
-
       <?php if (empty($markets)): ?>
         <li>No upcoming markets scheduled.</li>
       <?php endif; ?>
     </ul>
   </div>
+
 </div>
 
-<!--  Testimonial Section -->
-<?php if (!empty($vendor['description'])): ?>
-  <div class="vendor-testimonial">
-    <blockquote>
-      <?= htmlspecialchars($vendor['description']); ?>
-    </blockquote>
-    <p class="testimonial-author">— <?= htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']); ?>, <?= htmlspecialchars($vendor['business_name']); ?></p>
+<div id="vendor-contact-info">
+  <h2>Contact & Info</h2>
+  <div>
+    <p><strong>Email:</strong> <?php echo h($vendor['business_email']); ?></p>
+    <?php if ($vendor['website']): ?>
+
+      <p><strong>Website:</strong> <a href="https://www.linkedin.com/in/tcooper1412/" target="_blank"><?php echo h($vendor['business_name']); ?></a></p>
+    <?php endif; ?>
+
+    <p><strong>Location:</strong> <?php echo h($vendor['city']); ?></p>
   </div>
-<?php endif; ?>
+</div>
 
 <h2>Products</h2>
 <div class="product-list">

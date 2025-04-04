@@ -9,7 +9,7 @@ $fname = $lname = $is_vendor = $ein = null;
 $profile_image = 'img/upload/users/default.png';
 
 // Handle User Registration
-if (is_post_request() && isset($_POST['register'])) {
+if (is_post_request() && $_POST['register'] == '1') {
   $username = $_POST['username'] ?? '';
   $fname = $_POST['fname'] ?? '';
   $lname = $_POST['lname'] ?? '';
@@ -18,6 +18,10 @@ if (is_post_request() && isset($_POST['register'])) {
   $confirm_password = $_POST['confirm-pass'] ?? '';
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
   $ein = $is_vendor ? $_POST['business_EIN'] ?? '' : NULL;
+  $clean_name = strtolower($fname . '_' . $lname . '_' . $user_id);
+  $uploaded_filename = upload_image($_FILES['profile-pic'], 'users', $clean_name);
+
+
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
@@ -55,6 +59,20 @@ if (is_post_request() && isset($_POST['register'])) {
     $stmt = $db->prepare($sql);
     $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
     $user_id = $db->lastInsertId();
+
+    // Handle Profile Image Upload
+    $uploaded_filename = null;
+    if (isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] === UPLOAD_ERR_OK) {
+      $uploaded_filename = upload_image($_FILES['profile-pic'], 'users', $clean_name);
+    }
+
+    $profile_image = $uploaded_filename
+      ? "img/upload/users/" . $uploaded_filename
+      : 'img/upload/users/default.png';
+
+    $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$user_id, $profile_image]);
 
     // Insert into Vendor Table if Vendor
     if ($is_vendor) {

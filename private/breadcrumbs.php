@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $current_path = basename($_SERVER['PHP_SELF']);
 $current_label = $page_title ?? ucfirst(pathinfo($current_path, PATHINFO_FILENAME));
 
-$excluded_pages = ['login.php', 'vendorsignup.php', 'signup.php'];
+$excluded_pages = ['login.php', 'vendorsignup.php', 'signup.php', 'logout.php'];
 
 // Skip excluded pages
 if (in_array($current_path, $excluded_pages)) {

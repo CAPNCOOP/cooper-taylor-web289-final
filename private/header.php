@@ -74,20 +74,25 @@ if (!isset($page_title)) {
 
       <?php include 'private/breadcrumbs.php'; ?>
 
-      <nav id="breadcrumbs" aria-label="Breadcrumb">
-        <ul>
-          <?php foreach ($_SESSION['breadcrumbs'] as $index => $crumb): ?>
-            <li>
-              <?php if ($index !== array_key_last($_SESSION['breadcrumbs'])): ?>
-                <a href="<?= htmlspecialchars($crumb['path']) ?>">
-                  <?= htmlspecialchars($crumb['label']) ?>
-                </a>
-              <?php else: ?>
-                <span><?= htmlspecialchars($crumb['label']) ?></span>
-              <?php endif; ?>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </nav>
+      <?php if (!empty($_SESSION['breadcrumbs']) && is_array($_SESSION['breadcrumbs'])): ?>
+        <nav id="breadcrumbs" aria-label="Breadcrumb">
+          <ul>
+            <?php foreach ($_SESSION['breadcrumbs'] as $index => $crumb): ?>
+              <li>
+                <?php if ($index !== array_key_last($_SESSION['breadcrumbs'])): ?>
+                  <a href="<?= htmlspecialchars($crumb['path']) ?>">
+                    <?= htmlspecialchars($crumb['label']) ?>
+                  </a>
+                <?php else: ?>
+                  <span><?= htmlspecialchars($crumb['label']) ?></span>
+                <?php endif; ?>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </nav>
+      <?php endif; ?>
     </div>
   </header>
+  <button id="backToTop" aria-label="Back to Top">
+    <img src="img/assets/back-to-top.svg" alt="A back to top button." height="100" width="100">
+  </button>
