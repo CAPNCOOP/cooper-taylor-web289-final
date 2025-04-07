@@ -326,5 +326,5 @@ if (!$homepage_content) {
       </form>
     </div>
   </section>
-
-  <?php require_once 'private/footer.php'; ?>
+</main>
+<?php require_once 'private/footer.php'; ?>

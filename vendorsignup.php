@@ -92,11 +92,11 @@ require_once 'private/functions.php';
 
       <div>
         <fieldset>
-          <textarea id="description" name="description" required aria-label="Business Description" placeholder="Business Description"></textarea>
+          <textarea id="description" name="description" required aria-label="Business Description" placeholder="Business Description, a short blurb about your business."></textarea>
         </fieldset>
 
         <fieldset>
-          <textarea id="vendor-bio" name="vendor_bio" required aria-label="Vendor Bio" placeholder="Vendor Bio"></textarea>
+          <textarea id="vendor-bio" name="vendor_bio" required aria-label="Vendor Bio" placeholder="Vendor Bio, tell the consumer about the history of your business!"></textarea>
         </fieldset>
       </div>
 

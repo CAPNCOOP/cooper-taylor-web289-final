@@ -43,7 +43,7 @@ $vendors = $stmt->fetchAll(PDO::FETCH_ASSOC);
           alt="<?= h($vendor['business_name']) ?>"
           class="vendor-photo"
           onerror="this.onerror=null;this.src='img/upload/users/default.png';" height="100" width="100">
-        <div class="vendor-info">
+        <div>
           <strong><?= h($vendor['business_name']) ?></strong> -
           <?= h($vendor['city'] . ", " . $vendor['state_abbr']) ?>
           <p><?= nl2br(h($vendor['vendor_bio'])) ?></p>
