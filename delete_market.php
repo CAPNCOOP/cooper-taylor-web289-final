@@ -1,14 +1,17 @@
 <?php
 require_once 'private/initialize.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['week_id'])) {
-  $week_id = $_POST['week_id'];
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['week_id'])) {
+  $week_id = (int) $_POST['week_id'];
 
-  $stmt = $db->prepare("UPDATE market_week SET is_deleted = 1 WHERE week_id = ?");
-  $stmt->execute([$week_id]);
+  $admin = new Admin();
+  $success = $admin->deleteMarketWeek($week_id);
 
-  $_SESSION['message'] = "🗑️ Market archived (soft deleted).";
+  $_SESSION['message'] = $success
+    ? "🗑️ Market archived (soft deleted)."
+    : "❌ Failed to delete market.";
 }
 
-header("Location: " . ($_SESSION['user_level_id'] == 3 ? "admin_dash.php" : "superadmin_dash.php"));
+$redirect_page = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
+header("Location: $redirect_page");
 exit();

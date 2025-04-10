@@ -37,7 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let slideIndex = 1;
 
-// Function to show the correct slide
+/*
+ * The function `showSlides` is designed to display a specific slide and update corresponding
+ * navigation dots in a slideshow.
+ * @param n - The `n` parameter in the `showSlides` function represents the index of the slide that you
+ * want to display. It is used to control which slide is currently shown in a slideshow.
+ * @returns The `showSlides` function returns nothing (`undefined`) explicitly. It either executes the
+ * code inside the function or returns early if there are no slides to prevent errors.
+ */
 function showSlides(n) {
   let slides = document.getElementsByClassName('mySlides');
   let dots = document.getElementsByClassName('dot');
@@ -58,12 +65,25 @@ function showSlides(n) {
   dots[slideIndex - 1].className += ' active';
 }
 
-// Function to change slides
+/*
+ * The function `plusSlides` increments the `slideIndex` variable by `n` and then calls the
+ * `showSlides` function.
+ * @param n - The parameter `n` in the `plusSlides` function represents the number of slides you want
+ * to move forward or backward by. Positive values of `n` will move the slides forward, while negative
+ * values will move the slides backward.
+ */
 function plusSlides(n) {
   showSlides((slideIndex += n));
 }
 
-// Function to add swipe support
+/*
+ * The function `addSwipeListeners` enables swipe functionality for a slideshow by detecting touch
+ * gestures and navigating between slides based on the swipe direction.
+ *
+ * @returns The `addSwipeListeners` function is returning nothing (undefined) because it does not have
+ * a return statement. It is setting up event listeners for touch events on a slider element and
+ * handling swipe gestures to navigate between slides in a slideshow.
+ */
 function addSwipeListeners() {
   const slider = document.querySelector('.slideshow-container'); // Adjust based on your slideshow container
   let touchStartX = 0;
@@ -86,36 +106,13 @@ function addSwipeListeners() {
     handleSwipe();
   });
 
+  /**
+   * The function `handleSwipe` determines the direction of a swipe gesture and navigates to the next or
+   * previous slide based on the swipe distance.
+   */
   function handleSwipe() {
     const swipeDistance = touchStartX - touchEndX;
     const minSwipeDistance = 50; // Adjust this threshold if needed
-
-    if (swipeDistance > minSwipeDistance) {
-      plusSlides(1); // Swipe left → Next Slide
-    } else if (swipeDistance < -minSwipeDistance) {
-      plusSlides(-1); // Swipe right → Previous Slide
-    }
-  }
-}
-
-// Add Swipe Gesture Support
-function addSwipeListeners() {
-  const slider = document.querySelector('.mySlides').parentElement; // Get slideshow container
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  slider.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].clientX;
-  });
-
-  slider.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].clientX;
-    handleSwipe();
-  });
-
-  function handleSwipe() {
-    const swipeDistance = touchStartX - touchEndX;
-    const minSwipeDistance = 50; // Adjust threshold for sensitivity
 
     if (swipeDistance > minSwipeDistance) {
       plusSlides(1); // Swipe left → Next Slide
@@ -178,8 +175,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-/**
- * Converts message keys to readable text.
+/*
+ * The function `getMessageText` returns a message based on a given message key, with defaulting to an
+ * unknown error message if the key is not found.
+ *
+ * @param messageKey - The `messageKey` parameter is a string that represents a key used to look up a
+ * specific message in the `messages` object. The function `getMessageText` takes this key as input and
+ * returns the corresponding message text from the `messages` object. If the key does not match any
+ * message in
+ *
+ * @returns The function `getMessageText` returns a message based on the `messageKey` provided. If the
+ * `messageKey` matches one of the keys in the `messages` object, it returns the corresponding message.
+ * If the `messageKey` does not match any key in the `messages` object, it returns '❌ Unknown error
+ * occurred.'.
  */
 function getMessageText(messageKey) {
   const messages = {
@@ -194,6 +202,23 @@ function getMessageText(messageKey) {
 }
 
 // Notification Function
+/*
+ * The function `showNotification` displays a message with optional error styling and automatically
+ * fades out after 2 seconds.
+ *
+ * @param message - The `message` parameter is the text content that you want to display in the
+ * notification. It can be a success message, an error message, or any other informative message that
+ * you want to show to the user.
+ *
+ * @param [isError=false] - The `isError` parameter in the `showNotification` function is a boolean
+ * parameter that determines whether the notification should be styled as an error message (`true`) or
+ * a success message (`false`). If `isError` is `true`, the notification will have the 'error' class
+ * applied to it
+ *
+ * @returns The code snippet provided defines a function `showNotification` that displays a
+ * notification message on a webpage. It also includes a window onload event listener that adds a
+ * fade-out effect to a message element after a delay.
+ */
 function showNotification(message, isError = false) {
   let notification = document.getElementById('notification');
   if (!notification) {
@@ -225,7 +250,15 @@ window.onload = function () {
   }
 };
 
-// image preview
+/*
+ * The `previewImage` function allows users to preview an image before uploading it by dynamically
+ * updating an image element with the selected file.
+ *
+ * @param event - The `event` parameter in the `previewImage` function is an event object that is
+ * passed when the function is called. It contains information about the event that triggered the
+ * function, such as the target element (input field in this case) and any additional data related to
+ * the event.
+ */
 function previewImage(event) {
   const input = event.target; // Get the input field that triggered the event
   const previewId = input.getAttribute('data-preview'); // Get the ID of the preview element from a custom attribute
@@ -241,7 +274,14 @@ function previewImage(event) {
   }
 }
 
-// Toggle Admin Content
+/**
+ * The `toggleSection` function toggles the display of a section based on its header and stores the
+ * state in the browser's localStorage.
+ *
+ * @param header - The `header` parameter in the `toggleSection` function is a reference to the HTML
+ * element that serves as the header or title of a section. This function is designed to toggle the
+ * visibility of the content section associated with this header element.
+ */
 function toggleSection(header) {
   let content = header.nextElementSibling;
   let sectionId = header.dataset.section; // Unique ID for each section
@@ -292,6 +332,14 @@ document.addEventListener('DOMContentLoaded', function () {
   let lastScrollTop = 0;
   const scrollThreshold = 5; // Minimum scroll amount to trigger header show/hide
 
+  /*
+   * The function `handleSmartScroll` is used to control the visibility of a header element based on
+   * the user's scrolling behavior on the webpage.
+   *
+   * @returns If the condition `Math.abs(lastScrollTop - currentScrollTop) <= scrollThreshold` is true,
+   * then the function `handleSmartScroll` will return without making any changes to the header
+   * element.
+   */
   function handleSmartScroll() {
     const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
 

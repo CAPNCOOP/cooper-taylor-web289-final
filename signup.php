@@ -2,6 +2,7 @@
 $page_title = "Sign Up";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
+require_once 'private/popup_message.php';
 ?>
 
 <main>

@@ -2,13 +2,16 @@
 require_once 'private/initialize.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['week_id'])) {
-  $week_id = $_POST['week_id'];
+  $week_id = (int) $_POST['week_id'];
 
-  $stmt = $db->prepare("UPDATE market_week SET market_status = 'cancelled' WHERE week_id = ?");
-  $stmt->execute([$week_id]);
+  $admin = new Admin();
+  $success = $admin->cancelMarketWeek($week_id);
 
-  $_SESSION['message'] = "❌ Market cancelled.";
+  $_SESSION['message'] = $success
+    ? "❌ Market cancelled."
+    : "❌ Failed to cancel market.";
 }
 
-header("Location: " . ($_SESSION['user_level_id'] == 3 ? "admin_dash.php" : "superadmin_dash.php"));
+$redirect_page = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
+header("Location: $redirect_page");
 exit();

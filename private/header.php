@@ -69,8 +69,8 @@ if (!isset($page_title)) {
       </div>
     </div>
     <div id="nav-history">
-      <button onclick="window.history.back()" <?= empty($_SERVER['HTTP_REFERER']) ? 'disabled' : '' ?>>&#11164</button>
-      <button onclick="window.history.forward()">&#11166</button>
+      <button onclick="window.history.back()" <?= empty($_SERVER['HTTP_REFERER']) ? 'disabled' : '' ?>>&#8592</button>
+      <button onclick="window.history.forward()">&#8594</button>
 
       <?php include 'private/breadcrumbs.php'; ?>
 

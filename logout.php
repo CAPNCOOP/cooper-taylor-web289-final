@@ -1,19 +1,8 @@
 <?php
 require_once 'private/initialize.php';
 
-// Get username before destroying session
-if (isset($_SESSION['username'])) {
-  $goodbye_name = htmlspecialchars($_SESSION['username']);
-} else {
-  $goodbye_name = "User";
-}
+$goodbye_name = $session->username ?? 'User';
+$session->logout(); // Clean sweep using our Session class
 
-// Unset all session variables
-session_unset();
-
-// Destroy session data
-session_destroy();
-
-// Redirect to login page with logout message
-header("Location: " . url_for('/login.php?logout_message=' . urlencode("✅ Goodbye, $goodbye_name! You have been logged out.")));
-exit;
+$session->message("✅ Goodbye, $goodbye_name! You have been logged out.");
+redirect_to('login.php');

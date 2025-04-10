@@ -40,14 +40,14 @@ require_once('database_functions.php');
 require_once('validation_functions.php');
 require_once('cooper-taylor-db-connection.php');
 
-// Load class definitions manually
-
-// -> All classes in directory
-foreach (glob('classes/*.class.php') as $file) {
-  require_once($file);
-}
-
-// Autoload class definitions
+/*
+ * The function `my_autoload` dynamically loads PHP class files from a specified directory based on the
+ * class name.
+ * 
+ * @param class The `class` parameter in the `my_autoload` function is a variable that represents the
+ * class name that is being autoloaded. It is used to dynamically include the corresponding class file
+ * based on the class name provided.
+ */
 function my_autoload($class)
 {
   if (preg_match('/\A\w+\Z/', $class)) {
@@ -57,5 +57,5 @@ function my_autoload($class)
 spl_autoload_register('my_autoload');
 
 $database = db_connect();
-DatabaseObject::set_database($database);
+DatabaseObject::setDatabase($database); // 
 $session = new Session(); // This ensures $session is available globally

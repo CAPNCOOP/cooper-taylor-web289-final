@@ -3,20 +3,39 @@ require_once 'Admin.class.php';
 
 class SuperAdmin extends Admin
 {
-
-  public function activateAdmin($adminId)
+  // Fetch all admin users
+  public function fetchAdmins()
   {
-    $query = "UPDATE users SET is_active = 1 WHERE user_id = ? 
-                  AND user_level_id = (SELECT user_level_id FROM user_level WHERE user_level_name = 'admin')";
-    $stmt = $this->db->prepare($query);
-    return $stmt->execute([$adminId]);
+    return User::find_by_sql("SELECT * FROM users WHERE user_level_id = 3");
   }
 
-  public function deactivateAdmin($adminId)
+  // Activate an admin user by ID
+  public function activateAdmin($adminId): bool
   {
-    $query = "UPDATE users SET is_active = 0 WHERE user_id = ? 
-                  AND user_level_id = (SELECT user_level_id FROM user_level WHERE user_level_name = 'admin')";
-    $stmt = $this->db->prepare($query);
-    return $stmt->execute([$adminId]);
+    $admin = self::find_by_id($adminId);
+    if ($admin && $admin->user_level_id == 3) {
+      $admin->is_active = 1;
+      return $admin->save();
+    }
+    return false;
+  }
+
+
+
+  // Deactivate an admin user by ID
+  public function deactivateAdmin($adminId): bool
+  {
+    $admin = self::find_by_id($adminId);
+    if ($admin && $admin->user_level_id == 3) {
+      $admin->is_active = 0;
+      return $admin->save();
+    }
+    return false;
+  }
+
+
+  public static function isSuperAdminLoggedIn(): bool
+  {
+    return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 4;
   }
 }

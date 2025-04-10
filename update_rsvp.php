@@ -2,35 +2,29 @@
 require_once 'private/initialize.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Sanitize and validate input
-  $vendor_id = isset($_POST['vendor_id']) ? filter_var($_POST['vendor_id'], FILTER_VALIDATE_INT) : null;
-  $week_id = isset($_POST['week_id']) ? filter_var($_POST['week_id'], FILTER_VALIDATE_INT) : null;
+  $vendor_id = filter_input(INPUT_POST, 'vendor_id', FILTER_VALIDATE_INT);
+  $week_id = filter_input(INPUT_POST, 'week_id', FILTER_VALIDATE_INT);
   $status = isset($_POST['status']) ? trim($_POST['status']) : null;
 
-  // Ensure all required fields are present
+  $redirect = ($_SESSION['user_level_id'] == 4) ? "superadmin_dash.php" : "admin_dash.php";
+
   if (!$vendor_id || !$week_id || !$status) {
     $_SESSION['message'] = "❌ Missing vendor_id, week_id, or status.";
-    header("Location: " . ($_SESSION['user_level_id'] == 4 ? "superadmin_dash.php" : "admin_dash.php"));
+    header("Location: $redirect");
     exit();
   }
 
-  try {
-    // Update RSVP status in the database
-    $sql = "UPDATE vendor_market SET status = ? WHERE vendor_id = ? AND week_id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$status, $vendor_id, $week_id]);
+  $admin = new Admin();
+  $success = $admin->updateVendorRsvpStatus($vendor_id, $week_id, $status);
 
-    // Set success message
-    $_SESSION['message'] = "✅ RSVP updated to: $status";
-  } catch (PDOException $e) {
-    $_SESSION['message'] = "❌ Database error: " . $e->getMessage();
-  }
+  $_SESSION['message'] = $success
+    ? "✅ RSVP updated to: $status"
+    : "❌ Failed to update RSVP.";
 
-  // Redirect back to dashboard
-  header("Location: " . ($_SESSION['user_level_id'] == 4 ? "superadmin_dash.php" : "admin_dash.php"));
-  exit();
-} else {
-  $_SESSION['message'] = "❌ Invalid request method.";
-  header("Location: " . ($_SESSION['user_level_id'] == 4 ? "superadmin_dash.php" : "admin_dash.php"));
+  header("Location: $redirect");
   exit();
 }
+
+$_SESSION['message'] = "❌ Invalid request method.";
+header("Location: " . ($_SESSION['user_level_id'] == 4 ? "superadmin_dash.php" : "admin_dash.php"));
+exit();

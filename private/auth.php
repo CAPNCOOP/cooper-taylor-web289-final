@@ -2,123 +2,136 @@
 require_once 'initialize.php';
 require_once 'validation_functions.php';
 require_once 'functions.php';
+require_once 'classes/User.class.php';
+require_once 'classes/Vendor.class.php';
 
 $errors = [];
-$username = $password = $confirm_password = $email = "";
-$fname = $lname = $is_vendor = $ein = null;
 $profile_image = 'img/upload/users/default.png';
 
-// Handle User Registration
 if (is_post_request() && $_POST['register'] == '1') {
-  $username = $_POST['username'] ?? '';
-  $fname = $_POST['fname'] ?? '';
-  $lname = $_POST['lname'] ?? '';
-  $email = $_POST['email'] ?? '';
+  $admin_created = isset($_POST['admin_created']) && $_POST['admin_created'] == '1';
+  $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
+
+  // Collect fields
+  $username = strtolower(trim($_POST['username'] ?? ''));
+  $fname = trim($_POST['fname'] ?? '');
+  $lname = trim($_POST['lname'] ?? '');
+  $email = strtolower(trim($_POST['email'] ?? ''));
   $password = $_POST['password'] ?? '';
   $confirm_password = $_POST['confirm-pass'] ?? '';
-  $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
   $ein = $is_vendor ? $_POST['business_EIN'] ?? '' : NULL;
-  $clean_name = strtolower($fname . '_' . $lname . '_' . $user_id);
-  $uploaded_filename = upload_image($_FILES['profile-pic'], 'users', $clean_name);
-
-
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
-    $_SESSION['message'] = "❌ Required fields cannot be blank.";
-    header("Location: ../signup.php");
-    exit();
+    $session->message("❌ Required fields cannot be blank.");
+    redirect_to('../signup.php');
   }
   if (!has_length($password, ['min' => 8])) {
-    $_SESSION['message'] = "❌ Password must be at least 8 characters.";
-    header("Location: ../signup.php");
-    exit();
+    $session->message("❌ Password must be at least 8 characters.");
+    redirect_to('../signup.php');
   }
   if ($password !== $confirm_password) {
-    $_SESSION['message'] = "❌ Passwords do not match.";
-    header("Location: ../signup.php");
-    exit();
+    $session->message("❌ Passwords do not match.");
+    redirect_to('../signup.php');
   }
   if (!has_valid_email_format($email)) {
-    $_SESSION['message'] = "❌ Invalid email format.";
-    header("Location: ../signup.php");
-    exit();
+    $session->message("❌ Invalid email format.");
+    redirect_to('../signup.php');
   }
   if (!has_unique_username($username)) {
-    $_SESSION['message'] = "❌ Username already taken.";
-    header("Location: ../signup.php");
-    exit();
+    $session->message("❌ Username already taken.");
+    redirect_to('../signup.php');
   }
 
-  if (empty($errors)) {
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+  // Create user
+  $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+  $user = new User([
+    'username' => $username,
+    'first_name' => $fname,
+    'last_name' => $lname,
+    'email' => $email,
+    'password' => $hashed_password,
+    'user_level_id' => $is_vendor ? 2 : 1
+  ]);
 
-    // Insert into Users Table
-    $sql = "INSERT INTO users (username, first_name, last_name, email, password, user_level_id, is_active) 
-            VALUES (?, ?, ?, ?, ?, ?, 1)";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$username, $fname, $lname, $email, $hashed_password, $is_vendor ? 2 : 1]);
-    $user_id = $db->lastInsertId();
+  $result = $user->save();
 
-    // Handle Profile Image Upload
-    $uploaded_filename = null;
-    if (isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] === UPLOAD_ERR_OK) {
-      $uploaded_filename = upload_image($_FILES['profile-pic'], 'users', $clean_name);
+  if (!$result) {
+    $session->message("❌ Failed to create user.");
+    redirect_to('../signup.php');
+  }
+
+  $user_id = $user->user_id;
+
+  // Upload profile image
+  $clean_name = strtolower($fname . '_' . $lname . '_' . $user_id);
+  $uploaded_filename = null;
+  if (isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] === UPLOAD_ERR_OK) {
+    $uploaded_filename = upload_image($_FILES['profile-pic'], 'users', $clean_name);
+  }
+  $profile_image = $uploaded_filename
+    ? "img/upload/users/" . $uploaded_filename
+    : 'img/upload/users/default.png';
+
+  $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$user_id, $profile_image]);
+
+  // Insert vendor info if applicable
+  if ($is_vendor) {
+    $vendor = new Vendor([
+      'user_id' => $user_id,
+      'business_name' => $_POST['business_name'],
+      'contact_number' => $_POST['contact_number'],
+      'business_EIN' => $ein,
+      'business_email' => $_POST['business_email'],
+      'website' => $_POST['website'],
+      'city' => $_POST['city'],
+      'state_id' => $_POST['state_id'],
+      'street_address' => $_POST['street_address'],
+      'zip_code' => $_POST['zip_code'],
+      'description' => $_POST['description'],
+      'vendor_bio' => $_POST['vendor_bio']
+    ]);
+
+    $vendor->user_id = $user->user_id;
+
+    if (!$vendor->save()) {
+      $session->message("❌ Vendor creation failed.");
+      redirect_to('../superadmin_dash.php');
     }
+  }
 
-    $profile_image = $uploaded_filename
-      ? "img/upload/users/" . $uploaded_filename
-      : 'img/upload/users/default.png';
-
-    $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$user_id, $profile_image]);
-
-    // Insert into Vendor Table if Vendor
-    if ($is_vendor) {
-      $business_name = $_POST['business_name'];
-      $contact_number = $_POST['contact_number'];
-      $business_email = $_POST['business_email'];
-      $website = $_POST['website'];
-      $city = $_POST['city'];
-      $state_id = $_POST['state_id'];
-      $street_address = $_POST['street_address'];
-      $zip_code = $_POST['zip_code'];
-      $description = $_POST['description'];
-      $vendor_bio = $_POST['vendor_bio'];
-
-      $sql = "INSERT INTO vendor (user_id, business_name, contact_number, business_EIN, business_email, website, city, state_id, street_address, zip_code, description, vendor_bio, vendor_status) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
-      $stmt = $db->prepare($sql);
-      $stmt->execute([$user_id, $business_name, $contact_number, $ein, $business_email, $website, $city, $state_id, $street_address, $zip_code, $description, $vendor_bio]);
-
-      $_SESSION['message'] = "✅ Approval pending. Check your email for confirmation in the next 24-48h.";
-      $redirect_url = "/vendor_dash.php";
+  if ($admin_created) {
+    $session->message("✅ Vendor created successfully.");
+    if ($_SESSION['user_level_id'] == 4) {
+      redirect_to('../superadmin_dash.php');
+    } elseif ($_SESSION['user_level_id'] == 3) {
+      redirect_to('../admindash.php');
     } else {
-      $_SESSION['message'] = "✅ Account created successfully! Welcome to the site.";
-      $redirect_url = "/dashboard.php";
+      redirect_to('../dashboard.php');
     }
-
-    // Set Session Variables
-    $_SESSION['user_id'] = $user_id;
-    $_SESSION['username'] = $username;
-    $_SESSION['user_level_id'] = $is_vendor ? 2 : 1;
-    $_SESSION['profile_image'] = $profile_image;
-
-    header("Location: " . $redirect_url);
-    exit();
   }
+
+  $session->login([
+    'user_id' => $user_id,
+    'username' => $username,
+    'user_level' => $is_vendor ? 2 : 1
+  ]);
+  $_SESSION['profile_image'] = $profile_image;
+
+  $session->message("✅ Account created successfully!");
+  $redirect_url = $is_vendor ? "/vendor_dash.php" : "/dashboard.php";
+  redirect_to($redirect_url);
 }
 
-// Handle User Login
 if (is_post_request() && isset($_POST['login'])) {
   $username = $_POST['username'];
   $password = $_POST['password'];
 
   if (is_blank($username) || is_blank($password)) {
-    $_SESSION['message'] = "❌ Invalid username or password.";
-    header("Location: ../login.php");
-    exit();
+    $session->message("❌ Invalid username or password.");
+    redirect_to('../login.php');
   }
 
   $sql = "SELECT u.user_id, u.username, u.password, u.user_level_id, u.is_active, v.vendor_status
@@ -132,38 +145,46 @@ if (is_post_request() && isset($_POST['login'])) {
 
   if ($user && password_verify($password, $user['password'])) {
     if ($user['is_active'] == 0) {
-      $_SESSION['message'] = "❌ Your account has been deactivated. Contact support.";
-      header("Location: ../login.php");
-      exit();
+      $session->message("❌ Your account has been deactivated. Contact support.");
+      redirect_to('../login.php');
     }
 
-    session_regenerate_id(true);
-
-    $_SESSION['user_id'] = $user['user_id'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['user_level_id'] = $user['user_level_id'];
+    $session->login([
+      'user_id' => $user['user_id'],
+      'username' => $user['username'],
+      'user_level' => $user['user_level_id']
+    ]);
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
+    $_SESSION['user_level_id'] = $user['user_level_id'];
 
-    $_SESSION['message'] = "✅ Welcome back, " . h($user['username']) . "!";
 
-    if ($_SESSION['user_level_id'] == 2) {
-      header("Location: ../vendor_dash.php");
-    } elseif ($_SESSION['user_level_id'] == 3) {
-      header("Location: ../admin_dash.php");
-    } elseif ($_SESSION['user_level_id'] == 4) {
-      header("Location: ../superadmin_dash.php");
-    } else {
-      header("Location: ../dashboard.php");
+    $session->message("✅ Welcome back, " . h($user['username']) . "!");
+    error_log("Redirecting user level: " . $user['user_level_id']);
+
+    switch ($user['user_level_id']) {
+      case 2:
+        error_log("Redirecting to vendor dashboard");
+        redirect_to('../vendor_dash.php');
+        break;
+      case 3:
+        error_log("Redirecting to admin dashboard");
+        redirect_to('../admin_dash.php');
+        break;
+      case 4:
+        error_log("Redirecting to SUPERADMIN dashboard");
+        redirect_to('../superadmin_dash.php');
+        break;
+      default:
+        error_log("Redirecting to generic dashboard");
+        redirect_to('../dashboard.php');
+        break;
     }
-    exit();
   } else {
-    $_SESSION['message'] = "❌ Invalid username or password.";
-    header("Location: ../login.php");
-    exit();
+    $session->message("❌ Invalid username or password.");
+    redirect_to('../login.php');
   }
 }
 
-// Function to Get Profile Image
 function get_profile_image($user_id)
 {
   global $db;

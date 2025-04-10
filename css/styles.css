@@ -29,6 +29,36 @@ body {
   padding-top: 192px;
 }
 
+/* Universal Pop up */
+
+.popup-message {
+  animation: fadeOut 4s ease forwards;
+  background-color: #333;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-weight: bold;
+  left: 50%;
+  padding: 12px 24px;
+  position: fixed;
+  top: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    display: none;
+    opacity: 0;
+  }
+}
+
 .feedback-popup {
   background-color: var(--dark);
   border-radius: 8px;
@@ -313,19 +343,25 @@ footer div:nth-of-type(1):not(.social-links) {
   border-bottom: 1px solid var(--light);
 }
 
-footer div:nth-of-type(2) p {
+footer div:nth-of-type(2) span:first-of-type {
   text-align: center;
+  margin: 1rem;
 }
 
 footer .social-links {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   gap: 0.25rem;
 }
 
 footer > div div:last-of-type {
+  align-items: center;
   display: flex;
   justify-content: space-between;
+}
+
+.social-links {
+  margin-bottom: 1rem;
 }
 
 /* Privacy Policy/ ToS */
@@ -357,7 +393,7 @@ footer > div div:last-of-type {
 }
 
 .market-status-message {
-  background-color: #333333cc;
+  background-color: var(--dark);
   color: var(--light);
   padding: 0 !important;
   width: 100%;
@@ -493,8 +529,11 @@ footer > div div:last-of-type {
 
 /* Number text (1/3 etc) */
 .numbertext {
+  background-color: var(--dark);
+  border-radius: 5px;
   color: var(--light);
   font-size: 12px;
+  margin: 0.25rem;
   padding: 8px 12px;
   position: absolute;
   top: 0;
@@ -1235,14 +1274,6 @@ div#vendorhead {
   justify-content: center;
 }
 
-.vendor-signup div:nth-of-type(2) div {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
-  width: 300px;
-}
-
 #description,
 #vendor-bio {
   width: 300px;
@@ -1402,18 +1433,17 @@ label[for='profile-pic']:hover {
 
 #user-card {
   align-items: center;
+  background-color: var(--light);
   border-radius: 5px;
   color: var(--dark);
   display: inline-flex;
   flex: 1;
   flex-direction: column;
+  height: auto;
   margin: 1rem;
   padding: 1rem;
   justify-content: center;
-  background-color: var(--light);
-  justify-content: flex-start !important;
   row-gap: 1rem;
-  height: auto;
   width: 50%;
 }
 
@@ -1785,6 +1815,33 @@ form[action='update_homepage.php'] {
   row-gap: 0.5rem;
 }
 
+.super-admin-dashboard form[action='/private/auth.php'] {
+  background-color: var(--main-color);
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.super-admin-dashboard form[action='/private/auth.php'] fieldset,
+.admin-dashboard form[action='/private/auth.php'] fieldset {
+  border: none;
+}
+
+.super-admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset,
+.admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.super-admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset + div,
+.admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset + div {
+  display: flex;
+  justify-content: center;
+}
+
 .admin-dashboard button,
 .super-admin-dashboard button {
   background-color: var(--dark) !important;
@@ -1837,9 +1894,9 @@ td.request-action-column {
 }
 
 .section-content {
-  border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
+  display: block;
 }
 
 /* Fluid Text */
@@ -2267,7 +2324,4 @@ td.request-action-column {
   .sign-up input {
     width: 300px;
   }
-}
-
-@media screen and (max-width: 380px) {
 }
