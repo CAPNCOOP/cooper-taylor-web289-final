@@ -17,33 +17,30 @@ if (!$user_id) {
   exit();
 }
 
-// Fetch user details
-$sql = "SELECT first_name, last_name FROM users WHERE user_id = ?";
-$stmt = $db->prepare($sql);
-$stmt->execute([$user_id]);
-$user_info = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$user_info) {
-  header("Location: edit_profile.php?message=error_update_failed");
-  exit();
-}
-
-$first_name = $user_info['first_name'];
-$last_name = $user_info['last_name'];
-
-// Fetch current session values
 $username = trim($_POST['username'] ?? '');
 $email = trim($_POST['email'] ?? '');
-$profile_image = $_SESSION['profile_image'] ?? 'img/upload/users/default.png'; // Default profile image
+
+// ✅ Uniqueness Check for Username
+if (User::isUsernameTaken($username, $user_id)) {
+  $session->message("❌ That username is already taken.");
+  redirect_to('edit_profile.php');
+}
+
+// ✅ Uniqueness Check for Email (optional)
+if (User::isEmailTaken($email, $user_id)) {
+  $session->message("❌ That email is already in use.");
+  redirect_to('edit_profile.php');
+}
 
 // ✅ Update user profile
-$sql = "UPDATE users SET username = ?, email = ? WHERE user_id = ?";
-$stmt = $db->prepare($sql);
-$update_success = $stmt->execute([$username, $email, $user_id]);
+$user = User::find_by_id($user_id);
+$user->username = $username;
+$user->email = $email;
+$update_success = $user->save();
 
 // ✅ Handle Profile Image Upload
 if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'] == 0) {
-  $full_name = strtolower($first_name . '_' . $last_name);
+  $full_name = strtolower($user->first_name . '_' . $user->last_name);
   $file_extension = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
   $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
 
@@ -54,7 +51,6 @@ if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'
 
   $profile_image = 'img/upload/users/' . $full_name . '.' . $file_extension;
 
-  // Resize & Save Image
   $src_image = match (strtolower($file_extension)) {
     'jpg', 'jpeg' => imagecreatefromjpeg($_FILES['profile_image']['tmp_name']),
     'png' => imagecreatefrompng($_FILES['profile_image']['tmp_name']),
@@ -71,7 +67,6 @@ if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'
     $cropped_image = imagecreatetruecolor(500, 500);
     imagecopyresampled($cropped_image, $src_image, 0, 0, $x_offset, $y_offset, 500, 500, $crop_size, $crop_size);
 
-    // Save the cropped image
     match (strtolower($file_extension)) {
       'jpg', 'jpeg' => imagejpeg($cropped_image, $profile_image, 90),
       'png' => imagepng($cropped_image, $profile_image, 9),
@@ -81,9 +76,8 @@ if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'
     imagedestroy($src_image);
     imagedestroy($cropped_image);
 
-    // Update profile image in DB
     $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?) 
-                ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+            ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$user_id, $profile_image]);
 
@@ -93,25 +87,33 @@ if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'
 
 // ✅ If Vendor, Update Vendor-Specific Details
 if ($user_level == 2) {
-  $business_name = trim($_POST['business_name']);
-  $business_ein = trim($_POST['business_ein']);
-  $contact_number = trim($_POST['contact_number']);
-  $description = trim($_POST['description']);
+  $vendor = Vendor::find_by_user_id($user_id);
 
-  $sql = "UPDATE vendor SET business_name = ?, business_EIN = ?, contact_number = ?, description = ? WHERE user_id = ?";
-  $stmt = $db->prepare($sql);
-  $update_success_vendor = $stmt->execute([$business_name, $business_ein, $contact_number, $description, $user_id]);
+  if (!$vendor || !$vendor->vendor_id) {
+    $session->message("❌ Vendor record not found or incomplete. Cannot update profile.");
+    redirect_to('edit_profile.php');
+  }
 
-  if (!$update_success_vendor) {
+  // ✅ Patch in the user_id if it's missing
+  if (empty($vendor->user_id)) {
+    $vendor->user_id = $user_id;
+  }
+
+  $vendor->business_name = trim($_POST['business_name']);
+  $vendor->business_EIN = trim($_POST['business_ein']);
+  $vendor->contact_number = trim($_POST['contact_number']);
+  $vendor->description = trim($_POST['description']);
+
+  if (!$vendor->save()) {
     header("Location: edit_profile.php?message=error_update_failed");
     exit();
   }
 }
 
-// ✅ Refresh session variables
+
+
 $_SESSION['username'] = $username;
 
-// ✅ Redirect with success message
 if ($update_success) {
   header("Location: edit_profile.php?message=profile_updated");
 } else {

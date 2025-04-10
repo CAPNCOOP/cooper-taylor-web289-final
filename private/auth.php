@@ -8,7 +8,7 @@ require_once 'classes/Vendor.class.php';
 $errors = [];
 $profile_image = 'img/upload/users/default.png';
 
-if (is_post_request() && $_POST['register'] == '1') {
+if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1') {
   $admin_created = isset($_POST['admin_created']) && $_POST['admin_created'] == '1';
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
 
@@ -183,14 +183,4 @@ if (is_post_request() && isset($_POST['login'])) {
     $session->message("❌ Invalid username or password.");
     redirect_to('../login.php');
   }
-}
-
-function get_profile_image($user_id)
-{
-  global $db;
-  $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$user_id]);
-  $result = $stmt->fetch(PDO::FETCH_ASSOC);
-  return $result ? $result['file_path'] : 'img/upload/users/default.png';
 }

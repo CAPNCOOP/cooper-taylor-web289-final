@@ -4,7 +4,7 @@ class User extends DatabaseObject
 {
   protected static $primary_key = 'user_id';
   static protected $table_name = 'users';
-  static protected $db_columns = ['username', 'password', 'email', 'first_name', 'last_name', 'user_level_id', 'is_active'];
+  static protected $db_columns = ['user_id', 'username', 'password', 'email', 'first_name', 'last_name', 'user_level_id', 'is_active'];
 
   public $user_id;
   public $username;
@@ -32,32 +32,36 @@ class User extends DatabaseObject
     return $this->is_active ? 'Active' : 'Inactive';
   }
 
-  public function removeFavoriteVendor(int $vendor_id): bool
+  public static function isUsernameTaken(string $username, int $exclude_id = 0): bool
   {
-    $sql = "DELETE FROM favorite WHERE user_id = ? AND vendor_id = ?";
-    $stmt = self::$db->prepare($sql);
-    return $stmt->execute([$this->user_id, $vendor_id]);
+    $db = static::getDatabase();
+    $sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+    $params = [$username];
+
+    if ($exclude_id > 0) {
+      $sql .= " AND user_id != ?";
+      $params[] = $exclude_id;
+    }
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchColumn() > 0;
   }
 
-  public static function toggleFavoriteVendor(int $user_id, int $vendor_id): bool|null
+  public static function isEmailTaken(string $email, int $exclude_id = 0): bool
   {
-    global $db;
+    $db = static::getDatabase();
+    $sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+    $params = [$email];
 
-    $sql = "SELECT 1 FROM favorite WHERE user_id = ? AND vendor_id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$user_id, $vendor_id]);
-
-    if ($stmt->fetch()) {
-      // Remove favorite
-      $sql = "DELETE FROM favorite WHERE user_id = ? AND vendor_id = ?";
-      $stmt = $db->prepare($sql);
-      return $stmt->execute([$user_id, $vendor_id]) ? false : null;
-    } else {
-      // Add favorite
-      $sql = "INSERT INTO favorite (user_id, vendor_id) VALUES (?, ?)";
-      $stmt = $db->prepare($sql);
-      return $stmt->execute([$user_id, $vendor_id]) ? true : null;
+    if ($exclude_id > 0) {
+      $sql .= " AND user_id != ?";
+      $params[] = $exclude_id;
     }
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchColumn() > 0;
   }
 }
 

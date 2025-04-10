@@ -2,6 +2,9 @@
 
 class Product extends DatabaseObject
 {
+
+  static protected $primary_key = 'product_id';
+
   static protected $table_name = 'product';
   static protected $db_columns = ['product_id', 'vendor_id', 'name', 'price', 'amount_id', 'category_id', 'description'];
 

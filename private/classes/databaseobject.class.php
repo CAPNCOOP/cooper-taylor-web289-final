@@ -108,20 +108,29 @@ class DatabaseObject
       $attribute_pairs[] = "$key = :$key";
     }
 
-    $sql = "UPDATE " . static::$table_name . " SET " . join(', ', $attribute_pairs) . " WHERE id = :id LIMIT 1";
+    $primary_key = static::$primary_key ?? 'id';
+
+    $sql = "UPDATE " . static::$table_name . " SET ";
+    $sql .= join(', ', $attribute_pairs);
+    $sql .= " WHERE {$primary_key} = :primary_key LIMIT 1";
+
     $stmt = self::$db->prepare($sql);
 
+    // Bind attribute values
     foreach ($attributes as $key => $value) {
       $stmt->bindValue(':' . $key, $value);
     }
-    $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+    // Bind the primary key value
+    $stmt->bindValue(':primary_key', $this->$primary_key, PDO::PARAM_INT);
 
     return $stmt->execute();
   }
 
   public function save()
   {
-    return isset($this->id) ? $this->update() : $this->create();
+    $pk = static::$primary_key ?? 'id';
+    return isset($this->$pk) && !empty($this->$pk) ? $this->update() : $this->create();
   }
 
   public function merge_attributes($args = [])
@@ -158,5 +167,11 @@ class DatabaseObject
     $stmt = self::$db->prepare($sql);
     $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
     return $stmt->execute();
+  }
+
+  public function id()
+  {
+    $key = static::$primary_key ?? 'id';
+    return $this->$key ?? null;
   }
 }

@@ -4,37 +4,29 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
 
+require_login();
+
 if (!isset($db)) {
   exit("Database connection error.");
 }
 
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit("Redirecting to login...");
+$user_id = $_SESSION['user_id'] ?? null;
+$user_level = $_SESSION['user_level_id'] ?? null;
+
+if (!$user_id || $user_level !== 2) {
+  redirect_to('login.php');
 }
 
-// Fetch user and vendor details
-$user_id = $_SESSION['user_id'];
+// ✅ Load vendor and profile info using OOP
+$vendor = Vendor::find_by_user_id($user_id);
+$user = User::find_by_id($user_id);
 
-$sql = "SELECT v.vendor_id, v.business_name, v.vendor_status, u.first_name, u.last_name, p.file_path AS profile_image
-        FROM vendor v
-        JOIN users u ON v.user_id = u.user_id
-        LEFT JOIN profile_image p ON u.user_id = p.user_id
-        WHERE v.user_id = ?";
-$stmt = $db->prepare($sql);
-$stmt->execute([$user_id]);
-$vendor = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Ensure vendor exists
-if (!$vendor) {
+if (!$vendor || !$user) {
   exit("Error: Vendor not found.");
 }
 
-// ✅ Assign vendor status properly
-$vendor_status = $vendor['vendor_status'] ?? 'pending';
-
-// Set profile image (default if not found)
-$profile_image = !empty($vendor['profile_image']) ? $vendor['profile_image'] : "img/upload/users/default.png";
+$profile_image = get_profile_image($user_id);
+$vendor_status = $vendor->vendor_status ?? 'pending';
 
 require_once 'private/popup_message.php';
 ?>
@@ -49,11 +41,12 @@ require_once 'private/popup_message.php';
   </div>
 <?php endif; ?>
 
+
 <div id="vendor-info">
   <div>
-    <h2><?php echo h($vendor['first_name'] . ' ' . $vendor['last_name']); ?></h2>
-    <img src="<?php echo h($profile_image); ?>" alt="Vendor Profile Picture" height="250" width="250">
-    <span>Business: <?php echo h($vendor['business_name']); ?></span>
+    <h2><?= h($user->first_name . ' ' . $user->last_name); ?></h2>
+    <img src="<?= h($profile_image); ?>" alt="Vendor Profile Picture" height="250" width="250">
+    <span>Business: <?= h($vendor->business_name); ?></span>
     <a href="<?= ($vendor_status === 'approved') ? 'edit_profile.php' : '#' ?>"
       class="btn <?= ($vendor_status === 'approved') ? '' : 'disabled-link' ?>"
       title="<?= ($vendor_status === 'approved') ? '' : 'Approval required to edit profile.' ?>">

@@ -12,7 +12,9 @@ if (!$week_id || !is_numeric($week_id)) {
 
 $admin = new Admin();
 $market = $admin->fetchMarketById($week_id);
-$vendors = $admin->fetchVendorsForMarketWeek($week_id);
+$vendors_data = $admin->fetchVendorsForMarketWeek($week_id);
+
+$vendors = array_map(fn($data) => (object) $data, $vendors_data);
 
 $week_end_formatted = strtoupper(date('M-d-Y', strtotime($market['week_end'] ?? '')));
 ?>
@@ -22,24 +24,24 @@ $week_end_formatted = strtoupper(date('M-d-Y', strtotime($market['week_end'] ?? 
 <ul class="week-vendor">
   <?php foreach ($vendors as $vendor): ?>
     <?php
-    $profile_photo = !empty($vendor['profile_photo'])
-      ? '/' . ltrim($vendor['profile_photo'], '/')
+    $profile_photo = !empty($vendor->profile_photo)
+      ? '/' . ltrim($vendor->profile_photo, '/')
       : 'img/upload/users/default-profile.png';
     ?>
-    <a href="vendor_profile.php?vendor_id=<?= h($vendor['vendor_id']) ?>" style="text-decoration: none; color: inherit;">
-      <li class="vendor-item">
+    <li class="vendor-item">
+      <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>">
         <img src="<?= h($profile_photo) ?>"
-          alt="<?= h($vendor['business_name']) ?>"
+          alt="<?= h($vendor->business_name) ?>"
           class="vendor-photo"
           onerror="this.onerror=null;this.src='img/upload/users/default.png';"
           height="100" width="100">
         <div>
-          <strong><?= h($vendor['business_name']) ?></strong> -
-          <?= h($vendor['city'] . ", " . $vendor['state_abbr']) ?>
-          <p><?= nl2br(h($vendor['vendor_bio'])) ?></p>
+          <strong><?= h($vendor->business_name) ?></strong> -
+          <?= h($vendor->city . ", " . $vendor->state_abbr) ?>
+          <p><?= nl2br(h($vendor->vendor_bio)) ?></p>
         </div>
-      </li>
-    </a>
+      </a>
+    </li>
   <?php endforeach; ?>
 </ul>
 

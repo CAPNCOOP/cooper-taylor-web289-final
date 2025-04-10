@@ -17,8 +17,7 @@ if (!$vendor_id) {
   exit;
 }
 
-// Call helper logic
-$success = User::toggleFavoriteVendor($user_id, $vendor_id);
+$success = Favorite::toggle($user_id, $vendor_id);
 $message = $success === true ? 'favorite_added' : ($success === false ? 'favorite_removed' : 'error_failed');
 
 echo json_encode([

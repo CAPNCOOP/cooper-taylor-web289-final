@@ -221,3 +221,13 @@ function get_existing_tags($product_id)
   $stmt->execute([$product_id]);
   return $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
+
+function get_profile_image($user_id)
+{
+  global $db;
+  $sql = "SELECT file_path FROM profile_image WHERE user_id = ?";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$user_id]);
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $result ? $result['file_path'] : 'img/upload/users/default.png';
+}
