@@ -161,13 +161,15 @@ class DatabaseObject
     return $sanitized;
   }
 
-  public function delete()
+  public function delete(): bool
   {
-    $sql = "DELETE FROM " . static::$table_name . " WHERE id = :id LIMIT 1";
+    $pk = static::$primary_key ?? 'id';
+    $sql = "DELETE FROM " . static::$table_name . " WHERE {$pk} = :{$pk} LIMIT 1";
     $stmt = self::$db->prepare($sql);
-    $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+    $stmt->bindValue(":{$pk}", $this->$pk, PDO::PARAM_INT);
     return $stmt->execute();
   }
+
 
   public function id()
   {

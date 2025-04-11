@@ -25,4 +25,20 @@ class Product extends DatabaseObject
     $this->category_id = $args['category_id'] ?? 0;
     $this->description = $args['description'] ?? '';
   }
+
+  public function delete(): bool
+  {
+    global $db;
+
+    // Delete dependencies
+    $stmt = $db->prepare("DELETE FROM product_image WHERE product_id = ?");
+    $stmt->execute([$this->product_id]);
+
+    $stmt = $db->prepare("DELETE FROM product_tag_map WHERE product_id = ?");
+    $stmt->execute([$this->product_id]);
+    $db->exec("SET innodb_lock_wait_timeout = 1");
+
+    // Then call parent delete
+    return parent::delete();
+  }
 }

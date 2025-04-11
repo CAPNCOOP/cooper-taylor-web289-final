@@ -66,10 +66,10 @@ class Admin extends User
 
   // Fetch RSVP statuses per vendor per week
   // Inside Admin or SuperAdmin class (which extends DatabaseObject)
-  public function fetchVendorRsvps(): array
+  public static function fetchVendorRsvps(int $vendor_id): array
   {
     $sql = "
-    SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, vm.status AS rsvp_status
+    SELECT vm.vendor_id, mw.week_id, mw.week_start, mw.week_end, mw.confirmation_deadline, vm.status AS rsvp_status
     FROM vendor_market vm
     JOIN market_week mw ON vm.week_id = mw.week_id
     WHERE mw.week_start >= CURDATE() AND mw.is_deleted = 0
@@ -120,12 +120,15 @@ class Admin extends User
   }
 
   // Fetch all upcoming market weeks
-  public function fetchUpcomingMarkets()
+  public static function fetchUpcomingMarkets()
   {
-    $sql = "SELECT week_id, week_start, week_end, market_status 
-            FROM market_week 
-            WHERE week_end >= CURDATE() AND is_deleted = 0
-            ORDER BY week_end ASC";
+    $sql = "
+    SELECT week_id, week_start, week_end, confirmation_deadline
+    FROM market_week
+    WHERE week_start >= CURDATE() AND is_deleted = 0
+    ORDER BY week_start ASC
+  ";
+
     $stmt = self::$db->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

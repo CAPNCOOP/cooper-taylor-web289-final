@@ -35,9 +35,24 @@ class Session
     return isset($this->user_id) && isset($this->last_login) && $this->last_login_is_recent();
   }
 
-  public function is_admin_logged_in()
+  public static function is_vendor(): bool
   {
-    return $this->is_logged_in() && $this->user_level == 'a';
+    return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 2;
+  }
+
+  public static function is_admin(): bool
+  {
+    return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1;
+  }
+
+  public static function is_super_admin(): bool
+  {
+    return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 3;
+  }
+
+  public static function user_id(): ?int
+  {
+    return $_SESSION['user_id'] ?? null;
   }
 
   public function logout()
@@ -53,13 +68,12 @@ class Session
     return true;
   }
 
-
   private function check_stored_login()
   {
     if (isset($_SESSION['user_id'])) {
       $this->user_id = $_SESSION['user_id'];
       $this->username = $_SESSION['username'] ?? null;
-      $this->user_level = $_SESSION['user_level_id'] ?? null;
+      $this->user_level = $_SESSION['user_level'] ?? null;
       $this->last_login = $_SESSION['last_login'] ?? time(); // Set last login if missing
     } else {
       // Explicitly set everything to null if not found
@@ -69,7 +83,6 @@ class Session
       $this->last_login = null;
     }
   }
-
 
   private function last_login_is_recent()
   {
