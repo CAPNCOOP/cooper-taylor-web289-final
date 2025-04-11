@@ -43,17 +43,19 @@ class Vendor extends User
     }
   }
 
-
-  public function approve(): bool
+  public function isApproved(): bool
   {
-    $this->vendor_status = 'approved';
-    return $this->save();
+    return $this->vendor_status === 'approved';
   }
 
-  public function reject(): bool
+  public function isPending(): bool
   {
-    $this->vendor_status = 'denied';
-    return $this->save();
+    return $this->vendor_status === 'pending';
+  }
+
+  public function isDenied(): bool
+  {
+    return $this->vendor_status === 'denied';
   }
 
   public static function fetchProducts($vendor_id): array

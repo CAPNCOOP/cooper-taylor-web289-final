@@ -71,10 +71,7 @@ require_once 'private/functions.php';
           <option value="">Select State</option>
           <?php
           // Fetch states from the database
-          $state_sql = "SELECT state_id, state_abbr FROM state ORDER BY state_abbr ASC";
-          $state_stmt = $db->prepare($state_sql);
-          $state_stmt->execute();
-          $states = $state_stmt->fetchAll(PDO::FETCH_ASSOC);
+          $states = Admin::fetchStates();
           foreach ($states as $state) {
             echo "<option value=\"" . $state['state_id'] . "\">" . h($state['state_abbr']) . "</option>";
           }

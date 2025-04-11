@@ -1,55 +1,44 @@
 <?php
 require_once 'private/initialize.php';
+require_login();
 
-// Ensure vendor is logged in
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit("Unauthorized access.");
+if (!Session::is_vendor()) {
+  exit("❌ Unauthorized access.");
 }
 
-// Fetch vendor ID from the session
-$user_id = $_SESSION['user_id'];
-$sql = "SELECT vendor_id FROM vendor WHERE user_id = ? AND vendor_status = 'approved'";
-$stmt = $db->prepare($sql);
-$stmt->execute([$user_id]);
-$vendor = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$vendor) {
+$vendor = Vendor::find_by_user_id(Session::user_id());
+if (!$vendor || $vendor->vendor_status !== 'approved') {
   exit("❌ ERROR: You must be an approved vendor to RSVP.");
 }
 
-$vendor_id = $vendor['vendor_id'];
+$vendor_id = $vendor->vendor_id;
 
 // Validate POST data
-if (!isset($_POST['week_id']) || !isset($_POST['status'])) {
+$week_id = $_POST['week_id'] ?? null;
+$status = $_POST['status'] ?? null;
+
+if (!$week_id || !$status) {
   exit("❌ ERROR: Missing market week or RSVP status.");
 }
 
-$week_id = $_POST['week_id'];
-$status = $_POST['status'];
+$db = DatabaseObject::getDatabase();
 
-// Check if RSVP already exists
-$sql = "SELECT * FROM vendor_market WHERE vendor_id = ? AND week_id = ?";
-$stmt = $db->prepare($sql);
-$stmt->execute([$vendor_id, $week_id]);
-$existing_rsvp = $stmt->fetch(PDO::FETCH_ASSOC);
+// Use Admin helper method to insert or update RSVP
+Admin::saveVendorRsvp($vendor_id, $week_id, $status);
 
-if ($existing_rsvp) {
-  // Update existing RSVP
-  $sql = "UPDATE vendor_market SET status = ? WHERE vendor_id = ? AND week_id = ?";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$status, $vendor_id, $week_id]);
-
-  $message = "RSVP updated successfully!";
-} else {
-  // Insert new RSVP
-  $sql = "INSERT INTO vendor_market (vendor_id, week_id, status) VALUES (?, ?, ?)";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$vendor_id, $week_id, $status]);
-
-  $message = "RSVP submitted successfully!";
+// Redirect with message
+switch ($status) {
+  case 'confirmed':
+    $message = "✅ Market confirmed!";
+    break;
+  case 'canceled':
+    $message = "❌ Market canceled.";
+    break;
+  case 'planned':
+    $message = "📝 RSVP marked as planned.";
+    break;
+  default:
+    $message = "🔄 RSVP updated.";
 }
-
-// Redirect back to RSVP page with success message
-header("Location: rsvp_market.php?message=" . urlencode($message));
-exit;
+$session->message($message);
+redirect_to("rsvp_market.php");

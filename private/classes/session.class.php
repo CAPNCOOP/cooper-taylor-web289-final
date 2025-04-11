@@ -30,10 +30,18 @@ class Session
     return true;
   }
 
-  public function is_logged_in()
+  public static function is_logged_in()
   {
-    return isset($this->user_id) && isset($this->last_login) && $this->last_login_is_recent();
+    return isset($_SESSION['user_id']);
   }
+
+  public static function require_login(): void
+  {
+    if (!self::is_logged_in()) {
+      redirect_to('login.php');
+    }
+  }
+
 
   public static function is_vendor(): bool
   {
@@ -53,6 +61,11 @@ class Session
   public static function user_id(): ?int
   {
     return $_SESSION['user_id'] ?? null;
+  }
+
+  public static function user_level_id(): ?int
+  {
+    return $_SESSION['user_level_id'] ?? null;
   }
 
   public function logout()

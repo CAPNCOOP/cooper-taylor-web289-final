@@ -3,15 +3,13 @@ $page_title = "Home";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 
-// Get homepage welcome message
-$stmt = $db->prepare("SELECT content FROM homepage_content WHERE section = 'welcome' LIMIT 1");
-$stmt->execute();
-$homepage_welcome = $stmt->fetchColumn();
+$admin = new Admin();
 
-// Get next upcoming market
-$stmt = $db->prepare("SELECT week_end, market_status FROM market_week WHERE week_end >= CURDATE() ORDER BY week_end ASC LIMIT 1");
-$stmt->execute();
-$next_market = $stmt->fetch(PDO::FETCH_ASSOC);
+// Get homepage welcome message
+$homepage_welcome = $admin->fetchHomepageContent(); // returns string or null
+
+// Get next upcoming market info
+$next_market = $admin->fetchUpcomingMarketWeek(); // returns assoc array with week_end, market_status
 
 $market_message = '';
 if ($next_market) {
@@ -24,6 +22,7 @@ if ($next_market) {
   }
 }
 ?>
+
 
 
 <div class="hero-image">

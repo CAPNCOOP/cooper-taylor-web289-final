@@ -18,6 +18,7 @@ $weeks = Admin::fetchUpcomingMarkets();
 $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
 
 ?>
+<?php require_once 'private/popup_message.php'; ?>
 
 <h2>RSVP for Upcoming Markets</h2>
 
@@ -48,6 +49,7 @@ $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
                 <option value="confirmed" <?= ($rsvp_map[$week['week_id']] ?? '') === 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
                 <option value="canceled" <?= ($rsvp_map[$week['week_id']] ?? '') === 'canceled' ? 'selected' : '' ?>>Canceled</option>
               </select>
+              <noscript><button type="submit">Submit</button></noscript>
             </form>
           <?php else: ?>
             <span style="color: gray;">RSVP Closed</span>

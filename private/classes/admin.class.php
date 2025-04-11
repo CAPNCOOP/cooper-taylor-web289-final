@@ -4,6 +4,14 @@ class Admin extends User
   static protected $table_name = 'users';
   static protected $db_columns = ['user_id', 'username', 'password', 'email', 'first_name', 'last_name', 'user_level_id', 'is_active'];
 
+  public static function fetchStates(): array
+  {
+    $db = static::getDatabase();
+    $stmt = $db->query("SELECT state_id, state_abbr FROM state ORDER BY state_abbr ASC");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+
   public function toggleUserStatus($userId): bool
   {
     $user = self::find_by_id($userId);
@@ -23,7 +31,6 @@ class Admin extends User
     }
     return false;
   }
-
 
   // Override vendor RSVP to 'confirmed'
   public function overrideVendorSchedule($vendorId, $marketDate)
@@ -63,7 +70,6 @@ class Admin extends User
     return $stmt->fetchAll(PDO::FETCH_ASSOC); // or hydrate into Vendor objects if you want
   }
 
-
   // Fetch RSVP statuses per vendor per week
   // Inside Admin or SuperAdmin class (which extends DatabaseObject)
   public static function fetchVendorRsvps(int $vendor_id): array
@@ -83,7 +89,7 @@ class Admin extends User
     $map = [];
 
     foreach ($rsvps as $rsvp) {
-      $map[$rsvp['vendor_id']][$rsvp['week_id']] = $rsvp['rsvp_status'];
+      $map[$rsvp['week_id']] = $rsvp['rsvp_status'];
     }
 
     return $map;
@@ -94,6 +100,26 @@ class Admin extends User
     $sql = "UPDATE vendor_market SET status = ? WHERE vendor_id = ? AND week_id = ?";
     $stmt = self::$db->prepare($sql);
     return $stmt->execute([$status, $vendorId, $weekId]);
+  }
+
+  public static function saveVendorRsvp(int $vendor_id, int $week_id, string $status): void
+  {
+    $db = static::getDatabase();
+
+    $sql = "SELECT 1 FROM vendor_market WHERE vendor_id = ? AND week_id = ? LIMIT 1";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$vendor_id, $week_id]);
+    $exists = $stmt->fetchColumn();
+
+    if ($exists) {
+      $sql = "UPDATE vendor_market SET status = ? WHERE vendor_id = ? AND week_id = ?";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$status, $vendor_id, $week_id]);
+    } else {
+      $sql = "INSERT INTO vendor_market (vendor_id, week_id, status) VALUES (?, ?, ?)";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$vendor_id, $week_id, $status]);
+    }
   }
 
   // Fetch confirmed market weeks by vendor
@@ -134,6 +160,14 @@ class Admin extends User
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function fetchUpcomingMarketWeek()
+  {
+    $stmt = self::$db->prepare("SELECT week_end, market_status FROM market_week WHERE week_end >= CURDATE() ORDER BY week_end ASC LIMIT 1");
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
+
   public function fetchMarketById(int $week_id): ?array
   {
     $sql = "SELECT week_start, week_end FROM market_week WHERE week_id = ?";
@@ -158,7 +192,6 @@ class Admin extends User
     $stmt->execute([$week_id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
 
   public function createMarketWeek(string $week_start, string $week_end, string $confirmation_deadline): string
   {
@@ -188,7 +221,6 @@ class Admin extends User
     return $success ? "✅ Market week scheduled!" : "❌ Failed to schedule market.";
   }
 
-
   public function cancelMarketWeek($weekId): bool
   {
     $stmt = self::$db->prepare("UPDATE market_week SET market_status = 'cancelled' WHERE week_id = ?");
@@ -202,7 +234,12 @@ class Admin extends User
     return $stmt->execute([$weekId]);
   }
 
-
+  public static function toggleMarketStatus(int $week_id, string $status): void
+  {
+    $db = static::getDatabase();
+    $stmt = $db->prepare("UPDATE market_week SET market_status = ? WHERE week_id = ?");
+    $stmt->execute([$status, $week_id]);
+  }
 
   // Get homepage welcome message
   public function fetchHomepageContent()

@@ -61,7 +61,7 @@ if ($user_level == 2) {
       <input type="email" id="email" name="email" value="<?= h($user->email) ?>" required>
     </fieldset>
 
-    <?php if ($user_level == 2 && $vendor): ?>
+    <?php if (Session::is_vendor() && $vendor): ?>
       <fieldset>
         <label for="business_name">Business Name:</label>
         <input type="text" id="business_name" name="business_name" value="<?= h($vendor->business_name) ?>">
