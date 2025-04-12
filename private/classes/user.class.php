@@ -63,6 +63,19 @@ class User extends DatabaseObject
     $stmt->execute($params);
     return $stmt->fetchColumn() > 0;
   }
+
+  public function getImagePath(): string
+  {
+    $db = static::getDatabase();
+
+    $sql = "SELECT file_path FROM profile_image WHERE user_id = ? LIMIT 1";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$this->user_id]);
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['file_path'] ?? 'default_user.png';
+  }
 }
 
 function find_by_username($username)

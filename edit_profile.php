@@ -45,11 +45,24 @@ if ($user_level == 2) {
   <h2>Edit Profile</h2>
   <form action="process_profile_update.php" method="POST" enctype="multipart/form-data">
     <fieldset>
-      <label for="profile_image">Profile Picture</label>
-      <p><strong>Current:</strong></p>
-      <img src="<?= url_for($profile_image) ?>" id="profile_preview" height="300" width="300" alt="Current Profile Picture.">
-      <input type="file" id="profile_image" name="profile_image" data-preview="profile_preview" accept="image/png, image/jpeg, image/webp" onchange="previewImage(event)">
+      <label for="edit-profile-pic">Choose Profile Photo</label>
+
+      <img class="image-preview"
+        src="<?= h($user->getImagePath()) ?>"
+        alt="Current Profile Image"
+        data-preview="image-preview"
+        height="300"
+        width="300">
+
+      <input type="file"
+        id="edit-profile-pic"
+        name="profile-pic"
+        class="image-input"
+        data-preview="image-preview"
+        accept="image/png, image/jpeg, image/webp"
+        onchange="previewImage(event)">
     </fieldset>
+
 
     <fieldset>
       <label for="username">Username:</label>

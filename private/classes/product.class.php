@@ -41,4 +41,17 @@ class Product extends DatabaseObject
     // Then call parent delete
     return parent::delete();
   }
+
+  public function getImagePath(): string
+  {
+    $db = static::getDatabase();
+
+    $sql = "SELECT file_path FROM product_image WHERE product_id = ? LIMIT 1";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$this->product_id]);
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['file_path'] ?? 'default_product.png';
+  }
 }

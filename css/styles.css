@@ -1281,7 +1281,7 @@ div#vendorhead {
 }
 
 /* Hide the default file input appearance */
-#profile-pic {
+.image-input {
   height: 0.1px;
   opacity: 0;
   overflow: hidden;
@@ -1291,29 +1291,37 @@ div#vendorhead {
 }
 
 /* Style the label that will act as our button */
-label[for='profile-pic'] {
+label[for^='user-'],
+label[for^='vendor-'],
+label[for^='edit-'],
+label[for^='create-'],
+label[for^='admin-'] {
   background-color: var(--secondary-color);
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: var(--light);
   cursor: pointer;
   display: inline-block;
-  font: 32px var(--secondary-text);
-  font-family: Arial, sans-serif;
+  font: 18px var(--secondary-text);
   margin: 0.5rem;
   padding: 10px 15px;
+  text-align: center;
   transition: all 0.2s ease-in-out;
 }
 
 /* Hover effect */
-label[for='profile-pic']:hover {
+label[for^='user-']:hover,
+label[for^='vendor-']:hover,
+label[for^='edit-']:hover,
+label[for^='create-']:hover,
+label[for^='admin-']:hover {
   opacity: 0.7;
   transform: translateY(-3px);
 }
 
-#profile-preview {
-  background: url('../img/assets/add-photo.svg') center / cover;
+.image-preview {
   border-radius: 5px;
+  margin: 0 auto;
 }
 
 .sign-up fieldset,
@@ -1340,12 +1348,6 @@ label[for='profile-pic']:hover {
 .vendor-signup p {
   font: 18px var(--secondary-text);
   flex-basis: 100%;
-}
-
-.sign-up label,
-.vendor-signup label {
-  font: 32px var(--secondary-text);
-  text-align: center;
 }
 
 .sign-up input {
@@ -1699,42 +1701,80 @@ label[for='profile-pic']:hover {
   font: 48px var(--main-text);
 }
 
-.manage-products legend {
+form[action='manage_products.php'] legend,
+form[action='edit_product.php'] legend {
   font: 24px var(--secondary-text);
   text-align: center;
   padding: 1rem;
 }
 
-.manage-products form {
+form[action='manage_products.php'] {
   background-color: var(--light);
   border-radius: 5px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   padding: 1rem;
   width: 80%;
 }
 
-.manage-products form div:nth-of-type(2) {
+form[action='manage_products.php'] div:nth-of-type(2) {
   align-items: center;
   display: flex;
-  flex-flow: column wrap;
+  flex-direction: column;
   justify-content: space-between;
 }
 
-.manage-products fieldset {
+form[action='manage_products.php'] div:nth-of-type(2) fieldset {
+  flex-direction: column;
+}
+
+form[action='manage_products.php'] fieldset {
   border: none;
   display: flex;
   justify-content: space-between;
 }
 
-.manage-products button {
+form[action='manage_products.php'] button {
   background-color: var(--dark);
   border: none;
   border-radius: 5px;
   color: var(--light);
   font: 18px var(--secondary-text);
   padding: 0.5rem;
+}
+
+/* edit product */
+
+.edit-product h2 {
+  font: 48px var(--main-text);
+  text-align: center;
+}
+
+.edit-product form {
+  background-color: var(--light);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 90%;
+}
+
+.edit-product fieldset {
+  align-items: flex-start;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-product div:nth-of-type(2) fieldset {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+  row-gap: 1rem;
 }
 
 /* Vendor Market RSVP */
@@ -1925,7 +1965,8 @@ td.request-action-column {
   .edit-profile-details h2,
   #vendor-info h2,
   .manage-products h2:first-of-type,
-  .market-rsvp h2 {
+  .market-rsvp h2,
+  .edit-product h2 {
     font-size: calc(24px + (48 - 24) * (100vw - 375px) / (1400 - 375));
   }
 
@@ -1944,7 +1985,6 @@ td.request-action-column {
 
   /* originally 32px */
   .aboutus-item:nth-of-type(4) a,
-  label[for='profile-pic'],
   .vendor-profile h2 {
     font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 375));
   }
@@ -1988,6 +2028,11 @@ td.request-action-column {
   }
 
   /* originally 18px */
+  label[for^='user-'],
+  label[for^='vendor-'],
+  label[for^='edit-'],
+  label[for^='create-'],
+  label[for^='admin-'],
   .hero-image > div p,
   #vendor-contact-info div p,
   #nav-history button,
@@ -2005,7 +2050,7 @@ td.request-action-column {
   .vendor-signup p,
   #saved-vendors li,
   .message,
-  .manage-products button,
+  form[action='manage_products.php'] button,
   #vendor-profile-card p {
     font-size: calc(12px + (18 - 12) * (100vw - 375px) / (1400 - 375));
   }
@@ -2114,6 +2159,14 @@ td.request-action-column {
     flex-direction: column;
     gap: 1rem;
     justify-content: flex-start;
+  }
+
+  /* Vendor Dash */
+
+  /* Manage Products */
+
+  form[action='manage_products.php'] {
+    flex-direction: column;
   }
 }
 
@@ -2277,6 +2330,16 @@ td.request-action-column {
   .user-login {
     width: 80%;
   }
+
+  /* Vendor Dash */
+  /* Edit Products */
+  .edit-product form {
+    flex-direction: column;
+  }
+
+  .edit-product form fieldset {
+    flex-direction: column;
+  }
 }
 
 @media screen and (max-width: 660px) {
@@ -2292,6 +2355,58 @@ td.request-action-column {
 
   #searchBar {
     width: 150px !important;
+  }
+
+  /* Vendor Dash */
+  /* Manage Products */
+  form[action='manage_products.php'] {
+    width: 100%;
+  }
+
+  form[action='manage_products.php'] div:first-of-type fieldset {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  form[action='manage_products.php'] div:first-of-type fieldset textarea {
+    width: auto;
+  }
+
+  /* RSVP Market */
+  .market-rsvp table,
+  .market-rsvp tbody,
+  .market-rsvp th,
+  .market-rsvp td,
+  .market-rsvp tr {
+    display: block;
+    width: 100%;
+  }
+
+  .market-rsvp thead {
+    display: none; /* Hide table headers */
+  }
+
+  .market-rsvp tr {
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .market-rsvp td {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .market-rsvp td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    flex-basis: 40%;
   }
 }
 

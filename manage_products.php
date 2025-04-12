@@ -29,11 +29,17 @@ $sql = "SELECT amount_id, amount_name FROM amount_offered";
 $stmt = $db->query($sql);
 $amounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// fetch categories
+$sql = "SELECT category_id, category_name FROM category ORDER BY category_name ASC";
+$stmt = $db->query($sql);
+$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Handle Product Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $product_name = trim($_POST['product_name']);
   $price = trim($_POST['price']);
   $amount_id = trim($_POST['amount_id']);
+  $category_id = trim($_POST['category_id']);
   $description = trim($_POST['description']);
   $custom_tags = strtolower(trim($_POST['custom_tags'] ?? '')); // Convert to lowercase
 
@@ -43,9 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Insert product
-  $sql = "INSERT INTO product (vendor_id, name, price, amount_id, description) VALUES (?, ?, ?, ?, ?)";
+  $sql = "INSERT INTO product (vendor_id, name, price, amount_id, description, category_id)
+  VALUES (?, ?, ?, ?, ?, ?)";
   $stmt = $db->prepare($sql);
-  $stmt->execute([$vendor_id, $product_name, $price, $amount_id, $description]);
+  $stmt->execute([$vendor_id, $product_name, $price, $amount_id, $description, $category_id]);
 
   // Get last inserted product ID
   $product_id = $db->lastInsertId();
@@ -184,6 +191,15 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </fieldset>
 
     <fieldset>
+      <label for="category_id">Select Category:</label>
+      <select id="category_id" name="category_id" required>
+        <?php foreach ($categories as $category): ?>
+          <option value="<?= $category['category_id']; ?>"><?= h(ucwords(str_replace('_', ' ', $category['category_name']))); ?></option>
+        <?php endforeach; ?>
+      </select>
+    </fieldset>
+
+    <fieldset>
       <label for="description">Description:</label>
       <textarea id="description" name="description" spellcheck="true" required></textarea>
     </fieldset>
@@ -196,17 +212,24 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <div>
     <fieldset>
-      <label for="product_image">Product Image:</label>
+      <label for="create-product-image">Choose Product Image</label>
 
-      <img id="product-image-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-        alt="Product Preview" width="300" height="300">
+      <img class="image-preview"
+        src="img/assets/add-photo.svg"
+        alt="Product Image Preview"
+        data-preview="image-preview"
+        height="300"
+        width="300">
 
-      <input type="file" id="product_image" name="product_image"
+      <input type="file"
+        id="create-product-image"
+        name="product_image"
+        class="image-input"
+        data-preview="image-preview"
         accept="image/png, image/jpeg, image/webp"
-        data-preview="product-image-preview"
-        onchange="previewImage(event)"
-        required>
+        onchange="previewImage(event)">
     </fieldset>
+
 
     <button type="submit">Add Product</button>
   </div>

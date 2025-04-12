@@ -103,10 +103,25 @@ require_once 'private/functions.php';
 
       <div>
         <fieldset>
-          <label for="profile-pic">Choose File</label>
-          <img id="profile-preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="temporary hidden image." height="300" width="300">
-          <input type="file" id="profile-pic" data-preview="profile-preview" name="profile-pic" accept="image/png, image/jpeg, image/webp" aria-label="Profile Picture" onchange="previewImage(event)" required>
+          <label for="vendor-profile-pic">Choose Profile Photo</label>
+
+          <img class="image-preview"
+            src="img/assets/add-photo.svg"
+            alt="Vendor Profile Preview"
+            data-preview="image-preview"
+            height="300"
+            width="300">
+
+          <input type="file"
+            id="vendor-profile-pic"
+            name="profile-pic"
+            class="image-input"
+            data-preview="image-preview"
+            accept="image/png, image/jpeg, image/webp"
+            onchange="previewImage(event)">
         </fieldset>
+
+
         <div>
           <button class="signup-button" type="submit" name="register" value="1">Sign Up</button>
         </div>

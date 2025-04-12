@@ -90,25 +90,33 @@ class Vendor extends User
     $db = static::getDatabase();
 
     $sql = "SELECT v.vendor_id, v.business_name, v.vendor_bio, 
-                   pi.file_path AS profile_image,
-                   GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS product_tags,
-                   GROUP_CONCAT(DISTINCT CONCAT(mw.week_start, ' - ', mw.week_end) SEPARATOR ', ') AS market_weeks,
-                   GROUP_CONCAT(DISTINCT s.state_abbr SEPARATOR ', ') AS state_abbrs,
-                   GROUP_CONCAT(DISTINCT s.state_name SEPARATOR ', ') AS state_names,
-                   GROUP_CONCAT(DISTINCT v.city SEPARATOR ', ') AS cities
-            FROM vendor v
-            LEFT JOIN profile_image pi ON v.user_id = pi.user_id
-            LEFT JOIN product p ON v.vendor_id = p.vendor_id
-            LEFT JOIN vendor_market vm ON v.vendor_id = vm.vendor_id
-            LEFT JOIN market_week mw ON vm.week_id = mw.week_id
-            LEFT JOIN state s ON v.state_id = s.state_id
-            WHERE v.vendor_status = 'approved'";
+    pi.file_path AS profile_image,
+    GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS product_tags,
+    GROUP_CONCAT(DISTINCT CONCAT(mw.week_start, ' - ', mw.week_end) SEPARATOR ', ') AS market_weeks,
+    GROUP_CONCAT(DISTINCT s.state_abbr SEPARATOR ', ') AS state_abbrs,
+    GROUP_CONCAT(DISTINCT s.state_name SEPARATOR ', ') AS state_names,
+    GROUP_CONCAT(DISTINCT v.city SEPARATOR ', ') AS cities
+    FROM vendor v
+    LEFT JOIN profile_image pi ON v.user_id = pi.user_id
+    LEFT JOIN product p ON v.vendor_id = p.vendor_id
+    LEFT JOIN vendor_market vm ON v.vendor_id = vm.vendor_id
+    LEFT JOIN market_week mw ON vm.week_id = mw.week_id
+    LEFT JOIN state s ON v.state_id = s.state_id
+    WHERE v.vendor_status = 'approved'
+    GROUP BY v.vendor_id";
 
     if (!empty($search)) {
-      $sql .= " HAVING LOWER(CONCAT_WS(' ', v.business_name, v.vendor_bio, product_tags, market_weeks, state_abbrs, state_names, cities)) LIKE :searchTerm";
+      $sql .= " HAVING LOWER(CONCAT_WS(' ', v.business_name, v.vendor_bio, 
+     GROUP_CONCAT(DISTINCT p.name SEPARATOR ', '),
+     GROUP_CONCAT(DISTINCT CONCAT(mw.week_start, ' - ', mw.week_end) SEPARATOR ', '),
+     GROUP_CONCAT(DISTINCT s.state_abbr SEPARATOR ', '),
+     GROUP_CONCAT(DISTINCT s.state_name SEPARATOR ', '),
+     GROUP_CONCAT(DISTINCT v.city SEPARATOR ', ')
+   )) LIKE :searchTerm";
     }
 
-    $sql .= " GROUP BY v.vendor_id LIMIT :offset, :limit";
+    $sql .= " LIMIT :offset, :limit";
+
 
     $stmt = $db->prepare($sql);
 

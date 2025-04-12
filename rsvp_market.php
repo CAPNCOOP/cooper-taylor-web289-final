@@ -26,21 +26,25 @@ $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
   <p>No upcoming markets available.</p>
 <?php else: ?>
   <table>
-    <tr>
-      <th>Week Start</th>
-      <th>Week End</th>
-      <th>RSVP Status</th>
-      <th>Deadline</th>
-      <th>Action</th>
-    </tr>
+    <thead>
+      <tr>
+        <th>Week Start</th>
+        <th>Week End</th>
+        <th>RSVP Status</th>
+        <th>Deadline</th>
+        <th>Action</th>
+      </tr>
+    </thead>
 
     <?php foreach ($weeks as $week): ?>
       <tr>
-        <td><?= h($week['week_start']) ?></td>
-        <td><?= h($week['week_end']) ?></td>
-        <td><?= isset($rsvp_map[$week['week_id']]) ? ucfirst($rsvp_map[$week['week_id']]) : 'Not RSVPed' ?></td>
-        <td><?= h($week['confirmation_deadline']) ?></td>
-        <td>
+        <td data-label="Week Start"><?= h(date('M-d-Y', strtotime($week['week_start']))) ?></td>
+        <td data-label="Week End"><?= h(date('M-d-Y', strtotime($week['week_end']))) ?></td>
+        <td data-label="RSVP Status">
+          <?= isset($rsvp_map[$week['week_id']]) ? ucfirst($rsvp_map[$week['week_id']]) : 'Not RSVPed' ?>
+        </td>
+        <td data-label="Deadline"><?= h(date('M-d-Y', strtotime($week['confirmation_deadline']))) ?></td>
+        <td data-label="Action">
           <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
             <form method="post" action="rsvp_action.php">
               <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
@@ -55,6 +59,8 @@ $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
             <span style="color: gray;">RSVP Closed</span>
           <?php endif; ?>
         </td>
+      </tr>
+
       </tr>
     <?php endforeach; ?>
   </table>

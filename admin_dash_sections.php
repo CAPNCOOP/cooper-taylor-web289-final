@@ -200,9 +200,22 @@
       <!-- IMAGE + SUBMIT -->
       <div>
         <fieldset>
-          <label for="profile-pic">Choose File</label>
-          <img id="profile-preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="temporary hidden image." height="300" width="300">
-          <input type="file" id="profile-pic" data-preview="profile-preview" name="profile-pic" accept="image/png, image/jpeg, image/webp" aria-label="Profile Picture" onchange="previewImage(event)" required>
+          <label for="admin-vendor-photo">Choose Vendor Photo</label>
+
+          <img class="image-preview"
+            src="img/assets/add-photo.svg"
+            alt="Vendor Profile Preview"
+            data-preview="image-preview"
+            height="300"
+            width="300">
+
+          <input type="file"
+            id="admin-vendor-photo"
+            name="profile-pic"
+            class="image-input"
+            data-preview="image-preview"
+            accept="image/png, image/jpeg, image/webp"
+            onchange="previewImage(event)">
         </fieldset>
 
         <div>

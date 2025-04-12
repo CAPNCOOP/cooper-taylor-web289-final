@@ -4,9 +4,29 @@
 document.addEventListener('DOMContentLoaded', function () {
   const menu = document.getElementById('menu');
   const navLinks = document.querySelector('.nav-links');
+  let timeoutId;
 
   menu.addEventListener('click', function () {
-    navLinks.classList.toggle('active');
+    navLinks.classList.add('active');
+
+    // Start a 3-second countdown to remove 'active'
+    timeoutId = setTimeout(() => {
+      if (!navLinks.matches(':hover')) {
+        navLinks.classList.remove('active');
+      }
+    }, 3000);
+  });
+
+  // If they hover over the menu, cancel the timeout
+  navLinks.addEventListener('mouseenter', () => {
+    clearTimeout(timeoutId);
+  });
+
+  // If they leave the menu after clicking, start a new 3s countdown
+  navLinks.addEventListener('mouseleave', () => {
+    timeoutId = setTimeout(() => {
+      navLinks.classList.remove('active');
+    }, 3000);
   });
 });
 
@@ -260,17 +280,17 @@ window.onload = function () {
  * the event.
  */
 function previewImage(event) {
-  const input = event.target; // Get the input field that triggered the event
-  const previewId = input.getAttribute('data-preview'); // Get the ID of the preview element from a custom attribute
-  const preview = document.getElementById(previewId);
-  const file = input.files[0];
+  const input = event.target;
+  const previewClass = input.getAttribute('data-preview') || 'image-preview';
+  const preview = input.closest('fieldset')?.querySelector(`.${previewClass}`);
 
-  if (file && preview) {
+  if (input.files?.[0] && preview) {
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = e => {
       preview.src = e.target.result;
+      preview.setAttribute('data-state', 'updated');
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(input.files[0]);
   }
 }
 

@@ -27,10 +27,16 @@ if (!$product || $product->vendor_id != $vendor_id) {
 // Fetch existing product tags
 $product_tags = get_existing_tags($product_id);
 
+// Fetch categories for dropdown
+$sql = "SELECT category_id, category_name FROM category ORDER BY category_name ASC";
+$stmt = $db->query($sql);
+$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 if (is_post_request()) {
   $product->name = trim($_POST['product_name']);
   $product->price = trim($_POST['price']);
   $product->amount_id = trim($_POST['amount_id']);
+  $product->category_id = trim($_POST['category_id']);
   $product->description = trim($_POST['description']);
 
   if (empty($product->name) || empty($product->price) || empty($product->description)) {
@@ -91,46 +97,74 @@ if (is_post_request()) {
 
 <h2>Edit Product</h2>
 <form action="edit_product.php?id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
-  <fieldset>
-    <label for="product_name">Product Name:</label>
-    <input type="text" id="product_name" name="product_name" value="<?= h($product->name) ?>" required>
-  </fieldset>
+  <div>
+    <fieldset>
+      <label for="product_name">Product Name:</label>
+      <input type="text" id="product_name" name="product_name" value="<?= h($product->name) ?>" required>
+    </fieldset>
 
-  <fieldset>
-    <label for="price">Price ($):</label>
-    <input type="number" step="0.01" id="price" name="price" value="<?= h($product->price) ?>" required>
-  </fieldset>
+    <fieldset>
+      <label for="price">Price ($):</label>
+      <input type="number" step="0.01" id="price" name="price" value="<?= h($product->price) ?>" required>
+    </fieldset>
 
-  <fieldset>
-    <label for="amount_id">Amount Offered:</label>
-    <select id="amount_id" name="amount_id">
-      <?php
-      $amount_sql = "SELECT * FROM amount_offered";
-      $amount_stmt = $db->query($amount_sql);
-      while ($amount = $amount_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $selected = ($amount['amount_id'] == $product->amount_id) ? "selected" : "";
-        echo "<option value='{$amount['amount_id']}' $selected>" . h($amount['amount_name']) . "</option>";
-      }
-      ?>
-    </select>
-  </fieldset>
+    <fieldset>
+      <label for="amount_id">Amount Offered:</label>
+      <select id="amount_id" name="amount_id">
+        <?php
+        $amount_sql = "SELECT * FROM amount_offered";
+        $amount_stmt = $db->query($amount_sql);
+        while ($amount = $amount_stmt->fetch(PDO::FETCH_ASSOC)) {
+          $selected = ($amount['amount_id'] == $product->amount_id) ? "selected" : "";
+          echo "<option value='{$amount['amount_id']}' $selected>" . h($amount['amount_name']) . "</option>";
+        }
+        ?>
+      </select>
+    </fieldset>
 
-  <fieldset>
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" spellcheck="true"><?= h($product->description) ?></textarea>
-  </fieldset>
+    <fieldset>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" spellcheck="true"><?= h($product->description) ?></textarea>
+    </fieldset>
 
-  <fieldset>
-    <label for="tags">Tags (comma-separated):</label>
-    <input type="text" id="tags" name="tags" value="<?= h(implode(', ', $product_tags)) ?>" spellcheck="true">
-  </fieldset>
+    <fieldset>
+      <label for="category_id">Category:</label>
+      <select id="category_id" name="category_id" required>
+        <?php foreach ($categories as $category): ?>
+          <option value="<?= $category['category_id'] ?>" <?= ($category['category_id'] == $product->category_id) ? 'selected' : '' ?>>
+            <?= h(ucwords(str_replace('_', ' ', $category['category_name']))) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </fieldset>
 
-  <fieldset>
-    <label for="product_image">Product Image:</label>
-    <input type="file" id="product_image" name="product_image" accept="image/png, image/jpeg, image/webp">
-  </fieldset>
+    <fieldset>
+      <label for="tags">Tags (comma-separated):</label>
+      <input type="text" id="tags" name="tags" value="<?= h(implode(', ', $product_tags)) ?>" spellcheck="true">
+    </fieldset>
+  </div>
 
-  <button type="submit">Save Changes</button>
+  <div>
+    <fieldset>
+      <label for="edit-product-image">Choose Product Image</label>
+
+      <img class="image-preview"
+        src="<?= h($product->getImagePath()) ?>"
+        alt="Current Product Image"
+        data-preview="image-preview"
+        height="300"
+        width="300">
+
+      <input type="file"
+        id="edit-product-image"
+        name="product_image"
+        class="image-input"
+        data-preview="image-preview"
+        accept="image/png, image/jpeg, image/webp"
+        onchange="previewImage(event)">
+    </fieldset>
+
+  </div>
 </form>
 
 <?php require_once 'private/footer.php'; ?>
