@@ -22,6 +22,7 @@ class Vendor extends User
 
   public $vendor_status = 'pending'; // default status
 
+  // public $is_active = 1; // default active status
 
   // Not part of vendor.class.php, used by fetchApprovedVendorsWithTags
   public $profile_image;
@@ -32,6 +33,11 @@ class Vendor extends User
   public $cities;
 
 
+  /**
+   * Vendor constructor.
+   *
+   * @param array $args Optional associative array of vendor properties.
+   */
   public function __construct($args = [])
   {
     parent::__construct($args);
@@ -43,21 +49,64 @@ class Vendor extends User
     }
   }
 
+  /**
+   * Sets the vendor's status to 'approved' and saves the record.
+   *
+   * @return bool True on success, false on failure.
+   */
+  public function approve(): bool
+  {
+    $this->vendor_status = 'approved';
+    return $this->save();
+  }
+
+  /**
+   * Sets the vendor's status to 'denied' and saves the record.
+   *
+   * @return bool True on success, false on failure.
+   */
+  public function reject(): bool
+  {
+    $this->vendor_status = 'denied';
+    return $this->save();
+  }
+
+  /**
+   * Checks if the vendor is approved.
+   *
+   * @return bool True if approved.
+   */
   public function isApproved(): bool
   {
     return $this->vendor_status === 'approved';
   }
 
+  /**
+   * Checks if the vendor is pending approval.
+   *
+   * @return bool True if pending.
+   */
   public function isPending(): bool
   {
     return $this->vendor_status === 'pending';
   }
 
+  /**
+   * Checks if the vendor is denied.
+   *
+   * @return bool True if denied.
+   */
   public function isDenied(): bool
   {
     return $this->vendor_status === 'denied';
   }
 
+  /**
+   * Retrieves all products for a given vendor, including amount and image info.
+   *
+   * @param int $vendor_id The vendor's ID.
+   * @return array List of products with additional metadata.
+   */
   public static function fetchProducts($vendor_id): array
   {
     $sql = "SELECT p.*, a.amount_name, pi.file_path AS product_image
@@ -71,6 +120,12 @@ class Vendor extends User
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  /**
+   * Retrieves the vendor's next 5 upcoming confirmed market weeks.
+   *
+   * @param int $vendor_id The vendor's ID.
+   * @return array List of market week data.
+   */
   public static function fetchUpcomingMarkets(int $vendor_id): array
   {
     $sql = "SELECT mw.week_start, mw.week_end, mw.market_status
@@ -85,6 +140,14 @@ class Vendor extends User
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  /**
+   * Fetches approved vendors with profile images, product tags, market weeks, and location metadata.
+   *
+   * @param int $offset Offset for pagination.
+   * @param int $limit Number of records to fetch.
+   * @param string $search Optional search term to filter vendors.
+   * @return array List of hydrated Vendor objects.
+   */
   public static function fetchApprovedVendorsWithTags(int $offset, int $limit, string $search = ''): array
   {
     $db = static::getDatabase();
@@ -131,6 +194,12 @@ class Vendor extends User
     return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
   }
 
+  /**
+   * Counts the number of approved vendors, optionally filtered by search term.
+   *
+   * @param string $search Optional search term to filter vendors.
+   * @return int Total number of approved vendors.
+   */
   public static function countApprovedVendors(string $search = ''): int
   {
     $db = static::getDatabase();
@@ -149,6 +218,12 @@ class Vendor extends User
     return (int)$stmt->fetchColumn();
   }
 
+  /**
+   * Finds a vendor by their associated user ID.
+   *
+   * @param int $user_id The user's ID.
+   * @return Vendor|null The Vendor object if found, or null.
+   */
   public static function find_by_user_id(int $user_id): ?self
   {
     $sql = "SELECT vendor_id, user_id, business_name, contact_number, business_EIN, business_email, website,

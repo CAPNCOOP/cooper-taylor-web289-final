@@ -21,6 +21,24 @@ if ($next_market) {
     $market_message = "❌ The upcoming market for Saturday, {$date} has been cancelled.";
   }
 }
+
+// Get the path being requested
+$requested_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$document_root = $_SERVER['DOCUMENT_ROOT'];
+$full_path = realpath($document_root . $requested_path);
+
+// Normalize slashes
+if (str_ends_with($requested_path, '/')) {
+  $requested_path .= 'index.php';
+  $full_path = realpath($document_root . $requested_path);
+}
+
+// If the file doesn't exist or isn't inside the project root → 404
+if (!str_ends_with($requested_path, '.php') || !file_exists($full_path)) {
+  http_response_code(404);
+  require '404.php';
+  exit();
+}
 ?>
 
 

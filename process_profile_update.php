@@ -22,14 +22,18 @@ $email = trim($_POST['email'] ?? '');
 
 // ✅ Uniqueness Check for Username
 if (User::isUsernameTaken($username, $user_id)) {
+  $_SESSION['form_data'] = $_POST;
   $session->message("❌ That username is already taken.");
   redirect_to('edit_profile.php');
+  exit();
 }
 
 // ✅ Uniqueness Check for Email (optional)
 if (User::isEmailTaken($email, $user_id)) {
+  $_SESSION['form_data'] = $_POST;
   $session->message("❌ That email is already in use.");
   redirect_to('edit_profile.php');
+  exit();
 }
 
 // ✅ Update user profile
@@ -90,8 +94,10 @@ if ($user_level == 2) {
   $vendor = Vendor::find_by_user_id($user_id);
 
   if (!$vendor || !$vendor->vendor_id) {
+    $_SESSION['form_data'] = $_POST;
     $session->message("❌ Vendor record not found or incomplete. Cannot update profile.");
     redirect_to('edit_profile.php');
+    exit();
   }
 
   // ✅ Patch in the user_id if it's missing
@@ -105,6 +111,7 @@ if ($user_level == 2) {
   $vendor->description = trim($_POST['description']);
 
   if (!$vendor->save()) {
+    $_SESSION['form_data'] = $_POST;
     header("Location: edit_profile.php?message=error_update_failed");
     exit();
   }
@@ -117,6 +124,7 @@ $_SESSION['username'] = $username;
 if ($update_success) {
   header("Location: edit_profile.php?message=profile_updated");
 } else {
+  $_SESSION['form_data'] = $_POST;
   header("Location: edit_profile.php?message=error_update_failed");
 }
 exit();

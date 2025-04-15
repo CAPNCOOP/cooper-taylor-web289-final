@@ -15,6 +15,11 @@ class User extends DatabaseObject
   public $user_level_id;
   public $is_active = 1;
 
+  /**
+   * User constructor.
+   *
+   * @param array $args Optional associative array to initialize user properties.
+   */
   public function __construct($args = [])
   {
     $this->user_id = $args['user_id'] ?? 0;
@@ -27,11 +32,23 @@ class User extends DatabaseObject
     $this->is_active = $args['is_active'] ?? 1;
   }
 
+  /**
+   * Returns the user's active status as a human-readable string.
+   *
+   * @return string 'Active' or 'Inactive'.
+   */
   function statusLabel(): string
   {
     return $this->is_active ? 'Active' : 'Inactive';
   }
 
+  /**
+   * Checks if a username already exists in the database.
+   *
+   * @param string $username The username to check.
+   * @param int $exclude_id Optional user ID to exclude from the check (useful for updates).
+   * @return bool True if taken, false otherwise.
+   */
   public static function isUsernameTaken(string $username, int $exclude_id = 0): bool
   {
     $db = static::getDatabase();
@@ -48,6 +65,13 @@ class User extends DatabaseObject
     return $stmt->fetchColumn() > 0;
   }
 
+  /**
+   * Checks if an email address already exists in the database.
+   *
+   * @param string $email The email address to check.
+   * @param int $exclude_id Optional user ID to exclude from the check (useful for updates).
+   * @return bool True if taken, false otherwise.
+   */
   public static function isEmailTaken(string $email, int $exclude_id = 0): bool
   {
     $db = static::getDatabase();
@@ -64,6 +88,11 @@ class User extends DatabaseObject
     return $stmt->fetchColumn() > 0;
   }
 
+  /**
+   * Retrieves the user's profile image path.
+   *
+   * @return string File path of the profile image, or a default if not set.
+   */
   public function getImagePath(): string
   {
     $db = static::getDatabase();
@@ -76,13 +105,19 @@ class User extends DatabaseObject
 
     return $result['file_path'] ?? 'default_user.png';
   }
-}
 
-function find_by_username($username)
-{
-  global $db;
-  $sql = "SELECT * FROM users WHERE username = ? LIMIT 1";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$username]);
-  return $stmt->fetch(PDO::FETCH_ASSOC);
+  /**
+   * Retrieves user data by username.
+   *
+   * @param string $username The username to search for.
+   * @return array|false Associative array of user data, or false if not found.
+   */
+  function find_by_username($username)
+  {
+    global $db;
+    $sql = "SELECT * FROM users WHERE username = ? LIMIT 1";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$username]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
 }

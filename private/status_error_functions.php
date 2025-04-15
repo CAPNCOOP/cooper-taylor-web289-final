@@ -1,7 +1,9 @@
 <?php
 
 /**
- * The function `require_login` checks if a user is logged in and redirects to the index page if not.
+ * Redirects to the homepage if no user is logged in.
+ *
+ * @return void
  */
 function require_login()
 {

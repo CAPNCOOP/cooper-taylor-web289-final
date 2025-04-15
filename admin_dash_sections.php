@@ -283,7 +283,14 @@
       <tbody>
         <?php foreach ($pending_vendors as $vendor): ?>
           <tr>
-            <td><?= h($vendor['business_name']) ?></td>
+            <td>
+              <?php $status = $vendor['vendor_status'] ?? ''; ?>
+
+              <?= h($vendor['business_name']) ?>
+              <?php if ($status === 'denied'): ?>
+                <span class="status-rejected" title="This vendor was rejected but can still be approved later.">(rejected)</span>
+              <?php endif; ?>
+            </td>
             <td><?= h($vendor['email']) ?></td>
             <td>
               <a href="approve_vendor.php?vendor_id=<?= h($vendor['vendor_id']) ?>&action=approve" class="btn btn-success">Approve</a>
@@ -340,7 +347,8 @@
           <tr>
             <td><?= h($week['week_start']) ?></td>
             <td><?= h($week['week_end']) ?></td>
-            <td><?= h(ucfirst($week['market_status'])) ?></td>
+            <td><?= isset($week['market_status']) ? h(ucfirst($week['market_status'])) : '<span class="text-muted">No Status</span>' ?></td>
+
             <td style="display: flex; gap: 0.5rem;">
               <?php if ($week['market_status'] !== 'cancelled'): ?>
                 <form method="POST" action="cancel_market.php" onsubmit="return confirm('Cancel this market week?');">

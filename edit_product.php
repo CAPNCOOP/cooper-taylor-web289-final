@@ -3,6 +3,8 @@ $page_title = "Edit Product";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
+$form_data = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
 require_login();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 2) {
@@ -40,7 +42,9 @@ if (is_post_request()) {
   $product->description = trim($_POST['description']);
 
   if (empty($product->name) || empty($product->price) || empty($product->description)) {
+    $_SESSION['form_data'] = $_POST;
     redirect_to("edit_product.php?id=$product_id&message=error_empty_fields");
+    exit();
   }
 
   $product->save();
@@ -55,6 +59,7 @@ if (is_post_request()) {
       $stmt = $db->prepare($sql);
       $stmt->execute([$product_id, $product_image]);
     } else {
+      $_SESSION['form_data'] = $_POST;
       redirect_to("edit_product.php?id=$product_id&message=error_upload");
     }
   }
@@ -100,22 +105,25 @@ if (is_post_request()) {
   <div>
     <fieldset>
       <label for="product_name">Product Name:</label>
-      <input type="text" id="product_name" name="product_name" value="<?= h($product->name) ?>" required>
+      <input type="text" id="product_name" name="product_name"
+        value="<?= h($form_data['product_name'] ?? $product->name) ?>" required>
     </fieldset>
 
     <fieldset>
       <label for="price">Price ($):</label>
-      <input type="number" step="0.01" id="price" name="price" value="<?= h($product->price) ?>" required>
+      <input type="number" step="0.01" id="price" name="price"
+        value="<?= h($form_data['price'] ?? $product->price) ?>" required>
     </fieldset>
 
     <fieldset>
       <label for="amount_id">Amount Offered:</label>
       <select id="amount_id" name="amount_id">
         <?php
+        $selected_amount_id = $form_data['amount_id'] ?? $product->amount_id;
         $amount_sql = "SELECT * FROM amount_offered";
         $amount_stmt = $db->query($amount_sql);
         while ($amount = $amount_stmt->fetch(PDO::FETCH_ASSOC)) {
-          $selected = ($amount['amount_id'] == $product->amount_id) ? "selected" : "";
+          $selected = ($amount['amount_id'] == $selected_amount_id) ? "selected" : "";
           echo "<option value='{$amount['amount_id']}' $selected>" . h($amount['amount_name']) . "</option>";
         }
         ?>
@@ -124,7 +132,7 @@ if (is_post_request()) {
 
     <fieldset>
       <label for="description">Description:</label>
-      <textarea id="description" name="description" spellcheck="true"><?= h($product->description) ?></textarea>
+      <textarea id="description" name="description" spellcheck="true"><?= h($form_data['description'] ?? $product->description) ?></textarea>
     </fieldset>
 
     <fieldset>
@@ -140,18 +148,19 @@ if (is_post_request()) {
 
     <fieldset>
       <label for="tags">Tags (comma-separated):</label>
-      <input type="text" id="tags" name="tags" value="<?= h(implode(', ', $product_tags)) ?>" spellcheck="true">
+      <input type="text" id="tags" name="tags"
+        value="<?= h($form_data['tags'] ?? implode(', ', $product_tags)) ?>" spellcheck="true">
     </fieldset>
   </div>
 
   <div>
     <fieldset>
       <label for="edit-product-image">Choose Product Image</label>
+      <?php $image_path = $product->getImagePath(); ?>
 
-      <img class="image-preview"
-        src="<?= h($product->getImagePath()) ?>"
-        alt="Current Product Image"
-        data-preview="image-preview"
+      <img src="img/upload/products/<?= h($image_path) ?>"
+        alt="Product Image Preview"
+        class="image-preview"
         height="300"
         width="300">
 

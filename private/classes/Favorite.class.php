@@ -3,6 +3,12 @@
 class Favorite extends DatabaseObject
 {
 
+
+  /**
+   * Checks if the 'favorite' table exists in the database.
+   *
+   * @return bool True if the table exists, false otherwise.
+   */
   public static function tableExists(): bool
   {
     $sql = "SHOW TABLES LIKE 'favorite'";
@@ -10,6 +16,12 @@ class Favorite extends DatabaseObject
     return $stmt && $stmt->fetchColumn();
   }
 
+  /**
+   * Retrieves all favorite vendors for a specific user.
+   *
+   * @param int $user_id The ID of the user.
+   * @return array Array of Vendor objects, each with an optional profile image.
+   */
   public static function fetchFavoritesForUser(int $user_id): array
   {
     $sql = "SELECT v.*, pi.file_path AS profile_image
@@ -33,6 +45,13 @@ class Favorite extends DatabaseObject
     return $vendors;
   }
 
+  /**
+   * Toggles the favorite status for a vendor by a user.
+   *
+   * @param int $user_id The user ID.
+   * @param int $vendor_id The vendor ID.
+   * @return bool|null True if added, false if removed, null on failure.
+   */
   public static function toggle($user_id, $vendor_id): ?bool
   {
     if (static::isFavorited($user_id, $vendor_id)) {
@@ -42,6 +61,13 @@ class Favorite extends DatabaseObject
     }
   }
 
+  /**
+   * Checks if a vendor is favorited by a user.
+   *
+   * @param int $user_id The user ID.
+   * @param int $vendor_id The vendor ID.
+   * @return bool True if favorited, false otherwise.
+   */
   public static function isFavorited(int $user_id, int $vendor_id): bool
   {
     $db = static::getDatabase();
@@ -51,6 +77,13 @@ class Favorite extends DatabaseObject
     return $stmt->fetchColumn() > 0;
   }
 
+  /**
+   * Adds a vendor to a user's favorites.
+   *
+   * @param int $user_id The user ID.
+   * @param int $vendor_id The vendor ID.
+   * @return bool True on success, false on failure.
+   */
   public static function add(int $user_id, int $vendor_id): bool
   {
     $db = static::getDatabase();
@@ -59,6 +92,13 @@ class Favorite extends DatabaseObject
     return $stmt->execute([$user_id, $vendor_id]);
   }
 
+  /**
+   * Removes a vendor from a user's favorites.
+   *
+   * @param int $user_id The user ID.
+   * @param int $vendor_id The vendor ID.
+   * @return bool True on success, false on failure.
+   */
   public static function remove(int $user_id, int $vendor_id): bool
   {
     $db = static::getDatabase();

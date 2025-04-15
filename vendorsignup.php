@@ -3,6 +3,9 @@ $page_title = "Vendor Signup";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
+
+$form_data = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
 ?>
 
 <main>
@@ -17,88 +20,98 @@ require_once 'private/functions.php';
     <div>
 
       <fieldset>
-        <input type="text" id="username" name="username" required aria-label="Username" placeholder="Username">
+        <input type="text" id="username" name="username" required placeholder="Username"
+          value="<?= h($form_data['username'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="fname" name="fname" required aria-label="First Name" placeholder="First Name">
+        <input type="text" id="fname" name="fname" required placeholder="First Name"
+          value="<?= h($form_data['fname'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="lname" name="lname" required aria-label="Last Name" placeholder="Last Name">
+        <input type="text" id="lname" name="lname" required placeholder="Last Name"
+          value="<?= h($form_data['lname'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="email" id="email" name="email" required aria-label="Email Address" placeholder="Email Address">
+        <input type="email" id="email" name="email" required placeholder="Email Address"
+          value="<?= h($form_data['email'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="password" id="password" name="password" required aria-label="Password" placeholder="Password">
+        <input type="password" id="password" name="password" required placeholder="Password">
       </fieldset>
 
       <fieldset>
-        <input type="password" id="confirm-pass" name="confirm-pass" required aria-label="Confirm Password" placeholder="Confirm Password">
+        <input type="password" id="confirm-pass" name="confirm-pass" required placeholder="Confirm Password">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="business-name" name="business_name" required aria-label="Business Name" placeholder="Business Name">
+        <input type="text" id="business-name" name="business_name" required placeholder="Business Name"
+          value="<?= h($form_data['business_name'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="contact-number" name="contact_number" required aria-label="Contact Number" placeholder="Contact Number">
+        <input type="text" id="contact-number" name="contact_number" required placeholder="Contact Number"
+          value="<?= h($form_data['contact_number'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="business-ein" name="business_EIN" required aria-label="Business EIN" placeholder="Business EIN">
+        <input type="text" id="business-ein" name="business_EIN" required placeholder="Business EIN"
+          value="<?= h($form_data['business_EIN'] ?? '') ?>">
       </fieldset>
     </div>
 
     <div>
       <fieldset>
-        <input type="email" id="business-email" name="business_email" required aria-label="Business Email" placeholder="Business Email">
+        <input type="email" id="business-email" name="business_email" required placeholder="Business Email"
+          value="<?= h($form_data['business_email'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="url" id="website" name="website" aria-label="Website" placeholder="Website (optional)">
+        <input type="url" id="website" name="website" placeholder="Website (optional)"
+          value="<?= h($form_data['website'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="city" name="city" required aria-label="City" placeholder="City">
+        <input type="text" id="city" name="city" required placeholder="City"
+          value="<?= h($form_data['city'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <select id="state" name="state_id" required aria-label="State">
+        <select id="state" name="state_id" required>
           <option value="">Select State</option>
           <?php
-          // Fetch states from the database
           $states = Admin::fetchStates();
           foreach ($states as $state) {
-            echo "<option value=\"" . $state['state_id'] . "\">" . h($state['state_abbr']) . "</option>";
+            $selected = ($form_data['state_id'] ?? '') == $state['state_id'] ? 'selected' : '';
+            echo "<option value=\"" . $state['state_id'] . "\" $selected>" . h($state['state_abbr']) . "</option>";
           }
           ?>
         </select>
       </fieldset>
 
       <fieldset>
-        <input type="text" id="street-address" name="street_address" required aria-label="Street Address" placeholder="Street Address">
+        <input type="text" id="street-address" name="street_address" required placeholder="Street Address"
+          value="<?= h($form_data['street_address'] ?? '') ?>">
       </fieldset>
 
       <fieldset>
-        <input type="text" id="zip-code" name="zip_code" required aria-label="Zip Code" placeholder="Zip Code">
+        <input type="text" id="zip-code" name="zip_code" required placeholder="Zip Code"
+          value="<?= h($form_data['zip_code'] ?? '') ?>">
       </fieldset>
 
       <div>
         <fieldset>
-          <textarea id="description" name="description" required aria-label="Business Description" placeholder="Business Description, a short blurb about your business."></textarea>
+          <textarea id="description" name="description" required placeholder="Business Description"><?= h($form_data['description'] ?? '') ?></textarea>
         </fieldset>
 
         <fieldset>
-          <textarea id="vendor-bio" name="vendor_bio" required aria-label="Vendor Bio" placeholder="Vendor Bio, tell the consumer about the history of your business!"></textarea>
+          <textarea id="vendor-bio" name="vendor_bio" required placeholder="Vendor Bio"><?= h($form_data['vendor_bio'] ?? '') ?></textarea>
         </fieldset>
       </div>
-
     </div>
-
     <div>
 
       <div>
@@ -123,6 +136,8 @@ require_once 'private/functions.php';
 
 
         <div>
+          <div class="g-recaptcha" data-sitekey="6Le47BgrAAAAACvegE-N7BsAVv3Bo6dvcd6Cj0tU"></div>
+          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
           <button class="signup-button" type="submit" name="register" value="1">Sign Up</button>
         </div>
       </div>

@@ -11,17 +11,35 @@ class DatabaseObject
 
   public $id;
 
+  /**
+   * Sets the PDO database connection.
+   *
+   * @param PDO $database The PDO connection instance.
+   * @return void
+   */
   public static function setDatabase($database)
   {
     self::$db = $database;
   }
 
+  /**
+   * Gets the current PDO database connection.
+   *
+   * @return PDO|null The active PDO connection or null if not set.
+   */
   public static function getDatabase()
   {
     return static::$db;
   }
 
-  public static function find_by_sql($sql): array
+  /**
+   * Executes a raw SQL query and returns hydrated objects.
+   *
+   * @param string $sql The SQL query string.
+   * @return array Array of objects based on the query result.
+   * @throws Exception If the database connection is not set.
+   */
+  public static function find_by_sql(string $sql): array
   {
     if (self::$db === null) {
       throw new Exception("Database connection not initialized. Run DatabaseObject::setDatabase(\$pdo) first.");
@@ -38,12 +56,23 @@ class DatabaseObject
     return $object_array;
   }
 
+  /**
+   * Retrieves all records from the table as objects.
+   *
+   * @return array Array of objects from the table.
+   */
   public static function find_all()
   {
     $sql = "SELECT * FROM " . static::$table_name;
     return static::find_by_sql($sql);
   }
 
+  /**
+   * Finds a single record by its primary key.
+   *
+   * @param int $id The primary key value.
+   * @return static|false Object if found, false if not.
+   */
   public static function find_by_id($id)
   {
     $sql = "SELECT * FROM " . static::$table_name . " WHERE " . static::$primary_key . " = :id";
@@ -54,6 +83,12 @@ class DatabaseObject
     return $record ? static::instantiate($record) : false;
   }
 
+  /**
+   * Instantiates an object from an associative array.
+   *
+   * @param array $record Key-value pairs matching class properties.
+   * @return static The instantiated object.
+   */
   static protected function instantiate($record)
   {
     $object = new static;
@@ -65,12 +100,22 @@ class DatabaseObject
     return $object;
   }
 
+  /**
+   * Validates the object's data. Override in child classes.
+   *
+   * @return array List of validation errors.
+   */
   protected function validate()
   {
     $this->errors = [];
     return $this->errors;
   }
 
+  /**
+   * Inserts the object into the database.
+   *
+   * @return bool True on success, false on failure.
+   */
   protected function create()
   {
     $this->validate();
@@ -97,6 +142,11 @@ class DatabaseObject
     return $result;
   }
 
+  /**
+   * Updates the existing object in the database.
+   *
+   * @return bool True on success, false on failure.
+   */
   protected function update()
   {
     $this->validate();
@@ -127,21 +177,23 @@ class DatabaseObject
     return $stmt->execute();
   }
 
+  /**
+   * Saves the object by creating or updating based on primary key presence.
+   *
+   * @return bool True on success, false on failure.
+   */
   public function save()
   {
     $pk = static::$primary_key ?? 'id';
     return isset($this->$pk) && !empty($this->$pk) ? $this->update() : $this->create();
   }
 
-  public function merge_attributes($args = [])
-  {
-    foreach ($args as $key => $value) {
-      if (property_exists($this, $key) && $key != 'id') {
-        $this->$key = $value;
-      }
-    }
-  }
 
+  /**
+   * Returns an array of database column values for the object.
+   *
+   * @return array Associative array of column => value pairs.
+   */
   public function attributes()
   {
     $attributes = [];
@@ -152,6 +204,12 @@ class DatabaseObject
     return $attributes;
   }
 
+
+  /**
+   * Returns a sanitized version of object attributes.
+   *
+   * @return array Associative array of safe data.
+   */
   protected function sanitized_attributes(): array
   {
     $sanitized = [];
@@ -161,6 +219,11 @@ class DatabaseObject
     return $sanitized;
   }
 
+  /**
+   * Deletes the current object from the database.
+   *
+   * @return bool True on success, false on failure.
+   */
   public function delete(): bool
   {
     $pk = static::$primary_key ?? 'id';

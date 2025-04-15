@@ -16,6 +16,11 @@ class Product extends DatabaseObject
   public $category_id;
   public $description;
 
+  /**
+   * Product constructor.
+   *
+   * @param array $args Optional. Key-value pairs to initialize product properties.
+   */
   public function __construct($args = [])
   {
     $this->vendor_id = $args['vendor_id'] ?? 0;
@@ -26,6 +31,11 @@ class Product extends DatabaseObject
     $this->description = $args['description'] ?? '';
   }
 
+  /**
+   * Deletes the product and all of its dependent records.
+   *
+   * @return bool True on success, false on failure.
+   */
   public function delete(): bool
   {
     global $db;
@@ -42,6 +52,11 @@ class Product extends DatabaseObject
     return parent::delete();
   }
 
+  /**
+   * Retrieves the file path of the product's primary image.
+   *
+   * @return string Image file path or a default placeholder if none found.
+   */
   public function getImagePath(): string
   {
     $db = static::getDatabase();

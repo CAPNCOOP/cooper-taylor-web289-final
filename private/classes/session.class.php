@@ -9,11 +9,20 @@ class Session
 
   public const MAX_LOGIN_AGE = 60 * 60 * 24; // 1 day
 
+  /**
+   * Initializes the session object by checking for stored session values.
+   */
   public function __construct()
   {
     $this->check_stored_login();
   }
 
+  /**
+   * Logs in the given user and stores credentials in the session.
+   *
+   * @param array $user Associative array containing user_id, username, and user_level.
+   * @return bool Always returns true after setting session data.
+   */
   public function login($user)
   {
     if ($user) {
@@ -30,11 +39,21 @@ class Session
     return true;
   }
 
+  /**
+   * Checks whether a user is currently logged in.
+   *
+   * @return bool True if a user session exists, false otherwise.
+   */
   public static function is_logged_in()
   {
     return isset($_SESSION['user_id']);
   }
 
+  /**
+   * Redirects to the login page if no user is logged in.
+   *
+   * @return void
+   */
   public static function require_login(): void
   {
     if (!self::is_logged_in()) {
@@ -42,32 +61,61 @@ class Session
     }
   }
 
-
+  /**
+   * Checks if the current user is a vendor.
+   *
+   * @return bool True if user_level_id is 2.
+   */
   public static function is_vendor(): bool
   {
     return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 2;
   }
 
+  /**
+   * Checks if the current user is an admin.
+   *
+   * @return bool True if user_level_id is 1.
+   */
   public static function is_admin(): bool
   {
     return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1;
   }
 
+  /**
+   * Checks if the current user is a super admin.
+   *
+   * @return bool True if user_level_id is 3.
+   */
   public static function is_super_admin(): bool
   {
     return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 3;
   }
 
+  /**
+   * Returns the current logged-in user's ID.
+   *
+   * @return int|null User ID if set, or null.
+   */
   public static function user_id(): ?int
   {
     return $_SESSION['user_id'] ?? null;
   }
 
+  /**
+   * Returns the user level of the logged-in user.
+   *
+   * @return int|null User level ID if set, or null.
+   */
   public static function user_level_id(): ?int
   {
     return $_SESSION['user_level_id'] ?? null;
   }
 
+  /**
+   * Logs out the current user and clears session and local properties.
+   *
+   * @return bool Always returns true.
+   */
   public function logout()
   {
     unset($_SESSION['user_id']);
@@ -81,6 +129,11 @@ class Session
     return true;
   }
 
+  /**
+   * Loads session values into class properties if a user session exists.
+   *
+   * @return void
+   */
   private function check_stored_login()
   {
     if (isset($_SESSION['user_id'])) {
@@ -97,6 +150,11 @@ class Session
     }
   }
 
+  /**
+   * Checks whether the last login is within the allowed session age.
+   *
+   * @return bool True if recent, false otherwise.
+   */
   private function last_login_is_recent()
   {
     if (!isset($this->last_login)) {
@@ -108,6 +166,12 @@ class Session
     }
   }
 
+  /**
+   * Sets or gets a flash message stored in the session.
+   *
+   * @param string $msg Optional message to store.
+   * @return string|bool Stored message if getting, true if setting.
+   */
   public function message($msg = "")
   {
     if (!empty($msg)) {
@@ -120,6 +184,11 @@ class Session
     }
   }
 
+  /**
+   * Clears the stored flash message from the session.
+   *
+   * @return void
+   */
   public function clear_message()
   {
     unset($_SESSION['message']);

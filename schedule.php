@@ -4,14 +4,14 @@ require_once 'private/initialize.php';
 require_once 'private/map_header.php';
 
 // Fetch upcoming markets
-$sql = "SELECT 
-    mw.week_id, 
-    mw.week_start, 
-    DATE_FORMAT(DATE_ADD(mw.week_start, INTERVAL 6 DAY), '%b-%d-%Y') AS saturday_market_date, 
+$sql = "SELECT mw.week_id, mw.week_start,
+    DATE_FORMAT(DATE_ADD(mw.week_start, INTERVAL 6 DAY), '%b-%d-%Y') AS saturday_market_date,
     mw.confirmation_deadline
-FROM market_week mw
-ORDER BY mw.week_start ASC;
-";
+    FROM market_week mw
+    WHERE DATE_ADD(mw.week_start, INTERVAL 6 DAY) >= CURDATE()
+    AND mw.is_deleted = 0
+    ORDER BY mw.week_start ASC";
+
 
 $stmt = $db->query($sql);
 $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);

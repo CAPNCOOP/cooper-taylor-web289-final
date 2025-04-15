@@ -1,10 +1,9 @@
 <?php
 
-/*
- * The function `db_connect` establishes a connection to a MySQL database using the provided server,
- * username, password, and database name.
- * 
- * @return The function `db_connect()` is returning a MySQLi database connection object.
+/**
+ * Establishes a PDO connection to the MySQL database.
+ *
+ * @return PDO The PDO database connection instance.
  */
 function db_connect(): PDO
 {
@@ -23,13 +22,11 @@ function db_connect(): PDO
 }
 
 
-/*
- * The function `confirm_db_connect` checks for a database connection error and exits with an error
- * message if a connection error occurs.
- * 
- * @param connection The `confirm_db_connect` function is used to check if a database connection was
- * successful. It takes a parameter ``, which is typically an instance of the `mysqli` class
- * representing the database connection.
+/**
+ * Confirms a successful MySQLi database connection.
+ *
+ * @param mysqli $connection The MySQLi connection object.
+ * @return void
  */
 function confirm_db_connect($connection)
 {
@@ -41,13 +38,11 @@ function confirm_db_connect($connection)
   }
 }
 
-/*
- * The function `db_disconnect` is used to close a database connection in PHP.
- * 
- * @param connection The `db_disconnect` function takes a database connection object as a parameter.
- * This object is used to interact with the database, such as executing queries and fetching results.
- * The function checks if the connection object is set and then closes the connection using the
- * `close()` method. This is important to properly release
+/**
+ * Closes an active MySQLi database connection.
+ *
+ * @param mysqli $connection The MySQLi connection object.
+ * @return void
  */
 function db_disconnect($connection)
 {

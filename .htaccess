@@ -3,3 +3,4 @@ RewriteCond %{REQUEST_URI} !^/dashboard.php$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L,QSA]
+ErrorDocument 404 /404.php

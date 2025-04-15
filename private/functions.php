@@ -1,16 +1,10 @@
 <?php
-/*
- * The function `url_for` in PHP adds a leading '/' to the script path if it's not already present and
- * returns the full URL with the script path appended to the `WWW_ROOT`.
- * 
- * @param script_path The `script_path` parameter in the `url_for` function represents the path to a
- * specific script or resource on the website. This function is used to generate a full URL for a given
- * script path by appending it to the `WWW_ROOT` constant, which typically represents the base URL of
- * the website
- * 
- * @return The function `url_for` is returning the concatenation of the constant `WWW_ROOT` and the
- * `` parameter after ensuring that the `` has a leading '/' by adding it if
- * it's not present.
+
+/**
+ * Returns a full URL path by prepending WWW_ROOT to the given script path.
+ *
+ * @param string $script_path The relative script path (e.g., 'index.php').
+ * @return string The full URL path.
  */
 function url_for($script_path)
 {
@@ -21,47 +15,33 @@ function url_for($script_path)
   return WWW_ROOT . $script_path;
 }
 
-/*
- * The function `u` in PHP is used to encode a string using URL encoding.
- * 
- * @param string The `u` function is a simple function that takes a string as input (or an empty string
- * by default) and then returns the URL-encoded version of that string using the `urlencode` function
- * in PHP.
- * 
- * @return The `urlencode` function is being called with the input string ``, and the encoded
- * string is being returned.
+/**
+ * URL-encodes a string using `urlencode`.
+ *
+ * @param string $string The string to encode.
+ * @return string The encoded string.
  */
-
 function u($string = "")
 {
   return urlencode($string);
 }
 
-/*
- * The function `raw_u` in PHP returns the raw URL-encoded version of a given string.
- * 
- * @param string The `raw_u` function is a simple wrapper function that takes a string as input and
- * returns the raw URL-encoded version of that string using PHP's `rawurlencode` function. If you pass
- * a string to this function, it will be URL-encoded and returned. If you don't pass any string
- * 
- * @return The `raw_u` function is returning the raw URL-encoded version of the input string using the
- * `rawurlencode` function in PHP.
+/**
+ * URL-encodes a string using `rawurlencode`.
+ *
+ * @param string $string The string to encode.
+ * @return string The encoded string.
  */
 function raw_u($string = "")
 {
   return rawurlencode($string);
 }
 
-/*
- * The function `h()` in PHP is used to safely escape and encode HTML entities in a given string.
- * 
- * @param string The `h` function is a custom function that takes a string as input and returns the
- * HTML-escaped version of that string using the `htmlspecialchars` function. The function also has a
- * default parameter of an empty string in case no input is provided.
- * 
- * @return The function `h()` returns the input string after encoding it with `htmlspecialchars()`
- * function using the `ENT_QUOTES` flag and UTF-8 encoding. If the input string is not provided, an
- * empty string is used for encoding.
+/**
+ * Escapes HTML special characters in a string using `htmlspecialchars`.
+ *
+ * @param string $string The string to escape.
+ * @return string The escaped string.
  */
 function h($string = "")
 {
@@ -69,8 +49,9 @@ function h($string = "")
 }
 
 /**
- * The function `error_404` sets the HTTP header to indicate a 404 Not Found error and exits the
- * script.
+ * Sends a 404 Not Found header and exits.
+ *
+ * @return void
  */
 function error_404()
 {
@@ -78,9 +59,10 @@ function error_404()
   exit();
 }
 
-/*
- * The function `error_500` sets the HTTP header to indicate a 500 Internal Server Error and exits the
- * script.
+/**
+ * Sends a 500 Internal Server Error header and exits.
+ *
+ * @return void
  */
 function error_500()
 {
@@ -88,13 +70,11 @@ function error_500()
   exit();
 }
 
-/*
- * The function `redirect_to` is used to redirect the user to a specified location in PHP, ensuring
- * that headers are not sent before the redirection.
- * 
- * @param location The `redirect_to` function is used to redirect the user to a different location. The
- * parameter `` should be a string containing the URL where you want to redirect the user. For
- * example, you can pass a URL like "https://www.example.com/newpage.php" as the `
+/**
+ * Redirects the browser to a given location and exits.
+ *
+ * @param string $location The destination URL or path.
+ * @return void
  */
 function redirect_to($location)
 {
@@ -104,45 +84,33 @@ function redirect_to($location)
   }
 }
 
-/*
- * The function is_post_request() checks if the current request method is POST in PHP.
- * 
- * @return The function `is_post_request()` is returning a boolean value based on whether the current
- * request method is 'POST'.
+/**
+ * Checks whether the current request method is POST.
+ *
+ * @return bool True if POST, false otherwise.
  */
 function is_post_request()
 {
   return $_SERVER['REQUEST_METHOD'] === 'POST';
 }
 
-/*
- * The function `is_get_request()` checks if the current request method is a GET request in PHP.
- * 
- * @return The function `is_get_request()` is returning a boolean value based on whether the current
- * request method is a GET request or not.
+/**
+ * Checks whether the current request method is GET.
+ *
+ * @return bool True if GET, false otherwise.
  */
 function is_get_request()
 {
   return $_SERVER['REQUEST_METHOD'] === 'GET';
 }
 
-/*
- * The function `upload_image` uploads and processes an image file, including validation, renaming, and
- * cropping, before saving it to a specified folder.
- * 
- * @param file The `upload_image` function you provided is used to upload and process images. It takes
- * three parameters:
- * @param folder The `folder` parameter in the `upload_image` function represents the directory within
- * the `upload` folder where the uploaded image will be stored. It is a string that specifies the
- * subfolder where the image will be saved. For example, if you pass `'user'` as the `folder`
- * @param name The `name` parameter in the `upload_image` function represents the name that will be
- * used to save the uploaded image file. This name is sanitized to remove any special characters and
- * spaces, and then combined with the file extension to form the final filename under which the image
- * will be stored in the specified
- * 
- * @return The function `upload_image` returns the new filename of the uploaded and cropped image if
- * the file upload was successful and the file type is valid. If the file upload encountered an error
- * or the file type is not allowed, it returns `null`.
+/**
+ * Handles image upload with validation and centered crop to 500x500.
+ *
+ * @param array $file The uploaded file from $_FILES.
+ * @param string $folder The target subdirectory under /img/upload/.
+ * @param string $name The desired filename base (will be sanitized).
+ * @return string|null The new filename if successful, or null on failure.
  */
 function upload_image($file, $folder, $name)
 {
@@ -198,18 +166,11 @@ function upload_image($file, $folder, $name)
   return null;
 }
 
-
-/*
- * The function `get_existing_tags` retrieves existing tag names associated with a product ID from the
- * database.
- * 
- * @param product_id The `get_existing_tags` function retrieves existing tags associated with a product
- * based on the provided `product_id`. The function executes a SQL query to select the tag names from
- * the `product_tag` table by joining it with the `product_tag_map` table on the `tag_id`. The tags are
- * 
- * @return The function `get_existing_tags()` returns an array of existing tag names
- * associated with the specified product ID. The tags are fetched from the database table `product_tag`
- * based on the product ID provided and returned as an array of tag names.
+/**
+ * Retrieves all tags associated with a given product ID.
+ *
+ * @param int $product_id The product ID to look up.
+ * @return array List of tag names.
  */
 function get_existing_tags($product_id)
 {
@@ -222,6 +183,12 @@ function get_existing_tags($product_id)
   return $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
+/**
+ * Retrieves the file path to a user's profile image, or a default if not set.
+ *
+ * @param int $user_id The user ID.
+ * @return string File path to the profile image.
+ */
 function get_profile_image($user_id)
 {
   global $db;

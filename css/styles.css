@@ -136,6 +136,57 @@ body {
   width: 100%;
 }
 
+/* Error 404 */
+
+.error-404 {
+  align-items: center;
+  background-color: #f9ead6;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  text-align: center;
+}
+
+.error-404 h1 {
+  font: 48px var(--main-text);
+  margin-bottom: 1rem;
+}
+
+.error-404 p {
+  font-size: 18px;
+  margin-bottom: 2rem;
+}
+
+.error-404 img {
+  height: auto;
+  margin-bottom: 2rem;
+  max-width: 100%;
+}
+
+.error-404 .btn {
+  background-color: var(--dark);
+  border-radius: 5px;
+  color: var(--light);
+  font-size: 18px;
+  margin: 0.5rem auto;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.error-404 .btn:hover {
+  opacity: 0.7;
+  transform: translateY(-3px);
+}
+
+.error-illustration {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+}
+
 /* Header - Footer */
 header {
   align-items: center;
@@ -502,7 +553,7 @@ footer > div div:last-of-type {
 .text {
   background: rgba(0, 0, 0, 0.5); /* Slight background for readability */
   border-radius: 8px;
-  color: white;
+  color: var(--light);
   font: 24px var(--secondary-text);
   left: 50%;
   padding: 20px;
@@ -517,10 +568,12 @@ footer > div div:last-of-type {
   background-color: var(--light);
   border-radius: 5px;
   color: var(--dark);
-  padding: 0.25rem;
-  margin: 1rem;
+  overflow-wrap: normal;
+  padding: 0 0.25rem;
   text-decoration: none;
   transition: 0.2s ease-in-out;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .text a:hover {
@@ -1263,8 +1316,14 @@ div#vendorhead {
 
 .sign-up div:nth-of-type(2) div,
 .vendor-signup div:nth-of-type(3) fieldset + div {
+  align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+}
+
+.g-recaptcha {
+  padding: 0;
 }
 
 .vendor-signup div:nth-of-type(3) div fieldset {
@@ -1366,9 +1425,9 @@ label[for^='admin-']:hover {
   padding: 10px;
 }
 
-.vendor-signup main div {
+/* .vendor-signup main div {
   padding: 1rem;
-}
+} */
 
 /* Styling the custom file input button */
 .file-input {
@@ -1855,11 +1914,12 @@ form[action='update_homepage.php'] {
   row-gap: 0.5rem;
 }
 
-.super-admin-dashboard form[action='/private/auth.php'] {
+.super-admin-dashboard form[action='/private/auth.php'],
+.admin-dashboard form[action='/private/auth.php'] {
+  align-items: flex-start;
   background-color: var(--main-color);
   display: flex;
   flex-flow: row wrap;
-  align-items: flex-start;
   justify-content: center;
 }
 
@@ -1920,8 +1980,14 @@ td.request-action-column {
   gap: 5px;
 }
 
+.status-rejected {
+  color: rgb(155, 13, 13);
+  font-weight: bold;
+  cursor: help;
+}
+
 .section-header {
-  background-color: #f5f5f5;
+  background-color: var(--light);
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: pointer;
@@ -1957,6 +2023,7 @@ td.request-action-column {
   }
 
   /* originally 48px */
+  .error-404 h1,
   header h1,
   .user-login legend,
   .sign-up legend,
@@ -1989,7 +2056,6 @@ td.request-action-column {
     font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 375));
   }
 
-  .text,
   #type-text,
   .aboutus-item p,
   .edit-profile-details form label {
@@ -2002,6 +2068,7 @@ td.request-action-column {
   }
 
   /* originally 24px */
+
   .hero-image > div h2,
   .week-vendor li,
   .market-schedule table,
@@ -2011,6 +2078,10 @@ td.request-action-column {
   #user-card p,
   .manage-products legend {
     font-size: calc(16px + (24 - 16) * (100vw - 375px) / (1400 - 375));
+  }
+
+  .text {
+    font-size: calc(12px + (24 - 12) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 22px */
@@ -2028,6 +2099,8 @@ td.request-action-column {
   }
 
   /* originally 18px */
+  .error-404 .btn,
+  .error-404 p,
   label[for^='user-'],
   label[for^='vendor-'],
   label[for^='edit-'],
@@ -2085,9 +2158,9 @@ td.request-action-column {
 @media screen and (max-width: 1170px) {
   /* Our Vendors */
   #vendor-profile-container {
+    align-items: center;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
   }
 
   #vendor-upcoming-markets {
@@ -2131,9 +2204,9 @@ td.request-action-column {
 
   /* About Us */
   .about-us main section {
-    width: 100%;
     margin: 0 auto;
     padding: 1rem;
+    width: 100%;
   }
 
   .aboutus-item {
@@ -2238,28 +2311,28 @@ td.request-action-column {
 
   .admin-dashboard tr,
   .super-admin-dashboard tr {
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
     background: white;
-    padding: 10px;
+    border: 1px solid #ddd;
     display: flex;
     flex-wrap: wrap;
+    padding: 10px;
+    margin-bottom: 10px;
   }
 
   .admin-dashboard td,
   .super-admin-dashboard td {
+    border-bottom: 1px solid #ddd;
     display: flex;
     justify-content: space-between;
     padding: 5px;
     width: 100%;
-    border-bottom: 1px solid #ddd;
   }
 
   .admin-dashboard td::before,
   .super-admin-dashboard td::before {
     content: attr(data-label);
-    font-weight: bold;
     flex-basis: 40%;
+    font-weight: bold;
   }
 
   .super-admin-dashboard a:not(:first-of-type),
@@ -2271,16 +2344,16 @@ td.request-action-column {
   .admin-dashboard .btn,
   .super-admin-dashboard .btn {
     display: block;
-    width: 100%;
-    text-align: center;
-    padding: 8px;
     font-size: 14px;
+    padding: 8px;
+    text-align: center;
+    width: 100%;
   }
 
   .admin-dashboard select,
   .super-admin-dashboard select {
-    width: 100%;
     padding: 5px;
+    width: 100%;
   }
 }
 

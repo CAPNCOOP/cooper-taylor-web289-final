@@ -3,6 +3,8 @@ $page_title = "Sign Up";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/popup_message.php';
+$form_data = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
 ?>
 
 <main>
@@ -11,19 +13,23 @@ require_once 'private/popup_message.php';
     <div>
       <legend>User Sign up</legend>
       <fieldset>
-        <input type="text" id="username" name="username" aria-label="Username" placeholder="Username" required>
+        <input type="text" id="username" name="username" aria-label="Username" placeholder="Username"
+          value="<?= h($form_data['username'] ?? '') ?>" required>
       </fieldset>
 
       <fieldset>
-        <input type="text" id="fname" name="fname" aria-label="First Name" placeholder="First Name" required>
+        <input type="text" id="fname" name="fname" aria-label="First Name" placeholder="First Name"
+          value="<?= h($form_data['fname'] ?? '') ?>" required>
       </fieldset>
 
       <fieldset>
-        <input type="text" id="lname" name="lname" aria-label="Last Name" placeholder="Last Name" required>
+        <input type="text" id="lname" name="lname" aria-label="Last Name" placeholder="Last Name"
+          value="<?= h($form_data['lname'] ?? '') ?>" required>
       </fieldset>
 
       <fieldset>
-        <input type="email" id="email" name="email" aria-label="Email Address" placeholder="Email Address" required>
+        <input type="email" id="email" name="email" aria-label="Email Address" placeholder="Email Address"
+          value="<?= h($form_data['email'] ?? '') ?>" required>
       </fieldset>
 
       <fieldset>
@@ -55,8 +61,9 @@ require_once 'private/popup_message.php';
           onchange="previewImage(event)">
       </fieldset>
 
-
       <div>
+        <div class="g-recaptcha" data-sitekey="6Le47BgrAAAAACvegE-N7BsAVv3Bo6dvcd6Cj0tU"></div>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <button class="signup-button" type="submit" name="register" value="1">Sign Up</button>
       </div>
     </div>

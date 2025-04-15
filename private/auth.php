@@ -8,12 +8,50 @@ require_once 'classes/Vendor.class.php';
 $errors = [];
 $profile_image = 'img/upload/users/default.png';
 
+// Register /////////////////////////////////////////////////////////
 if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1') {
+
+  $form_origin = $_SERVER['HTTP_REFERER'] ?? '../signup.php';
+
+
   $admin_created = isset($_POST['admin_created']) && $_POST['admin_created'] == '1';
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
 
   // Collect fields
   $username = strtolower(trim($_POST['username'] ?? ''));
+
+  // CAPTCHA Validation
+  $recaptcha_secret = '6Le47BgrAAAAAE20ys2OV1qfjBDSufGJDqe-Fev0';
+  $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
+
+  // Require the CAPTCHA response
+  if (empty($recaptcha_response)) {
+    $_SESSION['form_data'] = $_POST;
+    $session->message("❌ Please complete the CAPTCHA before submitting.");
+    redirect_to($form_origin);
+    exit();
+  }
+
+  if (!$captcha_result->success) {
+    $_SESSION['form_data'] = $_POST;
+    $session->message("❌ CAPTCHA verification failed. Please try again.");
+    redirect_to($form_origin);
+    exit();
+  }
+
+
+  // Verify the CAPTCHA response with Google
+  $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptcha_secret}&response={$recaptcha_response}");
+  $captcha_result = json_decode($verify);
+
+  if (!$captcha_result->success) {
+    $session->message("❌ CAPTCHA verification failed. Please try again.");
+    redirect_to('../signup.php');
+    exit(); // Stop execution immediately
+  }
+
+  // If we got here, CAPTCHA is valid - continue with registration
+
   $fname = trim($_POST['fname'] ?? '');
   $lname = trim($_POST['lname'] ?? '');
   $email = strtolower(trim($_POST['email'] ?? ''));
@@ -23,24 +61,34 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
 
   // Validation
   if (is_blank($username) || is_blank($email) || is_blank($password)) {
+    $_SESSION['form_data'] = $_POST;
     $session->message("❌ Required fields cannot be blank.");
-    redirect_to('../signup.php');
+    redirect_to($form_origin);
+    exit();
   }
   if (!has_length($password, ['min' => 8])) {
+    $_SESSION['form_data'] = $_POST;
     $session->message("❌ Password must be at least 8 characters.");
-    redirect_to('../signup.php');
+    redirect_to($form_origin);
+    exit();
   }
   if ($password !== $confirm_password) {
+    $_SESSION['form_data'] = $_POST;
     $session->message("❌ Passwords do not match.");
-    redirect_to('../signup.php');
+    redirect_to($form_origin);
+    exit();
   }
   if (!has_valid_email_format($email)) {
+    $_SESSION['form_data'] = $_POST;
     $session->message("❌ Invalid email format.");
-    redirect_to('../signup.php');
+    redirect_to($form_origin);
+    exit();
   }
   if (!has_unique_username($username)) {
+    $_SESSION['form_data'] = $_POST;
     $session->message("❌ Username already taken.");
-    redirect_to('../signup.php');
+    redirect_to($form_origin);
+    exit();
   }
 
   // Create user
@@ -125,6 +173,7 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
   redirect_to($redirect_url);
 }
 
+// login ////////////////////////////////////////////////////////////////
 if (is_post_request() && isset($_POST['login'])) {
   $username = $_POST['username'];
   $password = $_POST['password'];
@@ -157,25 +206,19 @@ if (is_post_request() && isset($_POST['login'])) {
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
     $_SESSION['user_level_id'] = $user['user_level_id'];
 
-
     $session->message("✅ Welcome back, " . h($user['username']) . "!");
-    error_log("Redirecting user level: " . $user['user_level_id']);
 
     switch ($user['user_level_id']) {
       case 2:
-        error_log("Redirecting to vendor dashboard");
         redirect_to('../vendor_dash.php');
         break;
       case 3:
-        error_log("Redirecting to admin dashboard");
         redirect_to('../admin_dash.php');
         break;
       case 4:
-        error_log("Redirecting to SUPERADMIN dashboard");
         redirect_to('../superadmin_dash.php');
         break;
       default:
-        error_log("Redirecting to generic dashboard");
         redirect_to('../dashboard.php');
         break;
     }
