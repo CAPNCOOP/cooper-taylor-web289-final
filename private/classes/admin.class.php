@@ -54,20 +54,6 @@ class Admin extends User
   }
 
   /**
-   * Confirms a vendor's attendance for a specific market date.
-   *
-   * @param int $vendorId The vendor's ID.
-   * @param string $marketDate The date to confirm attendance.
-   * @return bool True on success, false on failure.
-   */
-  public function overrideVendorSchedule($vendorId, $marketDate)
-  {
-    $sql = "UPDATE vendor_market SET status = 'confirmed' WHERE vendor_id = ? AND attend_date = ?";
-    $stmt = self::$db->prepare($sql);
-    return $stmt->execute([$vendorId, $marketDate]);
-  }
-
-  /**
    * Retrieves all users except super admins.
    *
    * @return array List of User objects.

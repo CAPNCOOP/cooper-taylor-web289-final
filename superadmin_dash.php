@@ -3,6 +3,7 @@ $page_title = "Super Admin Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
+require_once 'private/config.php';
 
 // Restrict access to super admins only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 4) {

@@ -16,9 +16,9 @@
       <tbody>
         <?php foreach ($users as $user): ?>
           <tr>
-            <td><?= h($user->first_name . " " . $user->last_name) ?></td>
-            <td><?= h($user->email) ?></td>
-            <td><?= $user->is_active ? 'Active' : 'Inactive' ?></td>
+            <td data-label="Name"><?= h($user->first_name . " " . $user->last_name) ?></td>
+            <td data-label="Email"><?= h($user->email) ?></td>
+            <td data-label="Member Status"><?= $user->is_active ? 'Active' : 'Inactive' ?></td>
             <td>
               <a href="toggle_entity.php?id=<?= $user->user_id ?>&action=<?= $user->is_active ? 'deactivate' : 'activate' ?>&type=user">
                 <?= $user->is_active ? 'Deactivate User' : 'Activate User' ?>
@@ -50,9 +50,9 @@
       <tbody>
         <?php foreach ($vendor_list as $vendor): ?>
           <tr>
-            <td><?= h($vendor->first_name . " " . $vendor->last_name) ?></td>
-            <td><?= h($vendor->email) ?></td>
-            <td>
+            <td data-label="Name"><?= h($vendor->first_name . " " . $vendor->last_name) ?></td>
+            <td data-label="Email"><?= h($vendor->email) ?></td>
+            <td data-label="Market Status">
               <form method="POST" action="update_rsvp.php" role="form">
                 <input type="hidden" name="vendor_id" value="<?= h($vendor->vendor_id) ?>">
                 <select name="week_id" required>
@@ -82,7 +82,7 @@
                 <button type="submit" aria-label="Change Market Status">Update</button>
               </form>
             </td>
-            <td><?= $vendor->is_active ? 'Active' : 'Inactive' ?></td>
+            <td data-label="Vendor Status"><?= $vendor->is_active ? 'Active' : 'Inactive' ?></td>
             <td>
               <?php
               $vendor_action = $vendor->is_active ? 'deactivate' : 'activate';
@@ -107,7 +107,7 @@
   </div>
 
   <div class="section-content">
-    <form action="/private/auth.php" method="POST" enctype="multipart/form-data" role="form">
+    <form class="create-vendor-form" action="/private/auth.php" method="POST" enctype="multipart/form-data" role="form">
       <input type="hidden" name="admin_created" value="1">
       <input type="hidden" name="is_vendor" value="1">
       <!-- LEFT SIDE FORM -->
@@ -219,7 +219,9 @@
             onchange="previewImage(event)">
         </fieldset>
 
-        <div>
+        <div class="recaptcha-container">
+          <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
           <button class="signup-button" type="submit" name="register" value="1">New Vendor</button>
         </div>
       </div>
@@ -248,10 +250,10 @@
         <tbody>
           <?php foreach ($admins as $admin): ?>
             <tr>
-              <td><?= h($admin->first_name . " " . $admin->last_name) ?></td>
-              <td><?= h($admin->email) ?></td>
-              <td>Admin</td>
-              <td><?= $admin->is_active ? 'Active' : 'Inactive' ?></td>
+              <td data-label="Name"><?= h($admin->first_name . " " . $admin->last_name) ?></td>
+              <td data-label="Email"><?= h($admin->email) ?></td>
+              <td data-label="Role">Admin</td>
+              <td data-label="Admin Status"><?= $admin->is_active ? 'Active' : 'Inactive' ?></td>
               <td>
                 <a href="toggle_entity.php?id=<?= h($admin->user_id) ?>&action=<?= $admin->is_active ? 'deactivate' : 'activate' ?>&type=admin"
                   class="btn <?= $admin->is_active ? 'btn-danger' : 'btn-success' ?>">
@@ -284,7 +286,7 @@
       <tbody>
         <?php foreach ($pending_vendors as $vendor): ?>
           <tr>
-            <td>
+            <td data-label="Name">
               <?php $status = $vendor['vendor_status'] ?? ''; ?>
 
               <?= h($vendor['business_name']) ?>
@@ -292,7 +294,7 @@
                 <span class="status-rejected" title="This vendor was rejected but can still be approved later.">(rejected)</span>
               <?php endif; ?>
             </td>
-            <td><?= h($vendor['email']) ?></td>
+            <td data-label="Email"><?= h($vendor['email']) ?></td>
             <td>
               <a href="approve_vendor.php?vendor_id=<?= h($vendor['vendor_id']) ?>&action=approve" class="btn btn-success">Approve</a>
               <a href="approve_vendor.php?vendor_id=<?= h($vendor['vendor_id']) ?>&action=reject" class="btn btn-danger">Reject</a>
@@ -346,11 +348,11 @@
       <tbody>
         <?php foreach ($upcoming_markets as $week): ?>
           <tr>
-            <td><?= h($week['week_start']) ?></td>
-            <td><?= h($week['week_end']) ?></td>
-            <td><?= isset($week['market_status']) ? h(ucfirst($week['market_status'])) : '<span class="text-muted">No Status</span>' ?></td>
+            <td data-label="Week Start"><?= h($week['week_start']) ?></td>
+            <td data-label="Market Date"><?= h($week['week_end']) ?></td>
+            <td data-label="Market Status"><?= isset($week['market_status']) ? h(ucfirst($week['market_status'])) : '<span class="text-muted">No Status</span>' ?></td>
 
-            <td style="display: flex; gap: 0.5rem;">
+            <td>
               <?php if ($week['market_status'] !== 'cancelled'): ?>
                 <form method="POST" action="cancel_market.php" onsubmit="return confirm('Cancel this market week?');" role="form">
                   <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
@@ -375,7 +377,7 @@
 <!-- Edit Homepage Message -->
 <section>
   <div class="section-header" data-section="update-content" onclick="toggleSection(this)">
-    <h3>Edit Homepage Welcome Message</h3>
+    <h3>Edit Homepage Message</h3>
   </div>
   <div class="section-content">
     <form method="POST" action="update_homepage.php" role="form">

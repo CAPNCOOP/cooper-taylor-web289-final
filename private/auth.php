@@ -145,14 +145,17 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
 
   if ($admin_created) {
     $session->message("✅ Vendor created successfully.");
+
     if ($_SESSION['user_level_id'] == 4) {
       redirect_to('../superadmin_dash.php');
     } elseif ($_SESSION['user_level_id'] == 3) {
-      redirect_to('../admindash.php');
+      redirect_to('../admin_dash.php');
     } else {
       redirect_to('../dashboard.php');
     }
+    exit();
   }
+
 
   $session->login([
     'user_id' => $user_id,
@@ -160,6 +163,7 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
     'user_level' => $is_vendor ? 2 : 1
   ]);
   $_SESSION['profile_image'] = $profile_image;
+  $_SESSION['user_level_id'] = $is_vendor ? 2 : 1;
 
   $session->message("✅ Account created successfully!");
   $redirect_url = $is_vendor ? "/vendor_dash.php" : "/dashboard.php";
@@ -198,6 +202,9 @@ if (is_post_request() && isset($_POST['login'])) {
     ]);
     $_SESSION['profile_image'] = get_profile_image($user['user_id']);
     $_SESSION['user_level_id'] = $user['user_level_id'];
+    $_SESSION['breadcrumbs'] = [
+      ['label' => 'Home', 'path' => url_for('/index.php')],
+    ];
 
     $session->message("✅ Welcome back, " . h($user['username']) . "!");
 

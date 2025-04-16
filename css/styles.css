@@ -816,7 +816,6 @@ div#vendorhead {
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  font: 24px var(--secondary-text);
   height: 330px;
   justify-content: space-between !important;
   padding: 0;
@@ -829,19 +828,16 @@ div#vendorhead {
 }
 
 .vendor-card h2 {
-  font: 28px var(--secondary-text);
+  font: 20px var(--secondary-text);
   margin: 1rem !important;
   text-align: center;
   white-space: wrap;
 }
 
 .vendor-card div {
+  align-items: center;
   display: flex;
   flex: 1;
-}
-
-.vendor-card div:last-of-type {
-  align-items: center;
 }
 
 .vendor-card img {
@@ -1184,7 +1180,6 @@ div#vendorhead {
 .user-login img {
   border: 5px solid var(--secondary-color);
   border-radius: 100%;
-  /* box-shadow: 0 0 10px var(--dark); */
   margin: 0 auto;
 }
 
@@ -1276,18 +1271,18 @@ div#vendorhead {
 }
 
 .sign-up form {
+  align-items: center;
   background-color: var(--tertiary-color);
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: space-around;
 }
 
 .vendor-signup form {
+  align-items: flex-start;
   background-color: var(--tertiary-color);
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
   justify-content: center;
 }
 
@@ -1303,7 +1298,7 @@ div#vendorhead {
   border-radius: 5px;
   color: var(--light);
   font: 18px var(--secondary-text);
-  margin: 1rem;
+  margin: 0.25rem;
   padding: 1rem;
   transition: all 0.2s ease-in-out;
 }
@@ -1322,7 +1317,11 @@ div#vendorhead {
 }
 
 .g-recaptcha {
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  transform-origin: left top;
+  width: 100%;
 }
 
 .vendor-signup div:nth-of-type(3) div fieldset {
@@ -1348,7 +1347,7 @@ div#vendorhead {
   z-index: -1;
 }
 
-/* Style the label that will act as our button */
+/* Style the label that will act as button */
 label[for^='user-'],
 label[for^='vendor-'],
 label[for^='edit-'],
@@ -1893,11 +1892,19 @@ form[action='manage_products.php'] button {
 .admin-dashboard table td a,
 .super-admin-dashboard table td a {
   background-color: var(--dark) !important;
+  border-radius: 5px;
   color: var(--light) !important;
   padding: 0.25rem;
   text-decoration: none;
   width: 100%;
   text-align: center;
+}
+
+.super-admin-dashboard table td:last-of-type,
+.admin-dashboard table td:last-of-type {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
 }
 
 form[action='update_rsvp.php'] {
@@ -1913,8 +1920,8 @@ form[action='update_homepage.php'] {
   row-gap: 0.5rem;
 }
 
-.super-admin-dashboard form[action='/private/auth.php'],
-.admin-dashboard form[action='/private/auth.php'] {
+.super-admin-dashboard .create-vendor-form,
+.admin-dashboard .create-vendor-form {
   align-items: flex-start;
   background-color: var(--main-color);
   display: flex;
@@ -1922,34 +1929,37 @@ form[action='update_homepage.php'] {
   justify-content: center;
 }
 
-.super-admin-dashboard form[action='/private/auth.php'] fieldset,
-.admin-dashboard form[action='/private/auth.php'] fieldset {
+.super-admin-dashboard .create-vendor-form fieldset,
+.admin-dashboard .create-vendor-form fieldset {
   border: none;
 }
 
-.super-admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset,
-.admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset {
+.super-admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset,
+.admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset {
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.super-admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset + div,
-.admin-dashboard form[action='/private/auth.php'] div:nth-of-type(3) fieldset + div {
+.super-admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset + div,
+.admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset + div {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  row-gap: 5px;
 }
 
 .admin-dashboard button,
 .super-admin-dashboard button {
-  background-color: var(--dark) !important;
-  color: var(--light) !important;
+  background-color: var(--dark);
+  border-radius: 5px;
+  color: var(--light);
   padding: 0.25rem;
 }
 
-.admin-dashboard section:nth-of-type(4) form,
-.super-admin-dashboard section:nth-of-type(5) form {
+.admin-dashboard section:nth-of-type(5) form,
+.super-admin-dashboard section:nth-of-type(6) form {
   background-color: var(--light);
   display: flex;
   flex-direction: column;
@@ -1974,11 +1984,6 @@ div.section-content:last-of-type {
   display: none;
 }
 
-td.request-action-column {
-  display: flex;
-  gap: 5px;
-}
-
 .status-rejected {
   color: rgb(155, 13, 13);
   font-weight: bold;
@@ -2000,8 +2005,8 @@ td.request-action-column {
 
 .section-content {
   border-radius: 5px;
-  padding: 10px;
   display: block;
+  padding: 10px;
 }
 
 /* Fluid Text */
@@ -2061,18 +2066,11 @@ td.request-action-column {
     font-size: calc(16px + (32 - 16) * (100vw - 375px) / (1400 - 375));
   }
 
-  /* originally 28px */
-  .vendor-card h2 {
-    font-size: calc(14px + (28 - 14) * (100vw - 375px) / (1400 - 375));
-  }
-
   /* originally 24px */
-
   .hero-image > div h2,
   .week-vendor li,
   .market-schedule table,
   .market-schedule table th,
-  .vendor-card,
   .product-card h3,
   #user-card p,
   .manage-products legend {
@@ -2089,6 +2087,7 @@ td.request-action-column {
   }
 
   /* originally 20px */
+  .vendor-card h2,
   .feedback-popup,
   .about-us div div:last-of-type h3,
   .about-us div div:last-of-type span,
@@ -2136,14 +2135,17 @@ td.request-action-column {
   }
 
   /* originally 14px */
-  .btn,
-  #breadcrumbs li {
+  .btn {
     font-size: calc(11px + (14 - 11) * (100vw - 375px) / (1400 - 375));
   }
 
   /* originally 12px */
   .numbertext {
     font-size: calc(10px + (12 - 10) * (100vw - 375px) / (1400 - 375));
+  }
+
+  #breadcrumbs li {
+    font-size: calc(8px + (12 - 8) * (100vw - 375px) / (1400 - 375));
   }
 }
 
@@ -2354,6 +2356,11 @@ td.request-action-column {
     padding: 5px;
     width: 100%;
   }
+
+  .super-admin-dashboard .create-vendor-form,
+  .admin-dashboard .create-vendor-form {
+    flex-direction: column;
+  }
 }
 
 @media screen and (max-width: 780px) {
@@ -2510,5 +2517,16 @@ td.request-action-column {
   /* sign up */
   .sign-up input {
     width: 300px;
+  }
+
+  /* recaptcha */
+  .g-recaptcha {
+    transform: scale(0.85);
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .g-recaptcha {
+    transform: scale(0.75);
   }
 }
