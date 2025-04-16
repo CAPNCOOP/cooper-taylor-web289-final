@@ -1,6 +1,7 @@
 <?php
 $page_title = "Sign Up";
 require_once 'private/initialize.php';
+require_once 'private/config.php';
 require_once 'private/header.php';
 require_once 'private/popup_message.php';
 $form_data = $_SESSION['form_data'] ?? [];
@@ -63,7 +64,7 @@ unset($_SESSION['form_data']);
       </fieldset>
 
       <div>
-        <div class="g-recaptcha" data-sitekey="6Le47BgrAAAAACvegE-N7BsAVv3Bo6dvcd6Cj0tU"></div>
+        <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <button class="signup-button" type="submit" name="register" value="1" aria-label="Sign Up">Sign Up</button>
       </div>

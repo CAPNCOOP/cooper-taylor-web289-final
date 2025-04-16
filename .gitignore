@@ -1,0 +1,9 @@
+# Sensitive files
+/private/config.php
+/private/db_credentials.php
+.env
+# Logs
+/logs/*.log
+# Uploaded Content (optional, if dynamic)
+img/upload/*
+!img/upload/.gitkeep

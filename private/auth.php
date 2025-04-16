@@ -2,6 +2,7 @@
 require_once 'initialize.php';
 require_once 'validation_functions.php';
 require_once 'functions.php';
+require_once 'config.php';
 require_once 'classes/User.class.php';
 require_once 'classes/Vendor.class.php';
 
@@ -21,7 +22,7 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
   $username = strtolower(trim($_POST['username'] ?? ''));
 
   // CAPTCHA Validation
-  $recaptcha_secret = '6Le47BgrAAAAAE20ys2OV1qfjBDSufGJDqe-Fev0';
+  $recaptcha_secret = RECAPTCHA_SECRET_KEY;
   $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
 
   // Require the CAPTCHA response
@@ -31,14 +32,6 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
     redirect_to($form_origin);
     exit();
   }
-
-  if (!$captcha_result->success) {
-    $_SESSION['form_data'] = $_POST;
-    $session->message("❌ CAPTCHA verification failed. Please try again.");
-    redirect_to($form_origin);
-    exit();
-  }
-
 
   // Verify the CAPTCHA response with Google
   $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptcha_secret}&response={$recaptcha_response}");
