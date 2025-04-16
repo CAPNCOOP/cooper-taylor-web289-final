@@ -8,17 +8,16 @@ $form_data = $_SESSION['form_data'] ?? [];
 unset($_SESSION['form_data']);
 ?>
 
-<main>
+<main role="main">
   <h2>Vendor Sign Up</h2>
 
   <p>Becoming a vendor with us requires the submission of a valid Employer Identification Number (EIN) for verification. Once your EIN has been successfully approved, you will gain access to our platform, allowing you to register for upcoming market dates and showcase your products to our community. We strive to ensure a smooth and efficient approval process, but please allow up to 48 hours for confirmation. This step is essential for maintaining a high standard of service and ensuring all vendors meet our operational requirements.</p>
 
-  <form action="private/auth.php" method="POST" enctype="multipart/form-data">
+  <form action="private/auth.php" method="POST" enctype="multipart/form-data" role="form">
     <input type="hidden" name="is_vendor" value="1">
 
     <!-- Personal Info -->
     <div>
-
       <fieldset>
         <input type="text" id="username" name="username" required placeholder="Username"
           value="<?= h($form_data['username'] ?? '') ?>">
@@ -123,7 +122,8 @@ unset($_SESSION['form_data']);
             alt="Vendor Profile Preview"
             data-preview="image-preview"
             height="300"
-            width="300">
+            width="300"
+            loading="lazy">
 
           <input type="file"
             id="vendor-profile-pic"

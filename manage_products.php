@@ -167,7 +167,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <p>Business: <?= h($vendor['business_name']); ?></span>
 
   <!-- Product Upload Form -->
-<form action="manage_products.php" method="POST" enctype="multipart/form-data">
+<form action="manage_products.php" method="POST" enctype="multipart/form-data" role="form">
   <div>
     <legend>Add New Product</legend>
 
@@ -219,7 +219,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         alt="Product Image Preview"
         data-preview="image-preview"
         height="300"
-        width="300">
+        width="300"
+        loading="lazy">
 
       <input type="file"
         id="create-product-image"
@@ -240,12 +241,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php foreach ($products as $product): ?>
       <div class="product-card">
         <h3><?= h($product['name']); ?></h3>
-        <img src="img/upload/products/<?= h($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image">
+        <img src="img/upload/products/<?= h($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image" loading="lazy">
         <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p>
         <p><strong>Per:</strong> <?= h($product['amount_name'] ?? 'unit'); ?></p> <!-- New Line for Amount Offered -->
         <p><?= h($product['description']); ?></p>
-        <a href="edit_product.php?id=<?= $product['product_id']; ?>" class="edit-btn">Update</a>
-        <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+        <a href="edit_product.php?id=<?= $product['product_id']; ?>" class="edit-btn" aria-label="Update Product">Update</a>
+        <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');" aria-label="Delete Product">Delete</a>
       </div>
 
     <?php endforeach; ?>

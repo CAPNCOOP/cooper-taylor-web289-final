@@ -117,8 +117,6 @@ if ($user_level == 2) {
   }
 }
 
-
-
 $_SESSION['username'] = $username;
 
 if ($update_success) {

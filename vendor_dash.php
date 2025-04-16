@@ -37,12 +37,12 @@ require_once 'private/popup_message.php';
 <div id="vendor-info">
   <div>
     <h2><?= h($user->first_name . ' ' . $user->last_name); ?></h2>
-    <img src="<?= h($profile_image); ?>" alt="Vendor Profile Picture" height="250" width="250">
+    <img src="<?= h($profile_image); ?>" alt="Vendor Profile Picture" height="250" width="250" loading="lazy">
     <span>Business: <?= h($vendor->business_name); ?></span>
     <a href="<?= $vendor->isApproved() ? 'edit_profile.php' : '#' ?>"
       class="btn <?= $vendor->isApproved() ? '' : 'disabled-link' ?>"
-      title="<?= $vendor->isApproved() ? '' : 'Approval required to edit profile.' ?>">
-      <img src="img/assets/edit.png" alt="An edit icon." height="40" width="40">
+      title="<?= $vendor->isApproved() ? '' : 'Approval required to edit profile.' ?>" aria-label="Edit Profile Details">
+      <img src="img/assets/edit.png" alt="An edit icon." height="40" width="40" loading="lazy">
       Edit Details
     </a>
   </div>
@@ -55,7 +55,7 @@ require_once 'private/popup_message.php';
         <li>
           <a href="<?= $vendor->isApproved() ? 'manage_products.php' : '#' ?>"
             class="<?= $vendor->isApproved() ? '' : 'disabled-link' ?>"
-            title="<?= $vendor->isApproved() ? '' : 'Approval required to manage products.' ?>">
+            title="<?= $vendor->isApproved() ? '' : 'Approval required to manage products.' ?>" aria-label="Manage Products">
             Manage Products
           </a>
         </li>
@@ -63,7 +63,7 @@ require_once 'private/popup_message.php';
         <li>
           <a href="<?= $vendor->isApproved() ? 'rsvp_market.php' : '#' ?>"
             class="<?= $vendor->isApproved() ? '' : 'disabled-link' ?>"
-            title="<?= $vendor->isApproved() ? '' : 'Approval required to RSVP for markets.' ?>">
+            title="<?= $vendor->isApproved() ? '' : 'Approval required to RSVP for markets.' ?>" aria-label="RSVP for Markets">
             RSVP for Markets
           </a>
         </li>

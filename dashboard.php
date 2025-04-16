@@ -29,10 +29,10 @@ endif; ?>
 <div id="user-profile">
   <div id="user-card">
     <h2>Hello, <strong><?= h($user->username) ?></strong>!</h2>
-    <img src="<?= h($profile_image) ?>" alt="Profile Picture" height="250" width="250">
+    <img src="<?= h($profile_image) ?>" alt="Profile Picture" height="250" width="250" loading="lazy">
     <p><strong>Email:</strong> <?= h($user->email) ?></p>
     <p><strong>Account Type:</strong> <?= $user_type ?></p>
-    <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon.">Edit Details</a>
+    <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon." aria-label="Edit Profile Details">Edit Details</a>
   </div>
 
   <div id="saved-vendors">
@@ -41,11 +41,11 @@ endif; ?>
       <ul>
         <?php foreach ($favorites as $vendor): ?>
           <li>
-            <img src="<?= h($vendor->profile_image ?? 'default.png') ?>" height="200" width="200" alt="An Image of a Vendor.">
-            <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>">
+            <img src="<?= h($vendor->profile_image ?? 'default.png') ?>" height="200" width="200" alt="An Image of a Vendor." loading="lazy">
+            <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>" aria-label="View Vendor Profile">
               <?= h($vendor->business_name) ?>
             </a>
-            <a href="remove_vendor.php?vendor_id=<?= h($vendor->vendor_id) ?>" class="remove-link">Remove</a>
+            <a href="remove_vendor.php?vendor_id=<?= h($vendor->vendor_id) ?>" class="remove-link" aria-label="Remove Vendor From Favorites">Remove</a>
           </li>
         <?php endforeach; ?>
       </ul>

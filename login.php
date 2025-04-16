@@ -4,10 +4,10 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 ?>
 
-<main>
+<main role="main">
   <?php require_once 'private/popup_message.php'; ?>
 
-  <form action="private/auth.php" method="POST" class="user-login">
+  <form action="private/auth.php" method="POST" class="user-login" role="form">
     <legend>Log In</legend>
 
     <p>Not a user? <a href="#" id="openSignup">Sign up now!</a></p>
@@ -24,7 +24,7 @@ require_once 'private/header.php';
 
     <input type="hidden" name="login" value="1">
 
-    <img src="/img/upload/users/default.png" alt="A stylized user icon." height="250" width="250">
+    <img src="/img/upload/users/default.png" alt="A stylized user icon." height="250" width="250" loading="lazy">
     <fieldset>
       <label for="login-username"></label>
       <input type="text" id="login-username" name="username" placeholder="Username" aria-label="Username" required>

@@ -7,8 +7,8 @@ $form_data = $_SESSION['form_data'] ?? [];
 unset($_SESSION['form_data']);
 ?>
 
-<main>
-  <form action="private/auth.php" method="POST" enctype="multipart/form-data">
+<main role="main">
+  <form action="private/auth.php" method="POST" enctype="multipart/form-data" role="form">
 
     <div>
       <legend>User Sign up</legend>
@@ -50,7 +50,8 @@ unset($_SESSION['form_data']);
           alt="User Profile Preview"
           data-preview="image-preview"
           height="300"
-          width="300">
+          width="300"
+          loading="lazy">
 
         <input type="file"
           id="user-profile-pic"
@@ -64,7 +65,7 @@ unset($_SESSION['form_data']);
       <div>
         <div class="g-recaptcha" data-sitekey="6Le47BgrAAAAACvegE-N7BsAVv3Bo6dvcd6Cj0tU"></div>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <button class="signup-button" type="submit" name="register" value="1">Sign Up</button>
+        <button class="signup-button" type="submit" name="register" value="1" aria-label="Sign Up">Sign Up</button>
       </div>
     </div>
 

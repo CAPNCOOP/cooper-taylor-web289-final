@@ -20,46 +20,46 @@ if (!isset($page_title)) {
 <body class="<?= strtolower(str_replace(' ', '-', $page_title ?? 'Blue Ridge Bounty')) ?>">
 
 
-  <header>
+  <header role="banner">
     <div>
       <div>
         <a href="<?= url_for('/index.php') ?>">
-          <img src="img/assets/brblogo2.png" alt="" height="115" width="274">
+          <img src="img/assets/brblogo2.png" alt="Blue Ridge Bounty Logo." height="115" width="274" loading="lazy">
         </a>
       </div>
 
 
       <div>
-        <nav class="nav-links">
+        <nav class="nav-links" role="navigation" aria-label="Main Navigation">
           <ul>
-            <li><a href="<?= url_for('/schedule.php') ?>">Schedule</a></li>
-            <li><a href="<?= url_for('/ourvendors.php') ?>">Our Vendors</a></li>
-            <li><a href="<?= url_for('/aboutus.php') ?>">About Us</a></li>
-            <li><a href="<?= url_for('/aboutus.php#contact') ?>">Contact Us</a></li>
+            <li><a href="<?= url_for('/schedule.php') ?>" aria-label="Market Schedule Page">Schedule</a></li>
+            <li><a href="<?= url_for('/ourvendors.php') ?>" aria-label="Market Vendors Page">Our Vendors</a></li>
+            <li><a href="<?= url_for('/aboutus.php') ?>" aria-label="About the Market">About Us</a></li>
+            <li><a href="<?= url_for('/aboutus.php#contact') ?>" aria-label="Contact us Page">Contact Us</a></li>
 
             <?php if ($session->is_logged_in()) : ?>
               <?php if (!empty($_SESSION['user_level_id'])) : ?>
                 <?php if ($_SESSION['user_level_id'] == 2) : ?>
-                  <li><a href="<?= url_for('/vendor_dash.php') ?>">Dashboard</a></li>
+                  <li><a href="<?= url_for('/vendor_dash.php') ?>" aria-label="Vendor Dashboard">Vendor Dashboard</a></li>
                 <?php elseif ($_SESSION['user_level_id'] == 3) : ?>
-                  <li><a href="<?= url_for('/admin_dash.php') ?>">Dashboard</a></li>
+                  <li><a href="<?= url_for('/admin_dash.php') ?>" aria-label="Admin Dashboard">Admin Dashboard</a></li>
                 <?php elseif ($_SESSION['user_level_id'] == 4) : ?>
-                  <li><a href="<?= url_for('/superadmin_dash.php') ?>">Dashboard</a></li>
+                  <li><a href="<?= url_for('/superadmin_dash.php') ?>" aria-label="Super Admin Dashboard">Admin Dashboard</a></li>
                 <?php else : ?>
-                  <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
+                  <li><a href="<?= url_for('/dashboard.php') ?>" aria-label="User Dashboard">User Dashboard</a></li>
                 <?php endif; ?>
               <?php else : ?>
                 <li><a href="<?= url_for('/dashboard.php') ?>">Dashboard</a></li>
               <?php endif; ?>
 
               <li>
-                <a href="<?= url_for('/logout.php') ?>">
+                <a href="<?= url_for('/logout.php') ?>" aria-label="Log Out">
                   Logout, <?= htmlspecialchars($_SESSION['username'] ?? 'User') ?>
                 </a>
               </li>
 
             <?php else : ?>
-              <li><a href="<?= url_for('/login.php') ?>">Log In</a></li>
+              <li><a href="<?= url_for('/login.php') ?>" aria-label="Log In">Log In</a></li>
             <?php endif; ?>
           </ul>
         </nav>
@@ -94,5 +94,5 @@ if (!isset($page_title)) {
     </div>
   </header>
   <button id="backToTop" aria-label="Back to Top">
-    <img src="img/assets/back-to-top.svg" alt="A back to top button." height="100" width="100">
+    <img src="img/assets/topButton.webp" alt="A back to top button." height="100" width="100" loading="lazy">
   </button>

@@ -3,7 +3,7 @@ $page_title = "Privacy Policy";
 require_once 'private/initialize.php';
 include_once 'private/header.php'; ?>
 
-<body>
+<main role="main">
   <div class="policy-container">
     <h1>Privacy Policy</h1>
     <p>Effective Date: April 7, 2025</p>
@@ -40,5 +40,5 @@ include_once 'private/header.php'; ?>
     <h2>8. Contact</h2>
     <p>If you have questions about this policy, email us at blueridgebounty@support.com.</p>
   </div>
-
-  <?php require_once 'private/footer.php'; ?>
+</main>
+<?php require_once 'private/footer.php'; ?>

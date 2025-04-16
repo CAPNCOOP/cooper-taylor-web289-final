@@ -4,7 +4,7 @@ require_once 'private/initialize.php';
 include_once 'private/header.php';
 ?>
 
-<body>
+<main role="main">
   <div class="policy-container">
     <h1>Terms of Service</h1>
     <p>Effective Date: April 7, 2025</p>
@@ -41,5 +41,6 @@ include_once 'private/header.php';
     <h2>8. Contact</h2>
     <p>For questions about these Terms, contact us at blueridgebounty@support.com.</p>
   </div>
+</main>
 
-  <?php require_once 'private/footer.php'; ?>
+<?php require_once 'private/footer.php'; ?>

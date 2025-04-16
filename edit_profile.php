@@ -23,7 +23,7 @@ if ($user_level == 2) {
 }
 ?>
 
-<main>
+<main role="main">
   <?php require_once 'private/popup_message.php'; ?>
 
   <?php if (isset($_GET['message'])): ?>
@@ -45,7 +45,7 @@ if ($user_level == 2) {
   <?php endif; ?>
 
   <h2>Edit Profile</h2>
-  <form action="process_profile_update.php" method="POST" enctype="multipart/form-data">
+  <form action="process_profile_update.php" method="POST" enctype="multipart/form-data" role="form">
     <fieldset>
       <label for="edit-profile-pic">Choose Profile Photo</label>
 
@@ -54,7 +54,8 @@ if ($user_level == 2) {
         alt="Current Profile Image"
         data-preview="image-preview"
         height="300"
-        width="300">
+        width="300"
+        loading="lazy">
 
       <input type="file"
         id="edit-profile-pic"
@@ -90,7 +91,7 @@ if ($user_level == 2) {
 
     <?php endif; ?>
 
-    <button type="submit">Save Changes</button>
+    <button type="submit" aria-label="Save Profile Changes">Save Changes</button>
   </form>
 </main>
 

@@ -34,7 +34,9 @@ $week_end_formatted = strtoupper(date('M-d-Y', strtotime($market['week_end'] ?? 
           alt="<?= h($vendor->business_name) ?>"
           class="vendor-photo"
           onerror="this.onerror=null;this.src='img/upload/users/default.png';"
-          height="100" width="100">
+          height="100"
+          width="100"
+          loading="lazy">
         <div>
           <strong><?= h($vendor->business_name) ?></strong> -
           <?= h($vendor->city . ", " . $vendor->state_abbr) ?>

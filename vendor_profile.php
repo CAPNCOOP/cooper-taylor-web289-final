@@ -29,14 +29,14 @@ $products = Vendor::fetchProducts($vendor_id);
 <h2><?= h($vendor->business_name) ?></h2>
 <div id="vendor-profile-container">
   <div id="vendor-profile-card">
-    <img src="<?= h($profile_image) ?>" height="250" width="250" alt="A Vendor Image.">
+    <img src="<?= h($profile_image) ?>" height="250" width="250" alt="A Vendor Image." loading="lazy">
     <div>
       <p>"<?= nl2br(h($vendor->vendor_bio)) ?>"</p>
 
       <?php if (isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1): ?>
         <button class="favorite-btn" data-vendor-id="<?= h($vendor->vendor_id) ?>">♡</button>
         <noscript>
-          <form action="favorite_vendor.php" method="POST">
+          <form action="favorite_vendor.php" method="POST" role="form">
             <input type="hidden" name="vendor_id" value="<?= h($vendor->vendor_id) ?>">
             <button type="submit">♡</button>
           </form>
@@ -88,7 +88,7 @@ $products = Vendor::fetchProducts($vendor_id);
     <?php if (!empty($product['name'])): ?>
       <div class="product-card">
         <?php $product_image = !empty($product['product_image']) ? $product['product_image'] : 'default_product.png'; ?>
-        <img src="img/upload/products/<?= h($product_image) ?>" height="250" width="250" alt="Product Image">
+        <img src="img/upload/products/<?= h($product_image) ?>" height="250" width="250" alt="Product Image" loading="lazy">
         <h3><?= h($product['name']) ?></h3>
         <p><strong>Price:</strong> $<?= number_format($product['price'], 2) ?></p>
         <p><strong>Per:</strong> <?= h($product['amount_name'] ?? 'unit') ?></p>

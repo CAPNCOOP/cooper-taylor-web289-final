@@ -101,7 +101,7 @@ if (is_post_request()) {
 ?>
 
 <h2>Edit Product</h2>
-<form action="edit_product.php?id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
+<form action="edit_product.php?id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" role="form">
   <div>
     <fieldset>
       <label for="product_name">Product Name:</label>
@@ -162,7 +162,8 @@ if (is_post_request()) {
         alt="Product Image Preview"
         class="image-preview"
         height="300"
-        width="300">
+        width="300"
+        loading="lazy">
 
       <input type="file"
         id="edit-product-image"

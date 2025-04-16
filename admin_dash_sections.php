@@ -53,7 +53,7 @@
             <td><?= h($vendor->first_name . " " . $vendor->last_name) ?></td>
             <td><?= h($vendor->email) ?></td>
             <td>
-              <form method="POST" action="update_rsvp.php">
+              <form method="POST" action="update_rsvp.php" role="form">
                 <input type="hidden" name="vendor_id" value="<?= h($vendor->vendor_id) ?>">
                 <select name="week_id" required>
                   <option value="">Select a Week</option>
@@ -79,7 +79,7 @@
                   <option value="confirmed" <?= $current_status == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
                   <option value="canceled" <?= $current_status == 'canceled' ? 'selected' : '' ?>>Canceled</option>
                 </select>
-                <button type="submit">Update</button>
+                <button type="submit" aria-label="Change Market Status">Update</button>
               </form>
             </td>
             <td><?= $vendor->is_active ? 'Active' : 'Inactive' ?></td>
@@ -107,7 +107,7 @@
   </div>
 
   <div class="section-content">
-    <form action="/private/auth.php" method="POST" enctype="multipart/form-data">
+    <form action="/private/auth.php" method="POST" enctype="multipart/form-data" role="form">
       <input type="hidden" name="admin_created" value="1">
       <input type="hidden" name="is_vendor" value="1">
       <!-- LEFT SIDE FORM -->
@@ -207,7 +207,8 @@
             alt="Vendor Profile Preview"
             data-preview="image-preview"
             height="300"
-            width="300">
+            width="300"
+            loading="lazy">
 
           <input type="file"
             id="admin-vendor-photo"
@@ -309,7 +310,7 @@
     <h3>Schedule a Market Week</h3>
   </div>
   <div class="section-content">
-    <form action="schedule_market.php" method="POST">
+    <form action="schedule_market.php" method="POST" role="form">
       <fieldset>
         <label for="week_start">Week Start:</label>
         <input type="date" id="week_start" name="week_start" required>
@@ -351,17 +352,17 @@
 
             <td style="display: flex; gap: 0.5rem;">
               <?php if ($week['market_status'] !== 'cancelled'): ?>
-                <form method="POST" action="cancel_market.php" onsubmit="return confirm('Cancel this market week?');">
+                <form method="POST" action="cancel_market.php" onsubmit="return confirm('Cancel this market week?');" role="form">
                   <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
-                  <button type="submit" class="btn btn-warning">Cancel</button>
+                  <button type="submit" class="btn btn-warning" aria-label="Cancel Market">Cancel</button>
                 </form>
               <?php else: ?>
                 <span class="text-muted">Cancelled</span>
               <?php endif; ?>
 
-              <form method="POST" action="delete_market.php" onsubmit="return confirm('Permanently delete this market week? This cannot be undone.');">
+              <form method="POST" action="delete_market.php" onsubmit="return confirm('Permanently delete this market week? This cannot be undone.');" role="form">
                 <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
-                <button type="submit" class="btn btn-danger">Delete</button>
+                <button type="submit" class="btn btn-danger" aria-label="Delete Market">Delete</button>
               </form>
             </td>
           </tr>
@@ -377,10 +378,10 @@
     <h3>Edit Homepage Welcome Message</h3>
   </div>
   <div class="section-content">
-    <form method="POST" action="update_homepage.php">
+    <form method="POST" action="update_homepage.php" role="form">
       <textarea name="content" rows="5" cols="50" required><?= h($homepage_content) ?></textarea>
       <input type="hidden" name="section" value="welcome">
-      <button type="submit">Update Content</button>
+      <button type="submit" aria-label="Update Homepage Content">Update Content</button>
     </form>
   </div>
 </section>

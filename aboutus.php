@@ -4,7 +4,7 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 ?>
 
-<main>
+<main role="main">
   <section>
     <h2>Who We Are...</h2>
     <div>
@@ -46,18 +46,18 @@ require_once 'private/header.php';
       <div class="aboutus-item">
         <h2>Want to join our community?</h2>
         <p>If you're a local <strong>grower, maker, or artisan</strong> with something special to share, we'd love to hear from you. We're always looking for passionate new vendors to join our vibrant market family. Apply today and help us keep the spirit of local thriving — one booth at a time. Whether you're harvesting heirloom tomatoes, baking sourdough at sunrise, or crafting something completely unique, there's a place for you here. Our market isn't just a place to sell — it's a space to connect, share your story, and grow right alongside the community.</p>
-        <a href=<?= url_for('/vendorsignup.php') ?>>Apply Now!</a>
+        <a href=<?= url_for('/vendorsignup.php') ?> aria-label="Apply to be Vendor">Apply Now!</a>
       </div>
 
 
       <div id="contact">
         <h3>Contact Us</h3>
         <div>
-          <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25">
+          <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25" loading="lazy" aria-label="Email Icon">
           <span>support@blueridgebounty.us</span>
         </div>
         <div>
-          <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25">
+          <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25" loading="lazy" aria-label="Phone Icon">
           <span>1-828-874-2689</span>
         </div>
       </div>

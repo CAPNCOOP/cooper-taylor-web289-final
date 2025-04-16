@@ -46,7 +46,7 @@ $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
         <td data-label="Deadline"><?= h(date('M-d-Y', strtotime($week['confirmation_deadline']))) ?></td>
         <td data-label="Action">
           <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
-            <form method="post" action="rsvp_action.php">
+            <form method="post" action="rsvp_action.php" role="form">
               <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
               <select name="status" onchange="this.form.submit()">
                 <option value="planned" <?= ($rsvp_map[$week['week_id']] ?? '') === 'planned' ? 'selected' : '' ?>>Planned</option>

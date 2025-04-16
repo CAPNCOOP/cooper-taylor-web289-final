@@ -22,7 +22,7 @@ $pending_vendors = $admin->fetchPendingVendors();
 
 ?>
 
-<main>
+<main role="main">
   <h2>Welcome, Admin</h2>
   <?php require_once 'private/popup_message.php'; ?>
   <?php require_once 'admin_dash_sections.php'; ?>
