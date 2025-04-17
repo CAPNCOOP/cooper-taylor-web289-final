@@ -57,50 +57,40 @@ if (is_post_request()) {
   $product->product_id = $product_id; // <-- ensure this is locked in
   $product->save();
 
-  // Handle image upload with cropper first
+  // Try Cropper upload first
   $product_file = handle_cropped_upload('cropped-product', 'products', $product->name, $product_id);
+  error_log("🧪 RAW uploaded image filename: " . ($product_file ?? 'null'));
 
-  // Fallback to file input
+
+  // Fallback to raw file input
   if (!$product_file && !empty($_FILES['product_image']['name'])) {
     $product_file = upload_image($_FILES['product_image'], 'products', $product->name, $product_id);
   }
+  error_log("🧪 RAW uploaded image filename: " . ($product_file ?? 'null'));
 
-  error_log("🧠 DEBUG: Current image = " . $current_image);
-  error_log("🧠 DEBUG: New file uploaded = " . ($product_file ?: 'null'));
+  // ✅ If we got a new file, insert/update and remove old one
+  if ($product_file) {
+    $product_image_path = 'products/' . $product_file;
 
-
-  // File successfully uploaded
-  if (!str_starts_with($product_file, 'products/')) {
-    // Prefix only now
-    $product_file = 'products/' . $product_file;
-    $product_file = handle_cropped_upload(...);
-
-    // remove the old image
-    if (!empty($current_image) && $current_image !== 'products/default_product.webp') {
+    // Only delete the old file if it's different from the new one
+    if (
+      !empty($current_image) &&
+      $current_image !== 'products/default_product.webp' &&
+      $current_image !== $product_image_path
+    ) {
       $old_path = __DIR__ . "/img/upload/" . $current_image;
       if (file_exists($old_path)) {
         unlink($old_path);
       }
     }
 
-    // Save new image to database
+    // Save new image path
     $sql = "INSERT INTO product_image (product_id, file_path)
-          VALUES (?, ?)
-          ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
     $stmt = $db->prepare($sql);
-    $stmt->execute([$product_id, $product_file]);
-  } else {
-    // Don't delete old image if upload failed
-    $product_file = $current_image ?? 'products/default_product.webp';
+    $stmt->execute([$product_id, $product_image_path]);
   }
-
-
-  // Insert or update
-  $sql = "INSERT INTO product_image (product_id, file_path)
-  VALUES (?, ?)
-  ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$product_id, $product_file]);
 
   // Tags
   if (!empty($_POST['tags'])) {
@@ -196,7 +186,7 @@ if (is_post_request()) {
       <label class="upload-label" role="button" tabindex="0">
         Product Image
         <img
-          src=src="img/upload/products/<?= h($product['file_path']) ?>"
+          src="img/upload/<?= h($current_image ?? 'products/default_product.webp') ?>"
           alt="Product Preview"
           id="product-preview"
           class="image-preview"

@@ -118,18 +118,17 @@ function upload_image($file, $folder, $name, $id = null)
   $upload_dir = __DIR__ . "/../img/upload/{$folder}/";
 
   if (!file_exists($upload_dir)) {
-    mkdir($upload_dir, 0777, true); // Create folder if it doesn't exist
+    mkdir($upload_dir, 0777, true);
   }
 
   if ($file['error'] === UPLOAD_ERR_OK) {
     $file_type = mime_content_type($file['tmp_name']);
     if (!in_array($file_type, $allowed_types)) {
-      return null; // Invalid file type
+      return null;
     }
 
-    // Force rename based on condition (User or Product)
-    $ext = 'webp'; // Force WebP extension regardless of uploaded file
-    $sanitized_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name)); // Sanitize
+    $ext = 'webp';
+    $sanitized_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name));
 
     $new_filename = $id !== null
       ? "{$sanitized_name}_{$id}.{$ext}"
@@ -137,7 +136,6 @@ function upload_image($file, $folder, $name, $id = null)
 
     $target_path = $upload_dir . $new_filename;
 
-    // Crop Image to 500x500 (Centered Crop)
     $image = imagecreatefromstring(file_get_contents($file['tmp_name']));
     $width = imagesx($image);
     $height = imagesy($image);
@@ -149,13 +147,27 @@ function upload_image($file, $folder, $name, $id = null)
       'height' => 500
     ]);
 
-    imagewebp($cropped_image, $target_path);
+    $save_success = imagewebp($cropped_image, $target_path); // ONLY once
 
     imagedestroy($image);
     imagedestroy($cropped_image);
 
+    if (!$save_success) {
+      error_log("❌ imagewebp failed to save: $target_path");
+      return null;
+    }
+
+    $full_check = $upload_dir . $new_filename;
+    if (!file_exists($full_check)) {
+      error_log("❌ FILE WAS NOT SAVED: $full_check");
+    } else {
+      error_log("✅ FILE IS ON DISK: $full_check");
+    }
+
+    error_log("✅ Saved WebP image to: $target_path");
     return $new_filename;
   }
+
   return null;
 }
 

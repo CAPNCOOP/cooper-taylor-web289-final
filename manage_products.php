@@ -70,10 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_file = 'default_product.webp';
   }
 
-  // Final file path (what will be used in `<img src="...">`)
+  // ✅ Final file path for DB (always includes 'products/')
   $product_image = 'products/' . $product_file;
 
-  // Save filename to database
+  // 🧠 Insert into product_image table (always happens)
   $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?)";
   $stmt = $db->prepare($sql);
   $stmt->execute([$product_id, $product_image]);
@@ -253,7 +253,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php foreach ($products as $product): ?>
       <div class="product-card">
         <h3><?= h($product['name']); ?></h3>
-        <img src="img/upload/<?= h($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image" loading="lazy">
+        <img src="img/upload/<?= h($product['file_path'] ?? 'products/default_product.webp'); ?>" height="150" width="150" alt="Product Image" loading="lazy">
         <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p>
         <p><strong>Per:</strong> <?= h($product['amount_name'] ?? 'unit'); ?></p> <!-- New Line for Amount Offered -->
         <p><?= h($product['description']); ?></p>
