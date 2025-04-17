@@ -30,6 +30,75 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// Cropper Handler
+document.addEventListener('DOMContentLoaded', function () {
+  let cropper;
+
+  const fileInput = document.querySelector('input[type="file"]');
+  const cropperImage = document.getElementById('cropper-image');
+  const cropperModal = document.getElementById('cropper-modal');
+  const confirmBtn = document.getElementById('crop-confirm');
+
+  // Detect context (user or product)
+  let previewTargetId = '';
+  let hiddenInputId = '';
+
+  if (fileInput?.id === 'user-profile-pic') {
+    previewTargetId = 'profile-preview';
+    hiddenInputId = 'cropped-image';
+  } else if (fileInput?.id === 'product-image') {
+    previewTargetId = 'product-preview';
+    hiddenInputId = 'cropped-product';
+  } else {
+    console.warn('No recognized file input present.');
+    return;
+  }
+
+  const previewImage = document.getElementById(previewTargetId);
+  const hiddenInput = document.getElementById(hiddenInputId);
+
+  if (!fileInput || !previewImage || !hiddenInput) {
+    console.warn('Missing key cropper elements.');
+    return;
+  }
+
+  fileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      cropperImage.src = e.target.result;
+      cropperModal.style.display = 'flex';
+
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(cropperImage, {
+        aspectRatio: 1,
+        viewMode: 1,
+        autoCropArea: 1,
+      });
+
+      // Preview original before crop
+      previewImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    cropper.getCroppedCanvas({ width: 500, height: 500 }).toBlob(function (blob) {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        hiddenInput.value = reader.result;
+        cropperModal.style.display = 'none';
+
+        // Update preview with cropped result
+        previewImage.src = reader.result;
+      };
+      reader.readAsDataURL(blob);
+    });
+  });
+});
+
 // Back to top Button
 const backToTopBtn = document.getElementById('backToTop');
 
@@ -62,7 +131,6 @@ let slideIndex = 1;
  *
  * @param {number} n - The index of the slide to display.
  */
-
 function showSlides(n) {
   let slides = document.getElementsByClassName('mySlides');
   let dots = document.getElementsByClassName('dot');
@@ -88,7 +156,6 @@ function showSlides(n) {
  *
  * @param {number} n - The number of slides to move (positive or negative).
  */
-
 function plusSlides(n) {
   showSlides((slideIndex += n));
 }
@@ -96,7 +163,6 @@ function plusSlides(n) {
 /**
  * Enables swipe gestures on the slideshow container for slide navigation.
  */
-
 function addSwipeListeners() {
   const slider = document.querySelector('.slideshow-container'); // Adjust based on your slideshow container
   let touchStartX = 0;
@@ -135,7 +201,6 @@ function addSwipeListeners() {
 }
 
 // sign-up pop-up
-
 document.addEventListener('DOMContentLoaded', function () {
   let signupBtn = document.getElementById('openSignup');
   let closeBtn = document.getElementById('closeSignup');

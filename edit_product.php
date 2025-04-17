@@ -22,6 +22,13 @@ if (!$vendor_id || !isset($_GET['id'])) {
 $product_id = (int) $_GET['id'];
 $product = Product::find_by_id($product_id);
 
+// Get existing product image
+$sql = "SELECT file_path FROM product_image WHERE product_id = ?";
+$stmt = $db->prepare($sql);
+$stmt->execute([$product_id]);
+$image_result = $stmt->fetch(PDO::FETCH_ASSOC);
+$current_image = $image_result['file_path'] ?? 'products/default_product.webp';
+
 if (!$product || $product->vendor_id != $vendor_id) {
   redirect_to('manage_products.php?message=error_unauthorized');
 }
@@ -47,22 +54,53 @@ if (is_post_request()) {
     exit();
   }
 
+  $product->product_id = $product_id; // <-- ensure this is locked in
   $product->save();
 
-  // Image upload
-  if (!empty($_FILES['product_image']['name'])) {
-    $product_image = upload_image($_FILES['product_image'], 'products', $product->name);
+  // Handle image upload with cropper first
+  $product_file = handle_cropped_upload('cropped-product', 'products', $product->name, $product_id);
 
-    if ($product_image) {
-      $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?) 
-              ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
-      $stmt = $db->prepare($sql);
-      $stmt->execute([$product_id, $product_image]);
-    } else {
-      $_SESSION['form_data'] = $_POST;
-      redirect_to("edit_product.php?id=$product_id&message=error_upload");
-    }
+  // Fallback to file input
+  if (!$product_file && !empty($_FILES['product_image']['name'])) {
+    $product_file = upload_image($_FILES['product_image'], 'products', $product->name, $product_id);
   }
+
+  error_log("🧠 DEBUG: Current image = " . $current_image);
+  error_log("🧠 DEBUG: New file uploaded = " . ($product_file ?: 'null'));
+
+
+  // File successfully uploaded
+  if (!str_starts_with($product_file, 'products/')) {
+    // Prefix only now
+    $product_file = 'products/' . $product_file;
+    $product_file = handle_cropped_upload(...);
+
+    // remove the old image
+    if (!empty($current_image) && $current_image !== 'products/default_product.webp') {
+      $old_path = __DIR__ . "/img/upload/" . $current_image;
+      if (file_exists($old_path)) {
+        unlink($old_path);
+      }
+    }
+
+    // Save new image to database
+    $sql = "INSERT INTO product_image (product_id, file_path)
+          VALUES (?, ?)
+          ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$product_id, $product_file]);
+  } else {
+    // Don't delete old image if upload failed
+    $product_file = $current_image ?? 'products/default_product.webp';
+  }
+
+
+  // Insert or update
+  $sql = "INSERT INTO product_image (product_id, file_path)
+  VALUES (?, ?)
+  ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$product_id, $product_file]);
 
   // Tags
   if (!empty($_POST['tags'])) {
@@ -155,26 +193,39 @@ if (is_post_request()) {
 
   <div>
     <fieldset>
-      <label for="edit-product-image">Choose Product Image</label>
-      <?php $image_path = $product->getImagePath(); ?>
+      <label class="upload-label" role="button" tabindex="0">
+        Product Image
+        <img
+          src=src="img/upload/products/<?= h($product['file_path']) ?>"
+          alt="Product Preview"
+          id="product-preview"
+          class="image-preview"
+          width="150"
+          height="150"
+          loading="lazy" />
+        <input
+          type="file"
+          name="product_image"
+          id="product-image"
+          accept="image/*"
+          onchange="previewImage(event)"
+          style="display: none;" />
+      </label>
 
-      <img src="img/upload/products/<?= h($image_path) ?>"
-        alt="Product Image Preview"
-        class="image-preview"
-        height="300"
-        width="300"
-        loading="lazy">
+      <!-- 🔲 Cropping Modal -->
+      <div id="cropper-modal" style="display: none;">
+        <div id="cropper-modal-inner">
+          <img id="cropper-image" src="">
+        </div>
+        <button type="button" id="crop-confirm">Crop & Upload</button>
+      </div>
 
-      <input type="file"
-        id="edit-product-image"
-        name="product_image"
-        class="image-input"
-        data-preview="image-preview"
-        accept="image/png, image/jpeg, image/webp"
-        onchange="previewImage(event)">
+      <input type="hidden" name="cropped-product" id="cropped-product" />
     </fieldset>
 
   </div>
+  <button type="submit">Save Changes</button>
+
 </form>
 
 <?php require_once 'private/footer.php'; ?>

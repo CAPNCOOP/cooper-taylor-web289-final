@@ -54,29 +54,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt = $db->prepare($sql);
   $stmt->execute([$vendor_id, $product_name, $price, $amount_id, $description, $category_id]);
 
-  // Get last inserted product ID
+  // Get last-inserted product ID
   $product_id = $db->lastInsertId();
 
-  // Handle product image upload
-  $product_image = 'img/upload/products/default_product.png';
-  if (!empty($_FILES['product_image']['name'])) {
-    $product_image = upload_image($_FILES['product_image'], 'products', $product_name);
+  // Try Cropper-based image first
+  $product_file = handle_cropped_upload('cropped-product', 'products', $product_name, $product_id);
 
-    // 🚨 **Check if Image Upload Fails**
-    if (!$product_image) {
-      header("Location: manage_products.php?message=error_upload");
-      exit;
-    }
-
-    // Store only filename, not full path
-    $sql = "UPDATE product_image SET file_path = ? WHERE product_id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$product_image, $product_id]);
-
-    $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?)";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$product_id, $product_image]);
+  // Fallback to raw file input if Cropper not used
+  if (!$product_file && !empty($_FILES['product_image']['name'])) {
+    $product_file = upload_image($_FILES['product_image'], 'products', $product_name, $product_id);
   }
+
+  // If nothing got uploaded, assign default product image
+  if (!$product_file) {
+    $product_file = 'default_product.webp';
+  }
+
+  // Final file path (what will be used in `<img src="...">`)
+  $product_image = 'products/' . $product_file;
+
+  // Save filename to database
+  $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?)";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([$product_id, $product_image]);
 
   // Handle custom tags (comma-separated)
   if (!empty($custom_tags)) {
@@ -212,23 +212,35 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <div>
     <fieldset>
-      <label for="create-product-image">Choose Product Image</label>
+      <label class="upload-label" role="button" tabindex="0">
+        Upload Product Image
+        <img
+          src="img/assets/add-photo.svg"
+          alt="Product Preview"
+          id="product-preview"
+          class="image-preview"
+          width="200"
+          height="200"
+          loading="lazy" />
+        <input
+          type="file"
+          name="product_image"
+          id="product-image"
+          accept="image/*"
+          onchange="previewImage(event)"
+          style="display: none;" />
+      </label>
 
-      <img class="image-preview"
-        src="img/assets/add-photo.svg"
-        alt="Product Image Preview"
-        data-preview="image-preview"
-        height="300"
-        width="300"
-        loading="lazy">
+      <!-- 🔲 Cropping Modal -->
+      <div id="cropper-modal" style="display: none;">
+        <div id="cropper-modal-inner">
+          <img id="cropper-image" src="">
+        </div>
+        <button type="button" id="crop-confirm">Crop & Upload</button>
+      </div>
 
-      <input type="file"
-        id="create-product-image"
-        name="product_image"
-        class="image-input"
-        data-preview="image-preview"
-        accept="image/png, image/jpeg, image/webp"
-        onchange="previewImage(event)">
+      <input type="hidden" name="cropped-product" id="cropped-product" />
+
     </fieldset>
 
 
@@ -241,7 +253,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php foreach ($products as $product): ?>
       <div class="product-card">
         <h3><?= h($product['name']); ?></h3>
-        <img src="img/upload/products/<?= h($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image" loading="lazy">
+        <img src="img/upload/<?= h($product['file_path'] ?? 'default_product.png'); ?>" height="150" width="150" alt="Product Image" loading="lazy">
         <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p>
         <p><strong>Per:</strong> <?= h($product['amount_name'] ?? 'unit'); ?></p> <!-- New Line for Amount Offered -->
         <p><?= h($product['description']); ?></p>
@@ -255,4 +267,5 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php endif; ?>
 </div>
 
+<script src="js/cropper-handler.js"></script>
 <?php require_once 'private/footer.php'; ?>

@@ -24,7 +24,7 @@ require_once 'private/header.php';
 
     <input type="hidden" name="login" value="1">
 
-    <img src="/img/upload/users/default.png" alt="A stylized user icon." height="250" width="250" loading="lazy">
+    <img src="/img/upload/users/default.webp" alt="A stylized user icon." height="250" width="250" loading="lazy">
     <fieldset>
       <label for="login-username"></label>
       <input type="text" id="login-username" name="username" placeholder="Username" aria-label="Username" required>

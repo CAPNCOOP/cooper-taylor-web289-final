@@ -1337,6 +1337,28 @@ div#vendorhead {
   height: 100px;
 }
 
+#cropper-modal {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 9999;
+}
+
+#cropper-modal-inner {
+  background: #fff;
+  border-radius: 10px;
+  max-height: 80vh;
+  max-width: 600px;
+  overflow: auto;
+  padding: 20px;
+}
+
 /* Hide the default file input appearance */
 .image-input {
   height: 0.1px;
@@ -1348,17 +1370,14 @@ div#vendorhead {
 }
 
 /* Style the label that will act as button */
-label[for^='user-'],
-label[for^='vendor-'],
-label[for^='edit-'],
-label[for^='create-'],
-label[for^='admin-'] {
+.upload-label {
   background-color: var(--secondary-color);
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: var(--light);
   cursor: pointer;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   font: 18px var(--secondary-text);
   margin: 0.5rem;
   padding: 10px 15px;
@@ -1367,11 +1386,7 @@ label[for^='admin-'] {
 }
 
 /* Hover effect */
-label[for^='user-']:hover,
-label[for^='vendor-']:hover,
-label[for^='edit-']:hover,
-label[for^='create-']:hover,
-label[for^='admin-']:hover {
+.upload-label {
   opacity: 0.7;
   transform: translateY(-3px);
 }

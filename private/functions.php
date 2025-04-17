@@ -112,7 +112,7 @@ function is_get_request()
  * @param string $name The desired filename base (will be sanitized).
  * @return string|null The new filename if successful, or null on failure.
  */
-function upload_image($file, $folder, $name)
+function upload_image($file, $folder, $name, $id = null)
 {
   $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
   $upload_dir = __DIR__ . "/../img/upload/{$folder}/";
@@ -128,10 +128,13 @@ function upload_image($file, $folder, $name)
     }
 
     // Force rename based on condition (User or Product)
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $ext = 'webp'; // Force WebP extension regardless of uploaded file
     $sanitized_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name)); // Sanitize
 
-    $new_filename = "{$sanitized_name}.{$ext}"; // FINAL name format
+    $new_filename = $id !== null
+      ? "{$sanitized_name}_{$id}.{$ext}"
+      : "{$sanitized_name}.{$ext}";
+
     $target_path = $upload_dir . $new_filename;
 
     // Crop Image to 500x500 (Centered Crop)
@@ -146,22 +149,44 @@ function upload_image($file, $folder, $name)
       'height' => 500
     ]);
 
-    switch ($file_type) {
-      case 'image/jpeg':
-        imagejpeg($cropped_image, $target_path);
-        break;
-      case 'image/png':
-        imagepng($cropped_image, $target_path);
-        break;
-      case 'image/webp':
-        imagewebp($cropped_image, $target_path);
-        break;
-    }
+    imagewebp($cropped_image, $target_path);
 
     imagedestroy($image);
     imagedestroy($cropped_image);
 
     return $new_filename;
+  }
+  return null;
+}
+
+/**
+ * Handles base64-encoded image upload from Cropper.js
+ *
+ * @param string $field The POST key (e.g., 'cropped-image', 'cropped-product')
+ * @param string $folder The subfolder to save into (e.g., 'users', 'products')
+ * @param string $name The sanitized base name for the file
+ * @return string|null The uploaded file name or null on failure
+ */
+function handle_cropped_upload(string $field, string $folder, string $name, $id = "null"): ?string
+{
+  if (!empty($_POST[$field])) {
+    $image_parts = explode(',', $_POST[$field]);
+    if (count($image_parts) === 2) {
+      $decoded = base64_decode($image_parts[1]);
+      $tmp = tempnam(sys_get_temp_dir(), 'crop_');
+      file_put_contents($tmp, $decoded);
+
+      $fake = [
+        'name' => strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name)) . '.webp',
+        'tmp_name' => $tmp,
+        'type' => 'image/webp',
+        'error' => UPLOAD_ERR_OK,
+      ];
+
+      $file = upload_image($fake, $folder, $name, $id);
+      unlink($tmp);
+      return $file;
+    }
   }
   return null;
 }

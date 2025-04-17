@@ -44,23 +44,36 @@ unset($_SESSION['form_data']);
 
     <div>
       <fieldset>
-        <label for="user-profile-pic">Choose Profile Photo</label>
+        <label class="upload-label" tabindex="0" role="button" for="user-profile-pic" aria-label="Upload Profile Photo">
+          Upload Profile Photo
+          <img
+            src="img/assets/add-photo.svg"
+            alt="Profile Photo Preview"
+            id="profile-preview"
+            class="image-preview"
+            width="200"
+            height="200"
+            loading="lazy" />
+          <input
+            type="file"
+            name="profile-pic"
+            id="user-profile-pic"
+            accept="image/*"
+            onchange="previewImage(event)"
+            style="display: none;" />
+        </label>
 
-        <img class="image-preview"
-          src="img/assets/add-photo.svg"
-          alt="User Profile Preview"
-          data-preview="image-preview"
-          height="300"
-          width="300"
-          loading="lazy">
+        <!-- Cropping Modal -->
+        <div id="cropper-modal" style="display: none;">
+          <div id="cropper-modal-inner">
+            <img id="cropper-image" src="">
+          </div>
+          <button type="button" id="crop-confirm">Crop & Upload</button>
+        </div>
 
-        <input type="file"
-          id="user-profile-pic"
-          name="profile-pic"
-          class="image-input"
-          data-preview="image-preview"
-          accept="image/png, image/jpeg, image/webp"
-          onchange="previewImage(event)">
+        <!-- Hidden input (Base64) for the final image -->
+        <input type="hidden" name="cropped-image" id="cropped-image">
+
       </fieldset>
 
       <div>
@@ -73,4 +86,5 @@ unset($_SESSION['form_data']);
   </form>
 </main>
 
+<script src="js/cropper-handler.js"></script>
 <?php require_once 'private/footer.php'; ?>

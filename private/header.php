@@ -14,6 +14,8 @@ if (!isset($page_title)) {
   <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/js/script.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 
@@ -44,7 +46,7 @@ if (!isset($page_title)) {
                 <?php elseif ($_SESSION['user_level_id'] == 3) : ?>
                   <li><a href="<?= url_for('/admin_dash.php') ?>" aria-label="Admin Dashboard">Admin Dashboard</a></li>
                 <?php elseif ($_SESSION['user_level_id'] == 4) : ?>
-                  <li><a href="<?= url_for('/superadmin_dash.php') ?>" aria-label="Super Admin Dashboard">Admin Dashboard</a></li>
+                  <li><a href="<?= url_for('/superadmin_dash.php') ?>" aria-label="Super Admin Dashboard">Super Admin Dashboard</a></li>
                 <?php else : ?>
                   <li><a href="<?= url_for('/dashboard.php') ?>" aria-label="User Dashboard">User Dashboard</a></li>
                 <?php endif; ?>
