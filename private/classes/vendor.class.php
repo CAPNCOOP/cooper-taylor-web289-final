@@ -109,16 +109,55 @@ class Vendor extends User
    */
   public static function fetchProducts($vendor_id): array
   {
-    $sql = "SELECT p.*, a.amount_name, pi.file_path AS product_image
-            FROM product p
-            LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
-            LEFT JOIN product_image pi ON p.product_id = pi.product_id
-            WHERE p.vendor_id = ?";
-
+    // First fetch products
+    $sql = "
+      SELECT 
+        p.*,
+        a.amount_name,
+        pi.file_path AS product_image
+      FROM product p
+      LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
+      LEFT JOIN product_image pi ON p.product_id = pi.product_id
+      WHERE p.vendor_id = ?
+    ";
     $stmt = self::$db->prepare($sql);
     $stmt->execute([$vendor_id]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Get all product IDs
+    $product_ids = array_column($products, 'product_id');
+    if (empty($product_ids)) {
+      return $products;
+    }
+
+    // Fetch all tags for those products
+    $in = str_repeat('?,', count($product_ids) - 1) . '?';
+    $tag_sql = "
+      SELECT 
+        ptm.product_id, 
+        pt.tag_name
+      FROM product_tag_map ptm
+      JOIN product_tag pt ON ptm.tag_id = pt.tag_id
+      WHERE ptm.product_id IN ($in)
+    ";
+    $stmt = self::$db->prepare($tag_sql);
+    $stmt->execute($product_ids);
+    $tag_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Group tags by product_id
+    $tag_map = [];
+    foreach ($tag_rows as $row) {
+      $tag_map[$row['product_id']][] = $row['tag_name'];
+    }
+
+    // Attach tags to each product
+    foreach ($products as &$product) {
+      $product['tags'] = $tag_map[$product['product_id']] ?? [];
+    }
+
+    return $products;
   }
+
 
   /**
    * Retrieves the vendor's next 5 upcoming confirmed market weeks.

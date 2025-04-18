@@ -116,24 +116,26 @@ unset($_SESSION['form_data']);
 
       <div>
         <fieldset>
-          <label for="user-profile-pic">Choose Profile Photo</label>
+          <label class="upload-label" tabindex="0" role="button" for="user-profile-pic" aria-label="Upload Profile Photo">
+            Upload Profile Photo
 
-          <img class="image-preview"
-            id="profile-preview"
-            src="img/assets/add-photo.svg"
-            alt="Vendor Profile Preview"
-            data-preview="image-preview"
-            height="300"
-            width="300"
-            loading="lazy">
+            <img class="image-preview"
+              id="profile-preview"
+              src="img/assets/add-photo.svg"
+              alt="Vendor Profile Preview"
+              data-preview="image-preview"
+              height="300"
+              width="300"
+              loading="lazy">
 
-          <input type="file"
-            id="user-profile-pic"
-            name="profile_image"
-            class="image-input"
-            data-preview="image-preview"
-            accept="image/png, image/jpeg, image/webp"
-            onchange="previewImage(event)">
+            <input type="file"
+              id="user-profile-pic"
+              name="profile_image"
+              class="image-input"
+              data-preview="image-preview"
+              accept="image/png, image/jpeg, image/webp"
+              onchange="previewImage(event)">
+          </label>
         </fieldset>
 
         <div id="cropper-modal" style="display: none;">

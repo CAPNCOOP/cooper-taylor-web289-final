@@ -415,3 +415,65 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+// Product Modal Handler
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('product-modal');
+  const closeModal = modal.querySelector('.modal-close');
+
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const data = JSON.parse(card.dataset.product);
+      console.log(data);
+
+      document.getElementById('modal-product-image').src = 'img/upload/' + data.image;
+      document.getElementById('modal-product-name').textContent = data.name;
+      document.getElementById('modal-product-price').textContent = data.price;
+      document.getElementById('modal-product-amount').textContent = data.amount;
+      document.getElementById('modal-product-description').textContent = data.description;
+      document.getElementById('modal-product-category').textContent = data.category;
+
+      const tagWrapper = document.getElementById('modal-product-tags-wrapper');
+      const tagField = document.getElementById('modal-product-tags');
+      tagField.innerHTML = ''; // Clear previous
+
+      if (Array.isArray(data.tags) && data.tags.length > 0) {
+        tagWrapper.style.display = 'block';
+
+        data.tags.forEach(tag => {
+          if (tag.trim()) {
+            const tagEl = document.createElement('span');
+            tagEl.classList.add('tag');
+            tagEl.textContent = tag.trim();
+            tagField.appendChild(tagEl);
+          }
+        });
+      } else {
+        tagWrapper.style.display = 'none';
+      }
+
+      tagField.innerHTML = ''; // Clear existing tags
+
+      data.tags.forEach(tag => {
+        if (tag.trim()) {
+          const tagEl = document.createElement('span');
+          tagEl.classList.add('tag');
+          tagEl.textContent = tag.trim();
+          tagField.appendChild(tagEl);
+        }
+      });
+
+      modal.style.display = 'flex';
+    });
+  });
+
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', e => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});

@@ -29,25 +29,27 @@ if ($user_level == 2) {
   <h2>Edit Profile</h2>
   <form action="process_profile_update.php" method="POST" enctype="multipart/form-data" role="form">
     <fieldset>
-      <label for="user-profile-pic">Choose Profile Photo</label>
+      <label class="upload-label" tabindex="0" role="button" for="user-profile-pic" aria-label="Upload Profile Photo">
 
-      <img class="image-preview"
-        id="profile-preview"
-        src="<?= h('img/upload/' . $user->getImagePath()) ?>"
-        alt="Current Profile Image"
-        data-preview="image-preview"
-        height="300"
-        width="300"
-        loading="lazy">
+        Upload Profile Photo
 
-      <input type="file"
-        id="user-profile-pic"
-        name="profile_image"
-        class="image-input"
-        data-preview="image-preview"
-        accept="image/png, image/jpeg, image/webp"
-        onchange="previewImage(event)">
+        <img class="image-preview"
+          id="profile-preview"
+          src="<?= h('img/upload/' . $user->getImagePath()) ?>"
+          alt="Current Profile Image"
+          data-preview="image-preview"
+          height="300"
+          width="300"
+          loading="lazy">
 
+        <input type="file"
+          id="user-profile-pic"
+          name="profile_image"
+          class="image-input"
+          data-preview="image-preview"
+          accept="image/png, image/jpeg, image/webp"
+          onchange="previewImage(event)">
+      </label>
     </fieldset>
 
     <div id="cropper-modal" style="display: none;">

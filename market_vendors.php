@@ -24,22 +24,21 @@ $week_end_formatted = strtoupper(date('M-d-Y', strtotime($market['week_end'] ?? 
 <ul class="week-vendor">
   <?php foreach ($vendors as $vendor): ?>
     <?php
-    $profile_photo = !empty($vendor->profile_photo)
-      ? '/' . ltrim($vendor->profile_photo, '/')
-      : 'img/upload/users/default-profile.png';
+    $profile_path = $vendor->profile_photo && file_exists(__DIR__ . '/../img/upload/' . $vendor->profile_photo)
+      ? 'img/upload/' . ltrim($vendor->profile_photo, '/')
+      : 'img/upload/users/default.webp';
     ?>
     <li class="vendor-item">
       <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>">
-        <img src="<?= h($profile_photo) ?>"
-          alt="<?= h($vendor->business_name) ?>"
+        <img
+          src="<?= h($profile_path) ?>"
+          alt="Photo of <?= h($vendor->business_name) ?>"
           class="vendor-photo"
-          onerror="this.onerror=null;this.src='img/upload/users/default.png';"
           height="100"
           width="100"
           loading="lazy">
         <div>
-          <strong><?= h($vendor->business_name) ?></strong> -
-          <?= h($vendor->city . ", " . $vendor->state_abbr) ?>
+          <strong><?= h($vendor->business_name) ?></strong> – <?= h($vendor->city . ", " . $vendor->state_abbr) ?>
           <p><?= nl2br(h($vendor->vendor_bio)) ?></p>
         </div>
       </a>

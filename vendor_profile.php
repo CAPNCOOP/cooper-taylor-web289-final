@@ -86,16 +86,51 @@ $products = Vendor::fetchProducts($vendor_id);
 <div class="product-list">
   <?php foreach ($products as $product): ?>
     <?php if (!empty($product['name'])): ?>
-      <div class="product-card">
-        <?php $product_image = !empty($product['product_image']) ? $product['product_image'] : 'default_product.png'; ?>
-        <img src="img/upload/products/<?= h($product_image) ?>" height="250" width="250" alt="Product Image" loading="lazy">
+      <div class="product-card" data-product='<?= htmlspecialchars(json_encode([
+                                                'id' => $product['product_id'],
+                                                'name' => $product['name'],
+                                                'price' => number_format($product['price'], 2),
+                                                'amount' => $product['amount_name'] ?? 'unit',
+                                                'description' => $product['description'],
+                                                'image' => $product['product_image'] ?? 'products/default_product.webp',
+                                                'category' => $product['category_name'] ?? 'Uncategorized',
+                                                'tags' => $product['tags'] ?? []
+                                              ]), ENT_QUOTES, 'UTF-8') ?>'>
+        <a href="show_product.php?product_id=<?= h($product['product_id']) ?>" class="card-overlay-link" aria-label="View Full Product Page"></a>
+        <?php
+        $product_image = !empty($product['product_image'])
+          ? h($product['product_image'])
+          : 'default_product.webp';
+        ?>
+
+        <img src="/img/upload/<?= $product_image ?>"
+          height="250"
+          width="250"
+          alt="Product Image"
+          loading="lazy" />
+
         <h3><?= h($product['name']) ?></h3>
-        <p><strong>Price:</strong> $<?= number_format($product['price'], 2) ?></p>
-        <p><strong>Per:</strong> <?= h($product['amount_name'] ?? 'unit') ?></p>
-        <p><?= nl2br(h($product['description'])) ?></p>
       </div>
     <?php endif; ?>
   <?php endforeach; ?>
+</div>
+
+
+<!-- Product Modal -->
+<div id="product-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-content">
+    <button class="modal-close" aria-label="Close">&times;</button>
+    <img id="modal-product-image" src="" alt="Product Image" height="300" width="300" loading="lazy" />
+    <h2 id="modal-product-name"></h2>
+    <p><strong>Price:</strong> $<span id="modal-product-price"></span></p>
+    <p><strong>Per:</strong> <span id="modal-product-amount"></span></p>
+    <p id="modal-product-description"></p>
+    <p><strong>Category:</strong> <span id="modal-product-category"></span></p>
+    <p id="modal-product-tags-wrapper" style="display: none;">
+      <strong>Tags:</strong>
+      <span id="modal-product-tags"></span>
+    </p>
+  </div>
 </div>
 
 <?php require_once 'private/footer.php'; ?>

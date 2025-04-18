@@ -51,8 +51,8 @@ unset($_SESSION['form_data']);
             alt="Profile Photo Preview"
             id="profile-preview"
             class="image-preview"
-            width="200"
-            height="200"
+            width="250"
+            height="250"
             loading="lazy" />
           <input
             type="file"

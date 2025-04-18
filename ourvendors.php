@@ -4,17 +4,14 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
 
-// Pagination setup
 $itemsPerPage = 12;
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = (int)($_GET['page'] ?? 1);
 $offset = ($page - 1) * $itemsPerPage;
 $searchTerm = $_GET['search'] ?? '';
 
-// Fetch vendors using OOP
 $vendors = Vendor::fetchApprovedVendorsWithTags($offset, $itemsPerPage, $searchTerm);
 $totalVendors = Vendor::countApprovedVendors($searchTerm);
 $totalPages = ceil($totalVendors / $itemsPerPage);
-
 ?>
 
 <div id="vendorhead">
@@ -25,29 +22,22 @@ $totalPages = ceil($totalVendors / $itemsPerPage);
   </form>
 </div>
 
-<div class="pagination">
-  <?php if ($page > 1): ?>
-    <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($searchTerm) ?>" aria-label="Previous Page">&laquo; Prev</a>
-  <?php endif; ?>
-
-  <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-    <a href="?page=<?= $i ?>&search=<?= urlencode($searchTerm) ?>" class="<?= $i === $page ? 'active' : '' ?>" aria-label="Total Pages">
-      <?= $i ?>
-    </a>
-  <?php endfor; ?>
-
-  <?php if ($page < $totalPages): ?>
-    <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($searchTerm) ?>" aria-label="Next Page">Next &raquo;</a>
-  <?php endif; ?>
-</div>
+<?php include 'private/pagination.php'; ?>
 
 <div id="vendor-list">
   <?php if (!empty($vendors)): ?>
     <?php foreach ($vendors as $vendor): ?>
       <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>" aria-label="View Vendor Profile">
         <div class="vendor-card"
-          data-tags="<?= h(implode(', ', array_filter([$vendor->product_tags, $vendor->market_weeks, $vendor->state_abbrs, $vendor->state_names, $vendor->cities]))) ?>">
-          <div><img src="<?= h($vendor->profile_image ?? 'default.png') ?>" alt="Vendor Image" loading="lazy"></div>
+          data-tags="<?= h(implode(', ', array_filter([
+                        $vendor->product_tags,
+                        $vendor->market_weeks,
+                        $vendor->state_abbrs,
+                        $vendor->state_names,
+                        $vendor->cities
+                      ]))) ?>">
+          <div><img src="img/upload/<?= h($vendor->profile_image ?? 'users/default.webp') ?>" alt="Profile Image">
+          </div>
           <div>
             <h2><?= h($vendor->business_name) ?>, <?= h($vendor->state_abbrs) ?></h2>
           </div>
@@ -59,20 +49,5 @@ $totalPages = ceil($totalVendors / $itemsPerPage);
   <?php endif; ?>
 </div>
 
-<div class="pagination">
-  <?php if ($page > 1): ?>
-    <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($searchTerm) ?>" aria-label="Previous Page">&laquo; Prev</a>
-  <?php endif; ?>
-
-  <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-    <a href="?page=<?= $i ?>&search=<?= urlencode($searchTerm) ?>" class="<?= $i === $page ? 'active' : '' ?>" aria-label="Total Pages">
-      <?= $i ?>
-    </a>
-  <?php endfor; ?>
-
-  <?php if ($page < $totalPages): ?>
-    <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($searchTerm) ?>" aria-label="Next Page">Next &raquo;</a>
-  <?php endif; ?>
-</div>
-
+<?php include 'private/pagination.php'; ?>
 <?php require_once 'private/footer.php'; ?>

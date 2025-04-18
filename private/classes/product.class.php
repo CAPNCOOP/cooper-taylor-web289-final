@@ -69,4 +69,27 @@ class Product extends DatabaseObject
 
     return $result['file_path'] ?? 'default_product.png';
   }
+
+  public static function findById($id)
+  {
+    $sql = "SELECT p.*, c.category_name, a.amount_name
+            FROM product p
+            LEFT JOIN category c ON p.category_id = c.category_id
+            LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
+            WHERE p.product_id = ?";
+    $stmt = self::$db->prepare($sql);
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
+  public static function fetchTags($product_id)
+  {
+    $sql = "SELECT t.tag_name
+            FROM product_tag_map m
+            JOIN product_tag t ON m.tag_id = t.tag_id
+            WHERE m.product_id = ?";
+    $stmt = self::$db->prepare($sql);
+    $stmt->execute([$product_id]);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+  }
 }
