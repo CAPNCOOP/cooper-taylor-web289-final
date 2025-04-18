@@ -115,6 +115,7 @@ function is_get_request()
 function upload_image($file, $folder, $name, $id = null)
 {
   $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
+  $rejected_types = ['image/svg+xml', 'image/x-icon'];
   $upload_dir = __DIR__ . "/../img/upload/{$folder}/";
 
   if (!file_exists($upload_dir)) {
@@ -122,21 +123,55 @@ function upload_image($file, $folder, $name, $id = null)
   }
 
   if ($file['error'] === UPLOAD_ERR_OK) {
-    $file_type = mime_content_type($file['tmp_name']);
-    if (!in_array($file_type, $allowed_types)) {
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $file_type = $finfo->file($file['tmp_name']);
+    $ext_check = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+    // 🔒 Reject MIME or known bad extensions
+    if (in_array($file_type, $rejected_types) || !in_array($file_type, $allowed_types)) {
+      $_SESSION['message'] = "❌ Invalid image type. Please upload JPG, PNG, or WebP.";
+      return null;
+    }
+
+    if (in_array($ext_check, ['svg', 'ico'])) {
+      $_SESSION['message'] = "❌ Invalid file extension. Please upload JPG, PNG, or WebP.";
+      return null;
+    }
+
+    // 🛡️ Validate actual GD image resource
+    try {
+      /** @var GdImage|false $image */
+      switch ($file_type) {
+        case 'image/jpeg':
+          $image = @imagecreatefromjpeg($file['tmp_name']);
+          break;
+        case 'image/png':
+          $image = @imagecreatefrompng($file['tmp_name']);
+          break;
+        case 'image/webp':
+          $image = @imagecreatefromwebp($file['tmp_name']);
+          break;
+        default:
+          $image = false;
+      }
+
+      if (!$image) {
+        throw new Exception("Invalid GD resource — not a proper image.");
+      }
+    } catch (Exception $e) {
+      $_SESSION['message'] = "❌ Could not process image. Please upload a valid JPG, PNG, or WebP.";
       return null;
     }
 
     $ext = 'webp';
     $sanitized_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name));
-
     $new_filename = $id !== null
       ? "{$sanitized_name}_{$id}.{$ext}"
       : "{$sanitized_name}.{$ext}";
 
     $target_path = $upload_dir . $new_filename;
 
-    $image = imagecreatefromstring(file_get_contents($file['tmp_name']));
+    // 🖼️ Convert to 500x500 webp
     $width = imagesx($image);
     $height = imagesy($image);
     $size = min($width, $height);
@@ -147,24 +182,15 @@ function upload_image($file, $folder, $name, $id = null)
       'height' => 500
     ]);
 
-    $save_success = imagewebp($cropped_image, $target_path); // ONLY once
+    $save_success = imagewebp($cropped_image, $target_path);
 
     imagedestroy($image);
     imagedestroy($cropped_image);
 
     if (!$save_success) {
-      error_log("❌ imagewebp failed to save: $target_path");
       return null;
     }
 
-    $full_check = $upload_dir . $new_filename;
-    if (!file_exists($full_check)) {
-      error_log("❌ FILE WAS NOT SAVED: $full_check");
-    } else {
-      error_log("✅ FILE IS ON DISK: $full_check");
-    }
-
-    error_log("✅ Saved WebP image to: $target_path");
     return $new_filename;
   }
 
@@ -179,19 +205,24 @@ function upload_image($file, $folder, $name, $id = null)
  * @param string $name The sanitized base name for the file
  * @return string|null The uploaded file name or null on failure
  */
-function handle_cropped_upload(string $field, string $folder, string $name, $id = "null"): ?string
+function handle_cropped_upload(string $field, string $folder, string $name, $id = null): ?string
 {
   if (!empty($_POST[$field])) {
     $image_parts = explode(',', $_POST[$field]);
+
     if (count($image_parts) === 2) {
       $decoded = base64_decode($image_parts[1]);
       $tmp = tempnam(sys_get_temp_dir(), 'crop_');
       file_put_contents($tmp, $decoded);
 
+      // Validate MIME using finfo (optional but solid)
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $mime = $finfo->file($tmp);
+
       $fake = [
         'name' => strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name)) . '.webp',
         'tmp_name' => $tmp,
-        'type' => 'image/webp',
+        'type' => $mime,
         'error' => UPLOAD_ERR_OK,
       ];
 
@@ -200,6 +231,7 @@ function handle_cropped_upload(string $field, string $folder, string $name, $id 
       return $file;
     }
   }
+
   return null;
 }
 

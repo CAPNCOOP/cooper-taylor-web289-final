@@ -3,6 +3,7 @@ $page_title = "Edit Product";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
+require_once 'private/popup_message.php';
 $form_data = $_SESSION['form_data'] ?? [];
 unset($_SESSION['form_data']);
 require_login();
@@ -16,7 +17,9 @@ $vendor = Vendor::find_by_user_id($_SESSION['user_id']);
 $vendor_id = $vendor?->vendor_id ?? null;
 
 if (!$vendor_id || !isset($_GET['id'])) {
-  redirect_to('manage_products.php?message=error_invalid_product');
+  $session->message("❌ Error: Invalid product selected.");
+  redirect_to('manage_products.php');
+  exit;
 }
 
 $product_id = (int) $_GET['id'];
@@ -30,7 +33,9 @@ $image_result = $stmt->fetch(PDO::FETCH_ASSOC);
 $current_image = $image_result['file_path'] ?? 'products/default_product.webp';
 
 if (!$product || $product->vendor_id != $vendor_id) {
-  redirect_to('manage_products.php?message=error_unauthorized');
+  $session->message("❌ Error: You do not have permission to edit this product.");
+  redirect_to('manage_products.php');
+  exit;
 }
 
 // Fetch existing product tags
@@ -50,52 +55,60 @@ if (is_post_request()) {
 
   if (empty($product->name) || empty($product->price) || empty($product->description)) {
     $_SESSION['form_data'] = $_POST;
-    redirect_to("edit_product.php?id=$product_id&message=error_empty_fields");
-    exit();
+    $session->message("❌ Error: All fields must be filled.");
+    redirect_to("edit_product.php?id=$product_id");
+    exit;
   }
 
-  $product->product_id = $product_id; // <-- ensure this is locked in
+  $product->product_id = $product_id;
   $product->save();
 
-  // Try Cropper upload first
   $product_file = handle_cropped_upload('cropped-product', 'products', $product->name, $product_id);
-  error_log("🧪 RAW uploaded image filename: " . ($product_file ?? 'null'));
 
-
-  // Fallback to raw file input
   if (!$product_file && !empty($_FILES['product_image']['name'])) {
     $product_file = upload_image($_FILES['product_image'], 'products', $product->name, $product_id);
   }
-  error_log("🧪 RAW uploaded image filename: " . ($product_file ?? 'null'));
 
-  // ✅ If we got a new file, insert/update and remove old one
+  if (!$product_file && !empty($_FILES['product_image']['name'])) {
+    $_SESSION['form_data'] = $_POST;
+    $session->message("❌ Invalid image type. Please upload JPG, PNG, or WebP.");
+    redirect_to("edit_product.php?id=$product_id");
+    exit;
+  }
+
   if ($product_file) {
     $product_image_path = 'products/' . $product_file;
 
-    // Only delete the old file if it's different from the new one
-    if (
-      !empty($current_image) &&
-      $current_image !== 'products/default_product.webp' &&
-      $current_image !== $product_image_path
-    ) {
+    if (!empty($current_image) && $current_image !== 'products/default_product.webp' && $current_image !== $product_image_path) {
       $old_path = __DIR__ . "/img/upload/" . $current_image;
       if (file_exists($old_path)) {
         unlink($old_path);
       }
     }
 
-    // Save new image path
     $sql = "INSERT INTO product_image (product_id, file_path)
             VALUES (?, ?)
             ON DUPLICATE KEY UPDATE file_path = VALUES(file_path)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$product_id, $product_image_path]);
+  } elseif (!$product_file && !empty($current_image) && $product->name !== basename($current_image, ".webp")) {
+    $ext = pathinfo($current_image, PATHINFO_EXTENSION);
+    $sanitized_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $product->name));
+    $new_filename = "products/{$sanitized_name}_{$product_id}.{$ext}";
+    $new_path = __DIR__ . "/img/upload/" . $new_filename;
+    $old_path = __DIR__ . "/img/upload/" . $current_image;
+
+    if (file_exists($old_path)) {
+      rename($old_path, $new_path);
+
+      $sql = "UPDATE product_image SET file_path = ? WHERE product_id = ?";
+      $stmt = $db->prepare($sql);
+      $stmt->execute([$new_filename, $product_id]);
+    }
   }
 
-  // Tags
   if (!empty($_POST['tags'])) {
     $tags = explode(',', strtolower($_POST['tags']));
-
     $sql = "DELETE FROM product_tag_map WHERE product_id = ?";
     $stmt = $db->prepare($sql);
     $stmt->execute([$product_id]);
@@ -124,7 +137,9 @@ if (is_post_request()) {
     }
   }
 
-  redirect_to("manage_products.php?message=product_updated");
+  $session->message("✅ Product updated successfully!");
+  redirect_to("manage_products.php");
+  exit;
 }
 ?>
 
@@ -197,12 +212,11 @@ if (is_post_request()) {
           type="file"
           name="product_image"
           id="product-image"
-          accept="image/*"
+          accept="image/png, image/jpeg, image/webp"
           onchange="previewImage(event)"
           style="display: none;" />
       </label>
 
-      <!-- 🔲 Cropping Modal -->
       <div id="cropper-modal" style="display: none;">
         <div id="cropper-modal-inner">
           <img id="cropper-image" src="">
@@ -215,7 +229,6 @@ if (is_post_request()) {
 
   </div>
   <button type="submit">Save Changes</button>
-
 </form>
 
 <?php require_once 'private/footer.php'; ?>

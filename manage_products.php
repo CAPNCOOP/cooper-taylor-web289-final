@@ -44,7 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $custom_tags = strtolower(trim($_POST['custom_tags'] ?? '')); // Convert to lowercase
 
   if (empty($product_name) || empty($price) || empty($amount_id) || empty($description)) {
-    header("Location: manage_products.php?message=error_empty_fields");
+    $session->message("❌ Error: All fields must be filled.");
+    header("Location: manage_products.php");
     exit;
   }
 
@@ -65,9 +66,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_file = upload_image($_FILES['product_image'], 'products', $product_name, $product_id);
   }
 
+  // If image upload failed due to invalid file type
+  if (!$product_file && !empty($_FILES['product_image']['name'])) {
+    $_SESSION['form_data'] = $_POST;
+    $session->message("❌ Invalid image type. Please upload JPG, PNG, or WebP.");
+    header("Location: manage_products.php");
+    exit;
+  }
+
   // If nothing got uploaded, assign default product image
   if (!$product_file) {
-    $product_file = 'default_product.webp';
+    $_SESSION['form_data'] = $_POST;
+    header("Location: manage_products.php");
+    exit;
   }
 
   // ✅ Final file path for DB (always includes 'products/')
@@ -108,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 
-  header("Location: manage_products.php?message=product_added");
+  $session->message("✅ Product added successfully!");
+  header("Location: manage_products.php");
   exit;
 }
 
@@ -125,43 +137,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php require_once 'private/popup_message.php'; ?>
-
-<?php if (isset($_GET['message'])): ?>
-  <div class="feedback-popup">
-    <?php
-    switch ($_GET['message']) {
-      case 'product_added':
-        echo "✅ Product added successfully!";
-        break;
-      case 'product_updated':
-        echo "✅ Product updated successfully!";
-        break;
-      case 'product_deleted':
-        echo "✅ Product deleted successfully!";
-        break;
-      case 'error_empty_fields':
-        echo "❌ Error: All fields must be filled.";
-        break;
-      case 'error_invalid_product':
-        echo "❌ Error: Invalid product selected.";
-        break;
-      case 'error_unauthorized':
-        echo "❌ Error: You do not have permission to edit this product.";
-        break;
-      case 'error_upload':
-        echo "❌ Error: Image upload failed.";
-        break;
-      case 'warning_no_changes':
-        echo "⚠️ Warning: No changes were made.";
-        break;
-      default:
-        echo "❓ Unknown action. Please try again."; // Fallback case
-        break;
-    }
-    ?>
-  </div>
-<?php endif; ?>
-
 
 <h2>Manage Products</h2>
 <p>Business: <?= h($vendor['business_name']); ?></span>
@@ -226,7 +201,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
           type="file"
           name="product_image"
           id="product-image"
-          accept="image/*"
+          accept="image/png, image/jpeg, image/webp"
           onchange="previewImage(event)"
           style="display: none;" />
       </label>
@@ -267,5 +242,4 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php endif; ?>
 </div>
 
-<script src="js/cropper-handler.js"></script>
 <?php require_once 'private/footer.php'; ?>

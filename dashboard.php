@@ -4,6 +4,7 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
 require_login();
+Session::require_member();
 
 $user_id = $_SESSION['user_id'] ?? null;
 
@@ -18,41 +19,37 @@ if (Favorite::tableExists()) {
   $favorites = Favorite::fetchFavoritesForUser($user_id);
 }
 ?>
+<main role="main">
+  <?php require_once 'private/popup_message.php'; ?>
 
-<?php if ($session->message()): ?>
-  <div class="message">
-    <p><?= h($session->message()) ?></p>
-  </div>
-<?php $session->clear_message();
-endif; ?>
+  <div id="user-profile">
+    <div id="user-card">
+      <h2>Hello, <strong><?= h($user->username) ?></strong>!</h2>
+      <img src="<?= h('img/upload/' . $user->getImagePath()) ?>" alt="Profile Picture" height="250" width="250" loading="lazy">
+      <p><strong>Email:</strong> <?= h($user->email) ?></p>
+      <p><strong>Account Type:</strong> <?= $user_type ?></p>
+      <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon." aria-label="Edit Profile Details">Edit Details</a>
+    </div>
 
-<div id="user-profile">
-  <div id="user-card">
-    <h2>Hello, <strong><?= h($user->username) ?></strong>!</h2>
-    <img src="<?= h($profile_image) ?>" alt="Profile Picture" height="250" width="250" loading="lazy">
-    <p><strong>Email:</strong> <?= h($user->email) ?></p>
-    <p><strong>Account Type:</strong> <?= $user_type ?></p>
-    <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon." aria-label="Edit Profile Details">Edit Details</a>
+    <div id="saved-vendors">
+      <h2>Saved Vendors</h2>
+      <?php if (!empty($favorites)): ?>
+        <ul>
+          <?php foreach ($favorites as $vendor): ?>
+            <li>
+              <img src="<?= h($vendor->profile_image ?? 'default.png') ?>" height="200" width="200" alt="An Image of a Vendor." loading="lazy">
+              <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>" aria-label="View Vendor Profile">
+                <?= h($vendor->business_name) ?>
+              </a>
+              <a href="remove_vendor.php?vendor_id=<?= h($vendor->vendor_id) ?>" class="remove-link" aria-label="Remove Vendor From Favorites">Remove</a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      <?php else: ?>
+        <p>No saved vendors yet.</p>
+      <?php endif; ?>
+    </div>
   </div>
-
-  <div id="saved-vendors">
-    <h2>Saved Vendors</h2>
-    <?php if (!empty($favorites)): ?>
-      <ul>
-        <?php foreach ($favorites as $vendor): ?>
-          <li>
-            <img src="<?= h($vendor->profile_image ?? 'default.png') ?>" height="200" width="200" alt="An Image of a Vendor." loading="lazy">
-            <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>" aria-label="View Vendor Profile">
-              <?= h($vendor->business_name) ?>
-            </a>
-            <a href="remove_vendor.php?vendor_id=<?= h($vendor->vendor_id) ?>" class="remove-link" aria-label="Remove Vendor From Favorites">Remove</a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    <?php else: ?>
-      <p>No saved vendors yet.</p>
-    <?php endif; ?>
-  </div>
-</div>
+</main>
 
 <?php require_once 'private/footer.php'; ?>

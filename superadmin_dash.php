@@ -4,12 +4,7 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
 require_once 'private/config.php';
-
-// Restrict access to super admins only
-if (!isset($_SESSION['user_id']) || $_SESSION['user_level_id'] != 4) {
-  header("Location: login.php");
-  exit();
-}
+Session::require_superadmin();
 
 // fetch users, vendors, and admins
 $superAdmin = new SuperAdmin();

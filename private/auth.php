@@ -105,34 +105,17 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
   $user_id = $user->user_id;
 
   // Upload profile image
-  $clean_name = strtolower($fname . '_' . $lname . '_' . $user_id);
+  $clean_name = strtolower($fname . '_' . $lname);
   $uploaded_filename = null;
 
-  if (!empty($_POST['cropped-image'])) {
-    // Handle base64-encoded image from Cropper
-    $image_parts = explode(',', $_POST['cropped-image']);
-    if (count($image_parts) === 2) {
-      $decoded_image = base64_decode($image_parts[1]);
-      $temp_file = tempnam(sys_get_temp_dir(), 'crop_');
-      file_put_contents($temp_file, $decoded_image);
+  $uploaded_filename = handle_cropped_upload('cropped-profile', 'users', $clean_name, $user_id);
 
-      $fake_file = [
-        'name' => $clean_name . '.webp',
-        'tmp_name' => $temp_file,
-        'type' => 'image/webp',
-        'error' => UPLOAD_ERR_OK,
-      ];
-
-      $uploaded_filename = upload_image($fake_file, 'users', $clean_name);
-      unlink($temp_file); // Optional: Clean up temp file
-    }
-  } elseif (isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] === UPLOAD_ERR_OK) {
-    // Fallback for raw file upload if JS fails or Cropper isn’t used
-    $uploaded_filename = upload_image($_FILES['profile-pic'], 'users', $clean_name);
+  if (!$uploaded_filename && isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+    $uploaded_filename = upload_image($_FILES['profile_image'], 'users', $clean_name, $user_id);
   }
 
   $profile_image = $uploaded_filename
-    ? "img/upload/users/" . $uploaded_filename
+    ? "users/" . $uploaded_filename
     : 'img/upload/users/default.webp';
 
   $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";

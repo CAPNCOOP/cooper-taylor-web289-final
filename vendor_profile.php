@@ -29,7 +29,7 @@ $products = Vendor::fetchProducts($vendor_id);
 <h2><?= h($vendor->business_name) ?></h2>
 <div id="vendor-profile-container">
   <div id="vendor-profile-card">
-    <img src="<?= h($profile_image) ?>" height="250" width="250" alt="A Vendor Image." loading="lazy">
+    <img src="<?= h('img/upload/' . $profile_image) ?>" height="250" width="250" alt="A Vendor Image." loading="lazy">
     <div>
       <p>"<?= nl2br(h($vendor->vendor_bio)) ?>"</p>
 

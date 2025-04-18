@@ -328,7 +328,7 @@ function previewImage(event) {
 }
 
 /**
- * Toggles visibility of a section and saves its state in localStorage.
+ * Toggles visibility of a section in the admin/ superadmin dash and saves its state in localStorage.
  *
  * @param {HTMLElement} header - The section header element that was clicked.
  */
@@ -361,20 +361,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// FeedBack Popups
-document.addEventListener('DOMContentLoaded', function () {
-  let popup = document.querySelector('.feedback-popup');
-  if (popup) {
-    popup.style.display = 'block';
-    setTimeout(() => {
-      popup.style.opacity = '1'; // Fades in
-    }, 10);
-    setTimeout(() => {
-      popup.style.opacity = '0'; // Fades out after 3 sec
-      setTimeout(() => (popup.style.display = 'none'), 500);
-    }, 3000);
-  }
-});
+// Popup Message Fade
+// document.addEventListener('DOMContentLoaded', function () {
+//   const popup = document.querySelector('.popup-message');
+//   if (popup) {
+//     popup.classList.add('show');
+//     setTimeout(() => {
+//       popup.classList.remove('show');
+//       setTimeout(() => {
+//         popup.style.display = 'none';
+//       }, 500);
+//     }, 3000);
+//   }
+// });
 
 // Smart Scroll Header
 document.addEventListener('DOMContentLoaded', function () {

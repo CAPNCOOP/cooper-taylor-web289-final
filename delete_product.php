@@ -23,7 +23,8 @@ if (!$product || $product->vendor_id !== $vendor->vendor_id) {
 
 try {
   $product->delete();
-  redirect_to("manage_products.php?message=product_deleted");
+  $session->message("✅ Product deleted successfully!");
+  redirect_to("manage_products.php");
 } catch (Exception $e) {
   exit("❌ Error deleting product: " . h($e->getMessage()));
 }

@@ -32,7 +32,7 @@ body {
 /* Universal Pop up */
 
 .popup-message {
-  animation: fadeOut 4s ease forwards;
+  animation: fadeOut 2s ease forwards;
   background-color: #333;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -57,24 +57,6 @@ body {
     display: none;
     opacity: 0;
   }
-}
-
-.feedback-popup {
-  background-color: var(--dark);
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  color: var(--light);
-  display: none;
-  font-size: 1.25rem;
-  left: 50%;
-  opacity: 0;
-  padding: 15px 25px;
-  position: fixed;
-  text-align: center;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s ease-in-out;
-  z-index: 1000;
 }
 
 .frozen-popup {
@@ -1679,34 +1661,6 @@ div#vendorhead {
   opacity: 0.7;
 }
 
-/* Message styling */
-.message {
-  background-color: #4caf50;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  color: white;
-  font-size: 18px;
-  left: 50%;
-  opacity: 1;
-  padding: 20px;
-  position: fixed;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  top: 50%;
-  transition: opacity 1s ease-in-out;
-  z-index: 1000;
-}
-
-/* Error message styling */
-.message.error {
-  background-color: #e74c3c;
-}
-
-/* Fade out the message after 3 seconds */
-.message.fade-out {
-  opacity: 0;
-}
-
 /* Vendor Dashboard */
 
 #vendor-info {
@@ -2103,7 +2057,6 @@ div.section-content:last-of-type {
 
   /* originally 20px */
   .vendor-card h2,
-  .feedback-popup,
   .about-us div div:last-of-type h3,
   .about-us div div:last-of-type span,
   .favorite-btn,

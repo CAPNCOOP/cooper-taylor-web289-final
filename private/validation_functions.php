@@ -148,7 +148,5 @@ function has_unique_username($username)
   $stmt->execute([$username]);
   $count = $stmt->fetchColumn();
 
-  error_log("Username check for: " . $username . " | Count: " . $count);
-
   return $count == 0; // Returns true if username does NOT exist
 }

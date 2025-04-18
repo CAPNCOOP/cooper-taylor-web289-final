@@ -21,7 +21,6 @@ if (!isset($page_title)) {
 
 <body class="<?= strtolower(str_replace(' ', '-', $page_title ?? 'Blue Ridge Bounty')) ?>">
 
-
   <header role="banner">
     <div>
       <div>
@@ -29,7 +28,6 @@ if (!isset($page_title)) {
           <img src="img/assets/brblogo2.png" alt="Blue Ridge Bounty Logo." height="115" width="274" loading="lazy">
         </a>
       </div>
-
 
       <div>
         <nav class="nav-links" role="navigation" aria-label="Main Navigation">

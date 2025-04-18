@@ -26,31 +26,14 @@ if ($user_level == 2) {
 <main role="main">
   <?php require_once 'private/popup_message.php'; ?>
 
-  <?php if (isset($_GET['message'])): ?>
-    <div class="feedback-popup">
-      <?php
-      switch ($_GET['message']) {
-        case 'profile_updated':
-          echo "✅ Profile updated successfully!";
-          break;
-        case 'error_update_failed':
-          echo "❌ Error: Profile update failed.";
-          break;
-        case 'error_invalid_image':
-          echo "❌ Error: Invalid image format.";
-          break;
-      }
-      ?>
-    </div>
-  <?php endif; ?>
-
   <h2>Edit Profile</h2>
   <form action="process_profile_update.php" method="POST" enctype="multipart/form-data" role="form">
     <fieldset>
-      <label for="edit-profile-pic">Choose Profile Photo</label>
+      <label for="user-profile-pic">Choose Profile Photo</label>
 
       <img class="image-preview"
-        src="<?= h($user->getImagePath()) ?>"
+        id="profile-preview"
+        src="<?= h('img/upload/' . $user->getImagePath()) ?>"
         alt="Current Profile Image"
         data-preview="image-preview"
         height="300"
@@ -58,14 +41,23 @@ if ($user_level == 2) {
         loading="lazy">
 
       <input type="file"
-        id="edit-profile-pic"
-        name="profile-pic"
+        id="user-profile-pic"
+        name="profile_image"
         class="image-input"
         data-preview="image-preview"
         accept="image/png, image/jpeg, image/webp"
         onchange="previewImage(event)">
+
     </fieldset>
 
+    <div id="cropper-modal" style="display: none;">
+      <div id="cropper-modal-inner">
+        <img id="cropper-image" src="">
+      </div>
+      <button type="button" id="crop-confirm">Crop & Upload</button>
+    </div>
+
+    <input type="hidden" name="cropped-profile" id="cropped-image">
 
     <fieldset>
       <label for="username">Username:</label>
@@ -78,16 +70,28 @@ if ($user_level == 2) {
     </fieldset>
 
     <?php if (Session::is_vendor() && $vendor): ?>
-      <input type="text" id="business_name" name="business_name"
-        value="<?= h($form_data['business_name'] ?? $vendor->business_name) ?>">
+      <fieldset>
+        <label for="business_name">Business Name:</label>
+        <input type="text" id="business_name" name="business_name"
+          value="<?= h($form_data['business_name'] ?? $vendor->business_name) ?>">
+      </fieldset>
 
-      <input type="text" id="business_ein" name="business_ein"
-        value="<?= h($form_data['business_ein'] ?? $vendor->business_EIN) ?>">
+      <fieldset>
+        <label for="business_ein">Business EIN:</label>
+        <input type="text" id="business_ein" name="business_ein"
+          value="<?= h($form_data['business_ein'] ?? $vendor->business_EIN) ?>">
+      </fieldset>
 
-      <input type="text" id="contact_number" name="contact_number"
-        value="<?= h($form_data['contact_number'] ?? $vendor->contact_number) ?>">
+      <fieldset>
+        <label for="contact_number">Contact Number:</label>
+        <input type="text" id="contact_number" name="contact_number"
+          value="<?= h($form_data['contact_number'] ?? $vendor->contact_number) ?>">
+      </fieldset>
 
-      <textarea id="description" name="description"><?= h($form_data['description'] ?? $vendor->description) ?></textarea>
+      <fieldset>
+        <label for="description">Business Description:</label>
+        <textarea id="description" name="description"><?= h($form_data['description'] ?? $vendor->description) ?></textarea>
+      </fieldset>
 
     <?php endif; ?>
 

@@ -2,8 +2,8 @@
 $page_title = "Vendor Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
-
 Session::require_login();
+Session::require_vendor();
 
 // Redirect non-vendors
 if (!Session::is_vendor()) {
@@ -37,7 +37,7 @@ require_once 'private/popup_message.php';
 <div id="vendor-info">
   <div>
     <h2><?= h($user->first_name . ' ' . $user->last_name); ?></h2>
-    <img src="<?= h($profile_image); ?>" alt="Vendor Profile Picture" height="250" width="250" loading="lazy">
+    <img src="<?= h('img/upload/' . $user->getImagePath()) ?>" alt="Vendor Profile Picture" height="250" width="250" loading="lazy">
     <span>Business: <?= h($vendor->business_name); ?></span>
     <a href="<?= $vendor->isApproved() ? 'edit_profile.php' : '#' ?>"
       class="btn <?= $vendor->isApproved() ? '' : 'disabled-link' ?>"

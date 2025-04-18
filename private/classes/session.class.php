@@ -62,6 +62,59 @@ class Session
   }
 
   /**
+   * Redirects to index if user is not logged in or is not a member.
+   *
+   * @return void
+   */
+  public static function require_member()
+  {
+    if (!self::is_logged_in() || $_SESSION['user_level_id'] != 1) {
+      redirect_to('index.php');
+      exit();
+    }
+  }
+
+  /**
+   * Redirects to index if user is not logged in or is not a vendor.
+   *
+   * @return void
+   */
+  public static function require_vendor()
+  {
+    if (!isset($_SESSION['user_level_id']) || $_SESSION['user_level_id'] != 2) {
+      header("Location: index.php");
+      exit;
+    }
+  }
+
+  /**
+   * Redirects to index if user is not logged in or is not an admin.
+   *
+   * @return void
+   */
+  public static function require_admin()
+  {
+    if (!isset($_SESSION['user_level_id']) || $_SESSION['user_level_id'] != 3) {
+      header("Location: index.php");
+      exit;
+    }
+  }
+
+  /**
+   * Redirects to index if user is not logged in or is not a super admin.
+   *
+   * @return void
+   */
+  public static function require_superadmin()
+  {
+    if (!isset($_SESSION['user_level_id']) || $_SESSION['user_level_id'] != 4) {
+      header("Location: index.php");
+      exit;
+    }
+  }
+
+
+  /**
    * Checks if the current user is a vendor.
    *
    * @return bool True if user_level_id is 2.
@@ -69,26 +122,6 @@ class Session
   public static function is_vendor(): bool
   {
     return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 2;
-  }
-
-  /**
-   * Checks if the current user is an admin.
-   *
-   * @return bool True if user_level_id is 1.
-   */
-  public static function is_admin(): bool
-  {
-    return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 1;
-  }
-
-  /**
-   * Checks if the current user is a super admin.
-   *
-   * @return bool True if user_level_id is 3.
-   */
-  public static function is_super_admin(): bool
-  {
-    return isset($_SESSION['user_level_id']) && $_SESSION['user_level_id'] == 3;
   }
 
   /**

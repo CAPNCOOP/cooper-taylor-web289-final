@@ -200,9 +200,10 @@
       <!-- IMAGE + SUBMIT -->
       <div>
         <fieldset>
-          <label for="admin-vendor-photo">Choose Vendor Photo</label>
+          <label for="user-profile-pic">Choose Vendor Photo</label>
 
           <img class="image-preview"
+            id="profile-preview"
             src="img/assets/add-photo.svg"
             alt="Vendor Profile Preview"
             data-preview="image-preview"
@@ -211,13 +212,22 @@
             loading="lazy">
 
           <input type="file"
-            id="admin-vendor-photo"
-            name="profile-pic"
+            id="user-profile-pic"
+            name="profile_image"
             class="image-input"
             data-preview="image-preview"
             accept="image/png, image/jpeg, image/webp"
             onchange="previewImage(event)">
         </fieldset>
+
+        <div id="cropper-modal" style="display: none;">
+          <div id="cropper-modal-inner">
+            <img id="cropper-image" src="">
+          </div>
+          <button type="button" id="crop-confirm">Crop & Upload</button>
+        </div>
+
+        <input type="hidden" name="cropped-profile" id="cropped-image">
 
         <div class="recaptcha-container">
           <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>

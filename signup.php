@@ -56,25 +56,24 @@ unset($_SESSION['form_data']);
             loading="lazy" />
           <input
             type="file"
-            name="profile-pic"
+            name="profile_image"
             id="user-profile-pic"
-            accept="image/*"
+            accept="image/png, image/jpeg, image/webp"
             onchange="previewImage(event)"
             style="display: none;" />
         </label>
-
-        <!-- Cropping Modal -->
-        <div id="cropper-modal" style="display: none;">
-          <div id="cropper-modal-inner">
-            <img id="cropper-image" src="">
-          </div>
-          <button type="button" id="crop-confirm">Crop & Upload</button>
-        </div>
-
-        <!-- Hidden input (Base64) for the final image -->
-        <input type="hidden" name="cropped-image" id="cropped-image">
-
       </fieldset>
+
+      <!-- Cropping Modal -->
+      <div id="cropper-modal" style="display: none;">
+        <div id="cropper-modal-inner">
+          <img id="cropper-image" src="">
+        </div>
+        <button type="button" id="crop-confirm">Crop & Upload</button>
+      </div>
+
+      <!-- Hidden input (Base64) for the final image -->
+      <input type="hidden" name="cropped-image" id="cropped-image">
 
       <div>
         <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
@@ -86,5 +85,4 @@ unset($_SESSION['form_data']);
   </form>
 </main>
 
-<script src="js/cropper-handler.js"></script>
 <?php require_once 'private/footer.php'; ?>
