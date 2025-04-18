@@ -27,17 +27,6 @@ function u($string = "")
 }
 
 /**
- * URL-encodes a string using `rawurlencode`.
- *
- * @param string $string The string to encode.
- * @return string The encoded string.
- */
-function raw_u($string = "")
-{
-  return rawurlencode($string);
-}
-
-/**
  * Escapes HTML special characters in a string using `htmlspecialchars`.
  *
  * @param string $string The string to escape.

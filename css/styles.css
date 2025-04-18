@@ -94,7 +94,7 @@ body {
 #backToTop {
   background-color: var(--dark);
   bottom: 55px;
-  border: none;
+  border: 3px solid var(--main-color);
   border-radius: 50%;
   cursor: pointer;
   display: none;
@@ -872,7 +872,7 @@ div#vendorhead {
   background-color: var(--light);
   border-radius: 5px;
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: column;
   height: auto;
   justify-content: flex-start;
   padding: 1rem;
@@ -881,16 +881,12 @@ div#vendorhead {
   width: 300px;
 }
 
-.card-overlay-link {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  text-indent: -9999px;
-}
-
-.product-card h3 {
+.product-card h3,
+.profile-product-card h3 {
   font: 24px var(--secondary-text);
-  margin: 1rem auto;
+  margin: 1rem;
+  text-wrap: wrap;
+  text-align: center;
 }
 
 .product-card p:last-of-type {
@@ -899,12 +895,12 @@ div#vendorhead {
   text-align: left;
 }
 
-.product-card img {
-  border-radius: 5px;
-  margin: 0 auto;
+.product-card img,
+.profile-product-card img {
+  border-radius: 5px 5px 0 0;
 }
 
-.product-list a {
+.product-card a {
   border-radius: 5px;
   color: var(--light);
   display: inline;
@@ -928,11 +924,75 @@ div#vendorhead {
   opacity: 0.7;
 }
 
-.product-list a:last-of-type {
-  background-color: #a23024;
-}
-/* Vendor Profile */
+/* Vendor profile Card */
 
+.profile-product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.profile-product-list a {
+  border-radius: 5px;
+  color: var(--light);
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.profile-product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 250px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.profile-product-card:hover {
+  transform: scale(1.02);
+}
+
+.card-footer {
+  margin-top: auto;
+  text-align: center;
+}
+
+.card-footer-link {
+  background: var(--secondary-color);
+  border-radius: 0 0 5px 5px !important;
+  color: var(--light);
+  font-size: 0.9rem;
+  font-weight: bold;
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+.card-footer-link:hover {
+  opacity: 0.7;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.back-link:hover {
+  opacity: 0.7;
+}
+
+/* Vendor Profile */
 #vendor-profile-container {
   background-color: var(--light);
   border-radius: 5px;
@@ -1038,13 +1098,6 @@ div#vendorhead {
   opacity: 0.7;
 }
 
-.product-list {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 1rem;
-  padding: 1rem;
-}
-
 #notification {
   background: var(--dark);
   border-radius: 5px;
@@ -1115,6 +1168,65 @@ div#vendorhead {
   border-radius: 5px;
   font-size: 0.85rem;
   font-weight: 500;
+}
+
+/* Show Product Page */
+.product-full-view {
+  align-items: flex-start;
+  background-color: var(--light);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-flow: column wrap;
+  gap: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.product-full-view img {
+  border-radius: 10px;
+  margin: 0 auto;
+  object-fit: cover;
+}
+
+.product-full-view p {
+  font: 18px var(--secondary-text);
+  margin: 0.5rem 0;
+}
+
+.view-product h2 {
+  font: 46px var(--main-text);
+  text-align: center;
+}
+
+.product-full-view a {
+  background-color: var(--dark);
+  border-radius: 5px;
+  color: var(--light);
+  padding: 0.5rem;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.product-full-view a:hover {
+  opacity: 0.7;
+}
+
+.product-full-view .tag {
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  color: var(--light);
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0.25rem 0.4rem 0.25rem 0;
+  padding: 0.25rem 0.6rem;
+  text-transform: lowercase;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 /* About Us */
@@ -2041,6 +2153,7 @@ div.section-content:last-of-type {
   }
 
   /* originally 46px */
+  .view-product h2,
   #vendorhead h2 {
     font-size: calc(23px + (46 - 23) * (100vw - 375px) / (1400 - 375));
   }
@@ -2095,6 +2208,7 @@ div.section-content:last-of-type {
   }
 
   /* originally 18px */
+  .product-full-view p,
   .error-404 .btn,
   .error-404 p,
   label[for^='user-'],

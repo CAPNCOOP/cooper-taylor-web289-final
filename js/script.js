@@ -121,7 +121,6 @@ backToTopBtn.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   showSlides(slideIndex);
-  addSwipeListeners(); // Ensure swipe functionality is active
 });
 
 let slideIndex = 1;
@@ -169,6 +168,7 @@ function addSwipeListeners() {
   let touchEndX = 0;
 
   if (!slider) {
+    console.error('🚫 Swipe listener failed: .slideshow-container not found.');
     console.error('Swipe listener failed: .slideshow-container not found.');
     return;
   }
@@ -361,20 +361,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Popup Message Fade
-// document.addEventListener('DOMContentLoaded', function () {
-//   const popup = document.querySelector('.popup-message');
-//   if (popup) {
-//     popup.classList.add('show');
-//     setTimeout(() => {
-//       popup.classList.remove('show');
-//       setTimeout(() => {
-//         popup.style.display = 'none';
-//       }, 500);
-//     }, 3000);
-//   }
-// });
-
 // Smart Scroll Header
 document.addEventListener('DOMContentLoaded', function () {
   const header = document.querySelector('header');
@@ -418,13 +404,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Product Modal Handler
 document.addEventListener('DOMContentLoaded', () => {
+  const cards = document.querySelectorAll('.profile-product-card');
+  if (!cards.length) return;
+
   const modal = document.getElementById('product-modal');
+  if (!modal) return;
+
   const closeModal = modal.querySelector('.modal-close');
 
-  document.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', () => {
+  cards.forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.card-footer-link')) return;
       const data = JSON.parse(card.dataset.product);
-      console.log(data);
 
       document.getElementById('modal-product-image').src = 'img/upload/' + data.image;
       document.getElementById('modal-product-name').textContent = data.name;
@@ -435,11 +426,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const tagWrapper = document.getElementById('modal-product-tags-wrapper');
       const tagField = document.getElementById('modal-product-tags');
-      tagField.innerHTML = ''; // Clear previous
+      tagField.innerHTML = ''; // Clear previous tags
 
       if (Array.isArray(data.tags) && data.tags.length > 0) {
         tagWrapper.style.display = 'block';
-
         data.tags.forEach(tag => {
           if (tag.trim()) {
             const tagEl = document.createElement('span');
@@ -452,22 +442,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tagWrapper.style.display = 'none';
       }
 
-      tagField.innerHTML = ''; // Clear existing tags
-
-      data.tags.forEach(tag => {
-        if (tag.trim()) {
-          const tagEl = document.createElement('span');
-          tagEl.classList.add('tag');
-          tagEl.textContent = tag.trim();
-          tagField.appendChild(tagEl);
-        }
-      });
-
       modal.style.display = 'flex';
     });
   });
 
-  closeModal.addEventListener('click', () => {
+  closeModal?.addEventListener('click', () => {
     modal.style.display = 'none';
   });
 
@@ -476,4 +455,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.style.display = 'none';
     }
   });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.querySelector('.slideshow-container')) {
+    addSwipeListeners();
+  }
 });

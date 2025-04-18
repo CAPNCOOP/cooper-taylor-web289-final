@@ -16,6 +16,8 @@ class Product extends DatabaseObject
   public $category_id;
   public $description;
 
+  public string $tag_name = ''; // or make it nullable: ?string $tag_name = null;
+
   /**
    * Product constructor.
    *
@@ -72,11 +74,17 @@ class Product extends DatabaseObject
 
   public static function findById($id)
   {
-    $sql = "SELECT p.*, c.category_name, a.amount_name
-            FROM product p
-            LEFT JOIN category c ON p.category_id = c.category_id
-            LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
-            WHERE p.product_id = ?";
+    $sql = "SELECT 
+    p.*, 
+    c.category_name, 
+    a.amount_name, 
+    pi.file_path AS product_image
+    FROM product p
+    LEFT JOIN category c ON p.category_id = c.category_id
+    LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
+    LEFT JOIN product_image pi ON p.product_id = pi.product_id
+    WHERE p.product_id = ?";
+
     $stmt = self::$db->prepare($sql);
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);

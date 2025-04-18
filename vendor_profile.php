@@ -7,6 +7,19 @@ require_once 'private/functions.php';
 // Get vendor ID from URL
 $vendor_id = $_GET['vendor_id'] ?? 0;
 
+// Get Search Term
+$searchTerm = $_GET['search'] ?? '';
+
+$itemsPerPage = 12;
+$page = (int)($_GET['page'] ?? 1);
+$offset = ($page - 1) * $itemsPerPage;
+
+$products = Vendor::fetchPaginatedProducts($vendor_id, $itemsPerPage, $offset, $searchTerm);
+$totalProducts = Vendor::countVendorProducts($vendor_id, $searchTerm);
+$totalPages = ceil($totalProducts / $itemsPerPage);
+
+$paginationBaseUrl = "vendor_profile.php?vendor_id=" . urlencode($vendor_id) . "&search=" . u($searchTerm);
+
 // Use OOP to fetch vendor
 $vendor = Vendor::find_by_id($vendor_id);
 if (!$vendor) {
@@ -18,9 +31,6 @@ $profile_image = get_profile_image($vendor->user_id);
 
 // Fetch vendor's upcoming markets
 $markets = Vendor::fetchUpcomingMarkets($vendor_id);
-
-// Fetch products (with images & amount names)
-$products = Vendor::fetchProducts($vendor_id);
 
 ?>
 
@@ -83,20 +93,35 @@ $products = Vendor::fetchProducts($vendor_id);
 </div>
 
 <h2>Products</h2>
-<div class="product-list">
+
+<form method="GET" action="vendor_profile.php" role="search" id="vendor-search-form" role="form">
+  <input type="hidden" name="vendor_id" value="<?= h($searchTerm) ?>">
+  <input
+    type="text"
+    id="search"
+    name="search"
+    placeholder="Search this vendor's products..."
+    value="<?= h($searchTerm) ?>"
+    aria-label="Search Products">
+  <button type="submit" aria-label="Search Products">Search</button>
+</form>
+
+<div class="profile-product-list">
+  <?php if (empty($products)): ?>
+    <p>No products found<?= $searchTerm ? ' for "' . h($searchTerm) . '"' : '' ?>.</p>
+  <?php endif; ?>
   <?php foreach ($products as $product): ?>
     <?php if (!empty($product['name'])): ?>
-      <div class="product-card" data-product='<?= htmlspecialchars(json_encode([
-                                                'id' => $product['product_id'],
-                                                'name' => $product['name'],
-                                                'price' => number_format($product['price'], 2),
-                                                'amount' => $product['amount_name'] ?? 'unit',
-                                                'description' => $product['description'],
-                                                'image' => $product['product_image'] ?? 'products/default_product.webp',
-                                                'category' => $product['category_name'] ?? 'Uncategorized',
-                                                'tags' => $product['tags'] ?? []
-                                              ]), ENT_QUOTES, 'UTF-8') ?>'>
-        <a href="show_product.php?product_id=<?= h($product['product_id']) ?>" class="card-overlay-link" aria-label="View Full Product Page"></a>
+      <div class="profile-product-card" data-product='<?= htmlspecialchars(json_encode([
+                                                        'id' => $product['product_id'],
+                                                        'name' => $product['name'],
+                                                        'price' => number_format($product['price'], 2),
+                                                        'amount' => $product['amount_name'] ?? 'unit',
+                                                        'description' => $product['description'],
+                                                        'image' => $product['product_image'] ?? 'products/default_product.webp',
+                                                        'category' => $product['category_name'] ?? 'Uncategorized',
+                                                        'tags' => $product['tags'] ?? []
+                                                      ]), ENT_QUOTES, 'UTF-8') ?>'>
         <?php
         $product_image = !empty($product['product_image'])
           ? h($product['product_image'])
@@ -104,17 +129,19 @@ $products = Vendor::fetchProducts($vendor_id);
         ?>
 
         <img src="/img/upload/<?= $product_image ?>"
-          height="250"
-          width="250"
+          height="300"
+          width="300"
           alt="Product Image"
           loading="lazy" />
 
         <h3><?= h($product['name']) ?></h3>
+        <div class="card-footer">
+          <a href="show_product.php?product_id=<?= h($product['product_id']) ?>" class="card-footer-link" aria-label="View Full Product Page">View Full Product</a>
+        </div>
       </div>
     <?php endif; ?>
   <?php endforeach; ?>
 </div>
-
 
 <!-- Product Modal -->
 <div id="product-modal" class="modal-overlay" style="display:none;">
@@ -132,5 +159,7 @@ $products = Vendor::fetchProducts($vendor_id);
     </p>
   </div>
 </div>
+
+<?php require_once 'private/pagination.php'; ?>
 
 <?php require_once 'private/footer.php'; ?>

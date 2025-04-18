@@ -279,4 +279,59 @@ class Vendor extends User
 
     return $vendor ?: null;
   }
+
+  public static function fetchPaginatedProducts($vendor_id, $limit, $offset, $searchTerm = '')
+  {
+    global $db;
+
+    $sql = "SELECT DISTINCT p.*, a.amount_name, c.category_name
+            FROM product p
+            LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
+            LEFT JOIN category c ON p.category_id = c.category_id
+            LEFT JOIN product_tag_map ptm ON p.product_id = ptm.product_id
+            LEFT JOIN product_tag pt ON ptm.tag_id = pt.tag_id
+            WHERE p.vendor_id = :vendor_id";
+
+    if (!empty($searchTerm)) {
+      $sql .= " AND (
+        p.name LIKE :search
+        OR p.description LIKE :search
+        OR c.category_name LIKE :search
+        OR pt.tag_name LIKE :search
+      )";
+    }
+
+    $sql .= " ORDER BY p.name ASC LIMIT :limit OFFSET :offset";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':vendor_id', $vendor_id, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    if (!empty($searchTerm)) {
+      $stmt->bindValue(':search', "%$searchTerm%", PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public static function countVendorProducts($vendor_id, $searchTerm = '')
+  {
+    global $db;
+    $sql = "SELECT COUNT(*) FROM product WHERE vendor_id = :vendor_id";
+
+    if (!empty($searchTerm)) {
+      $sql .= " AND name LIKE :search";
+    }
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':vendor_id', $vendor_id, PDO::PARAM_INT);
+    if (!empty($searchTerm)) {
+      $stmt->bindValue(':search', '%' . $searchTerm . '%', PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchColumn();
+  }
 }
