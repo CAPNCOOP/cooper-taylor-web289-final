@@ -188,7 +188,6 @@ class DatabaseObject
     return isset($this->$pk) && !empty($this->$pk) ? $this->update() : $this->create();
   }
 
-
   /**
    * Returns an array of database column values for the object.
    *
@@ -203,7 +202,6 @@ class DatabaseObject
     }
     return $attributes;
   }
-
 
   /**
    * Returns a sanitized version of object attributes.
@@ -232,7 +230,6 @@ class DatabaseObject
     $stmt->bindValue(":{$pk}", $this->$pk, PDO::PARAM_INT);
     return $stmt->execute();
   }
-
 
   public function id()
   {

@@ -19,7 +19,7 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
   $is_vendor = isset($_POST['is_vendor']) ? (int)$_POST['is_vendor'] : 0;
 
   // Collect fields
-  $username = strtolower(trim($_POST['username'] ?? ''));
+  $username = strip_tags(strtolower(trim($_POST['username'] ?? '')));
 
   // CAPTCHA Validation
   $recaptcha_secret = RECAPTCHA_SECRET_KEY;
@@ -43,11 +43,9 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
     exit(); // Stop execution immediately
   }
 
-  // If we got here, CAPTCHA is valid - continue with registration
-
-  $fname = trim($_POST['fname'] ?? '');
-  $lname = trim($_POST['lname'] ?? '');
-  $email = strtolower(trim($_POST['email'] ?? ''));
+  $fname = strip_tags(trim($_POST['fname'] ?? ''));
+  $lname = strip_tags(trim($_POST['lname'] ?? ''));
+  $email = strip_tags(strtolower(trim($_POST['email'] ?? '')));
   $password = $_POST['password'] ?? '';
   $confirm_password = $_POST['confirm-pass'] ?? '';
   $ein = $is_vendor ? $_POST['business_EIN'] ?? '' : NULL;
@@ -126,17 +124,17 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
   if ($is_vendor) {
     $vendor = new Vendor([
       'user_id' => $user_id,
-      'business_name' => $_POST['business_name'],
-      'contact_number' => $_POST['contact_number'],
-      'business_EIN' => $ein,
-      'business_email' => $_POST['business_email'],
-      'website' => $_POST['website'],
-      'city' => $_POST['city'],
-      'state_id' => $_POST['state_id'],
-      'street_address' => $_POST['street_address'],
-      'zip_code' => $_POST['zip_code'],
-      'description' => $_POST['description'],
-      'vendor_bio' => $_POST['vendor_bio']
+      'business_name' => strip_tags(trim($_POST['business_name'] ?? '')),
+      'contact_number' => strip_tags(trim($_POST['contact_number'] ?? '')),
+      'business_EIN' => strip_tags(trim($ein ?? '')),
+      'business_email' => strip_tags(trim($_POST['business_email'] ?? '')),
+      'website' => strip_tags(trim($_POST['website'] ?? '')),
+      'city' => strip_tags(trim($_POST['city'] ?? '')),
+      'state_id' => trim($_POST['state_id'] ?? ''),
+      'street_address' => strip_tags(trim($_POST['street_address'] ?? '')),
+      'zip_code' => trim($_POST['zip_code'] ?? ''),
+      'description' => strip_tags(trim($_POST['description'] ?? '')),
+      'vendor_bio' => strip_tags(trim($_POST['vendor_bio'] ?? ''))
     ]);
 
     $vendor->user_id = $user->user_id;

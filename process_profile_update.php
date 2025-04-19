@@ -19,8 +19,8 @@ if (!$user_id) {
   exit;
 }
 
-$username = trim($_POST['username'] ?? '');
-$email = trim($_POST['email'] ?? '');
+$username = strip_tags(trim($_POST['username'] ?? ''));
+$email = strip_tags(trim($_POST['email'] ?? ''));
 
 // ✅ Uniqueness Check for Username
 if (User::isUsernameTaken($username, $user_id)) {
@@ -82,10 +82,10 @@ if ($user_level == 2) {
     $vendor->user_id = $user_id;
   }
 
-  $vendor->business_name = trim($_POST['business_name']);
-  $vendor->business_EIN = trim($_POST['business_ein']);
-  $vendor->contact_number = trim($_POST['contact_number']);
-  $vendor->description = trim($_POST['description']);
+  $vendor->business_name = strip_tags(trim($_POST['business_name']));
+  $vendor->business_EIN = strip_tags(trim($_POST['business_ein']));
+  $vendor->contact_number = strip_tags(trim($_POST['contact_number']));
+  $vendor->description = strip_tags(trim($_POST['description']));
 
   if (!$vendor->save()) {
     $session->message("❌ Error: Profile update failed.");

@@ -25,13 +25,16 @@ if (!isset($page_title)) {
     <div>
       <div>
         <a href="<?= url_for('/index.php') ?>">
-          <img src="img/assets/brblogo2.png" alt="" height="115" width="274" loading="lazy">
+          <img src="img/assets/brblogo2.png" alt="Blue Ridge Bounty Logo" height="115" width="274" loading="lazy">
         </a>
       </div>
 
 
       <div>
-        <nav class="nav-links" role="navigation" aria-label="Main Navigation">
+        <button id="menu" aria-label="nav-links" aria-controls="nav-links" aria-expanded="false">
+          Menu
+        </button>
+        <nav id="nav-links" class="nav-links" role="navigation" aria-label="Main Navigation">
           <ul>
             <li><a href="<?= url_for('/schedule.php') ?>" aria-label="Market Schedule Page">Schedule</a></li>
             <li><a href="<?= url_for('/ourvendors.php') ?>" aria-label="Market Vendors Page">Our Vendors</a></li>
@@ -64,14 +67,11 @@ if (!isset($page_title)) {
             <?php endif; ?>
           </ul>
         </nav>
-        <span id="menu">
-          Menu
-        </span>
       </div>
     </div>
     <div id="nav-history">
-      <button onclick="window.history.back()" <?= empty($_SERVER['HTTP_REFERER']) ? 'disabled' : '' ?>>&#8592</button>
-      <button onclick="window.history.forward()">&#8594</button>
+      <button onclick="window.history.back()" <?= empty($_SERVER['HTTP_REFERER']) ? 'disabled' : '' ?> aria-label="Go Back" role="button">&#8592;</button>
+      <button onclick="window.history.forward()" aria-label="Go Forward" role="button">&#8594;</button>
 
       <?php include 'private/breadcrumbs.php'; ?>
 
@@ -95,5 +95,5 @@ if (!isset($page_title)) {
     </div>
   </header>
   <button id="backToTop" aria-label="Back to Top">
-    <img src="img/assets/topButton.webp" alt="A back to top button." height="100" width="100" loading="lazy">
+    <img src="img/assets/topButton.webp" alt="" height="100" width="100" loading="lazy">
   </button>

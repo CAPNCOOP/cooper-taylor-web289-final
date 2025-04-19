@@ -3,30 +3,63 @@
 // Header Menu
 document.addEventListener('DOMContentLoaded', function () {
   const menu = document.getElementById('menu');
-  const navLinks = document.querySelector('.nav-links');
+  const navlinks = document.getElementById('nav-links');
   let timeoutId;
 
-  menu.addEventListener('click', function () {
-    navLinks.classList.add('active');
+  if (!menu || !navlinks) return;
 
-    // Start a 3-second countdown to remove 'active'
+  menu.addEventListener('click', function () {
+    navlinks.classList.add('active');
+    menu.setAttribute('aria-expanded', 'true');
+
     timeoutId = setTimeout(() => {
-      if (!navLinks.matches(':hover')) {
-        navLinks.classList.remove('active');
-      }
+      requestAnimationFrame(() => {
+        const isHovered = navlinks.matches(':hover');
+        const isFocused = navlinks.contains(document.activeElement);
+
+        if (!isHovered && !isFocused) {
+          navlinks.classList.remove('active');
+          menu.setAttribute('aria-expanded', 'false');
+        }
+      });
     }, 3000);
   });
 
   // If they hover over the menu, cancel the timeout
-  navLinks.addEventListener('mouseenter', () => {
+  navlinks.addEventListener('mouseenter', () => {
     clearTimeout(timeoutId);
   });
 
   // If they leave the menu after clicking, start a new 3s countdown
-  navLinks.addEventListener('mouseleave', () => {
+  navlinks.addEventListener('mouseleave', () => {
     timeoutId = setTimeout(() => {
-      navLinks.classList.remove('active');
+      requestAnimationFrame(() => {
+        const isHovered = navlinks.matches(':hover');
+        const isFocused = navlinks.contains(document.activeElement);
+
+        console.log('Hovered:', isHovered);
+        console.log('Focused inside nav:', isFocused);
+        console.log('Focused element:', document.activeElement);
+
+        if (!isHovered && !isFocused) {
+          navlinks.classList.remove('active');
+          menu.setAttribute('aria-expanded', 'false');
+        }
+      });
     }, 3000);
+  });
+
+  navlinks.addEventListener('focusout', () => {
+    // Slight delay to let focus move
+    setTimeout(() => {
+      const isHovered = navlinks.matches(':hover');
+      const isFocused = navlinks.contains(document.activeElement);
+
+      if (!isHovered && !isFocused) {
+        navlinks.classList.remove('active');
+        menu.setAttribute('aria-expanded', 'false');
+      }
+    }, 10);
   });
 });
 
@@ -418,6 +451,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = JSON.parse(card.dataset.product);
 
       document.getElementById('modal-product-image').src = 'img/upload/' + data.image;
+      document.getElementById('modal-product-image').onerror = function () {
+        this.src = 'img/upload/products/default_product.webp';
+      };
+
       document.getElementById('modal-product-name').textContent = data.name;
       document.getElementById('modal-product-price').textContent = data.price;
       document.getElementById('modal-product-amount').textContent = data.amount;

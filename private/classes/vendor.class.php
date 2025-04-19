@@ -32,7 +32,6 @@ class Vendor extends User
   public $state_names;
   public $cities;
 
-
   /**
    * Vendor constructor.
    *
@@ -102,64 +101,6 @@ class Vendor extends User
   }
 
   /**
-   * Retrieves all products for a given vendor, including amount and image info.
-   *
-   * @param int $vendor_id The vendor's ID.
-   * @return array List of products with additional metadata.
-   */
-  public static function fetchProducts($vendor_id): array
-  {
-    // First fetch products
-    $sql = "
-      SELECT 
-        p.*,
-        a.amount_name,
-        pi.file_path AS product_image
-      FROM product p
-      LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
-      LEFT JOIN product_image pi ON p.product_id = pi.product_id
-      WHERE p.vendor_id = ?
-    ";
-    $stmt = self::$db->prepare($sql);
-    $stmt->execute([$vendor_id]);
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Get all product IDs
-    $product_ids = array_column($products, 'product_id');
-    if (empty($product_ids)) {
-      return $products;
-    }
-
-    // Fetch all tags for those products
-    $in = str_repeat('?,', count($product_ids) - 1) . '?';
-    $tag_sql = "
-      SELECT 
-        ptm.product_id, 
-        pt.tag_name
-      FROM product_tag_map ptm
-      JOIN product_tag pt ON ptm.tag_id = pt.tag_id
-      WHERE ptm.product_id IN ($in)
-    ";
-    $stmt = self::$db->prepare($tag_sql);
-    $stmt->execute($product_ids);
-    $tag_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Group tags by product_id
-    $tag_map = [];
-    foreach ($tag_rows as $row) {
-      $tag_map[$row['product_id']][] = $row['tag_name'];
-    }
-
-    // Attach tags to each product
-    foreach ($products as &$product) {
-      $product['tags'] = $tag_map[$product['product_id']] ?? [];
-    }
-
-    return $products;
-  }
-
-
-  /**
    * Retrieves the vendor's next 5 upcoming confirmed market weeks.
    *
    * @param int $vendor_id The vendor's ID.
@@ -218,7 +159,6 @@ class Vendor extends User
     }
 
     $sql .= " LIMIT :offset, :limit";
-
 
     $stmt = $db->prepare($sql);
 
@@ -280,16 +220,28 @@ class Vendor extends User
     return $vendor ?: null;
   }
 
+  /**
+   * Retrieves a paginated list of products for a specific vendor,
+   * optionally filtered by a search term that matches the product's
+   * name, description, category, or associated tags.
+   *
+   * @param int $vendor_id The ID of the vendor whose products are being retrieved.
+   * @param int $limit The number of products to retrieve.
+   * @param int $offset The number of products to skip for pagination.
+   * @param string $searchTerm Optional search string to filter products.
+   * @return array An array of associative arrays containing product data.
+   */
   public static function fetchPaginatedProducts($vendor_id, $limit, $offset, $searchTerm = '')
   {
     global $db;
 
-    $sql = "SELECT DISTINCT p.*, a.amount_name, c.category_name
+    $sql = "SELECT DISTINCT p.*, a.amount_name, c.category_name, pi.file_path
             FROM product p
             LEFT JOIN amount_offered a ON p.amount_id = a.amount_id
             LEFT JOIN category c ON p.category_id = c.category_id
             LEFT JOIN product_tag_map ptm ON p.product_id = ptm.product_id
             LEFT JOIN product_tag pt ON ptm.tag_id = pt.tag_id
+            LEFT JOIN product_image pi ON p.product_id = pi.product_id
             WHERE p.vendor_id = :vendor_id";
 
     if (!empty($searchTerm)) {
@@ -316,6 +268,14 @@ class Vendor extends User
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  /**
+   * Counts the total number of products for a specific vendor,
+   * optionally filtered by a search term that matches the product name.
+   *
+   * @param int $vendor_id The ID of the vendor whose products are being counted.
+   * @param string $searchTerm Optional search string to filter products.
+   * @return int The number of matching products.
+   */
   public static function countVendorProducts($vendor_id, $searchTerm = '')
   {
     global $db;

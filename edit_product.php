@@ -47,11 +47,11 @@ $stmt = $db->query($sql);
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (is_post_request()) {
-  $product->name = trim($_POST['product_name']);
+  $product->name = strip_tags(trim($_POST['product_name']));
   $product->price = trim($_POST['price']);
   $product->amount_id = trim($_POST['amount_id']);
   $product->category_id = trim($_POST['category_id']);
-  $product->description = trim($_POST['description']);
+  $product->description = strip_tags(trim($_POST['description']));
 
   if (empty($product->name) || empty($product->price) || empty($product->description)) {
     $_SESSION['form_data'] = $_POST;
@@ -108,7 +108,8 @@ if (is_post_request()) {
   }
 
   if (!empty($_POST['tags'])) {
-    $tags = explode(',', strtolower($_POST['tags']));
+    $tags = explode(',', strip_tags(strtolower($_POST['tags'] ?? '')));
+
     $sql = "DELETE FROM product_tag_map WHERE product_id = ?";
     $stmt = $db->prepare($sql);
     $stmt->execute([$product_id]);
@@ -225,10 +226,10 @@ if (is_post_request()) {
       </div>
 
       <input type="hidden" name="cropped-product" id="cropped-product" />
+      <button type="submit">Save Changes</button>
     </fieldset>
 
   </div>
-  <button type="submit">Save Changes</button>
 </form>
 
 <?php require_once 'private/footer.php'; ?>

@@ -2,8 +2,6 @@
 
 class Favorite extends DatabaseObject
 {
-
-
   /**
    * Checks if the 'favorite' table exists in the database.
    *

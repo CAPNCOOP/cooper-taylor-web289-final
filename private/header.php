@@ -30,7 +30,10 @@ if (!isset($page_title)) {
       </div>
 
       <div>
-        <nav class="nav-links" role="navigation" aria-label="Main Navigation">
+        <button id="menu" aria-label="Toggle Navigation Menu" aria-controls="nav-links" aria-expanded="false">
+          Menu
+        </button>
+        <nav id="nav-links" class="nav-links" role="navigation" aria-label="Main Navigation">
           <ul>
             <li><a href="<?= url_for('/schedule.php') ?>" aria-label="Market Schedule Page">Schedule</a></li>
             <li><a href="<?= url_for('/ourvendors.php') ?>" aria-label="Market Vendors Page">Our Vendors</a></li>
@@ -63,14 +66,12 @@ if (!isset($page_title)) {
             <?php endif; ?>
           </ul>
         </nav>
-        <span id="menu">
-          Menu
-        </span>
+
       </div>
     </div>
     <div id="nav-history">
-      <button onclick="window.history.back()" <?= empty($_SERVER['HTTP_REFERER']) ? 'disabled' : '' ?>>&#8592</button>
-      <button onclick="window.history.forward()">&#8594</button>
+      <button onclick="window.history.back()" <?= empty($_SERVER['HTTP_REFERER']) ? 'disabled' : '' ?> aria-label="Go Back" role="button">&#8592;</button>
+      <button onclick="window.history.forward()" aria-label="Go Forward" role="button">&#8594;</button>
 
       <?php include 'private/breadcrumbs.php'; ?>
 

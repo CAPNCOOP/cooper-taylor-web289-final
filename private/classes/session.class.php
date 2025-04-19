@@ -1,7 +1,6 @@
 <?php
 class Session
 {
-
   private $user_id;
   public $username;
   private $last_login;
@@ -113,7 +112,6 @@ class Session
     }
   }
 
-
   /**
    * Checks if the current user is a vendor.
    *
@@ -180,22 +178,6 @@ class Session
       $this->username = null;
       $this->user_level = null;
       $this->last_login = null;
-    }
-  }
-
-  /**
-   * Checks whether the last login is within the allowed session age.
-   *
-   * @return bool True if recent, false otherwise.
-   */
-  private function last_login_is_recent()
-  {
-    if (!isset($this->last_login)) {
-      return false;
-    } elseif (($this->last_login + self::MAX_LOGIN_AGE) < time()) {
-      return false;
-    } else {
-      return true;
     }
   }
 

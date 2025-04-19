@@ -63,7 +63,6 @@ class Admin extends User
     return User::find_by_sql("SELECT * FROM users WHERE user_level_id != 4");
   }
 
-
   /**
    * Retrieves all vendors with associated user info.
    *
@@ -78,7 +77,6 @@ class Admin extends User
 
     return Vendor::find_by_sql($sql);
   }
-
 
   /**
    * Retrieves vendors with 'pending' or 'denied' status.
@@ -210,7 +208,6 @@ class Admin extends User
     }
     return $map;
   }
-
 
   /**
    * Retrieves all upcoming market weeks.

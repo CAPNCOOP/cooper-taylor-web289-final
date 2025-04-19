@@ -72,6 +72,13 @@ class Product extends DatabaseObject
     return $result['file_path'] ?? 'default_product.png';
   }
 
+  /**
+   * Retrieves detailed product information by its ID, including
+   * associated category, amount name, and product image path.
+   *
+   * @param int $id The ID of the product to retrieve.
+   * @return array|null An associative array of product data, or null if not found.
+   */
   public static function findById($id)
   {
     $sql = "SELECT 
@@ -90,6 +97,12 @@ class Product extends DatabaseObject
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  /**
+   * Retrieves an array of tag names associated with a specific product.
+   *
+   * @param int $product_id The ID of the product whose tags are being fetched.
+   * @return array An array of tag name strings.
+   */
   public static function fetchTags($product_id)
   {
     $sql = "SELECT t.tag_name

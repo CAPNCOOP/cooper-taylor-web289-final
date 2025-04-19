@@ -18,7 +18,7 @@ $products = Vendor::fetchPaginatedProducts($vendor_id, $itemsPerPage, $offset, $
 $totalProducts = Vendor::countVendorProducts($vendor_id, $searchTerm);
 $totalPages = ceil($totalProducts / $itemsPerPage);
 
-$paginationBaseUrl = "vendor_profile.php?vendor_id=" . urlencode($vendor_id) . "&search=" . u($searchTerm);
+$paginationBaseUrl = "vendor_profile.php";
 
 // Use OOP to fetch vendor
 $vendor = Vendor::find_by_id($vendor_id);
@@ -92,19 +92,25 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
   </div>
 </div>
 
-<h2>Products</h2>
 
-<form method="GET" action="vendor_profile.php" role="search" id="vendor-search-form" role="form">
-  <input type="hidden" name="vendor_id" value="<?= h($searchTerm) ?>">
-  <input
-    type="text"
-    id="search"
-    name="search"
-    placeholder="Search this vendor's products..."
-    value="<?= h($searchTerm) ?>"
-    aria-label="Search Products">
-  <button type="submit" aria-label="Search Products">Search</button>
-</form>
+<div id="vendorhead">
+  <h2>Products</h2>
+
+  <form method="GET" action="vendor_profile.php" role="form">
+    <input type="hidden" name="vendor_id" value="<?= h($vendor_id) ?>">
+    <input
+      type="text"
+      id="searchBar"
+      name="search"
+      placeholder="Search this vendor's products..."
+      value="<?= h($searchTerm) ?>"
+      aria-label="Search Products"
+      role="search">
+    <button type="submit" aria-label="Search Products">Search</button>
+  </form>
+</div>
+
+<?php require_once 'private/pagination.php'; ?>
 
 <div class="profile-product-list">
   <?php if (empty($products)): ?>
@@ -118,17 +124,14 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
                                                         'price' => number_format($product['price'], 2),
                                                         'amount' => $product['amount_name'] ?? 'unit',
                                                         'description' => $product['description'],
-                                                        'image' => $product['product_image'] ?? 'products/default_product.webp',
+                                                        'image' => $product['file_path'] ?? 'products/default_product.webp',
                                                         'category' => $product['category_name'] ?? 'Uncategorized',
                                                         'tags' => $product['tags'] ?? []
                                                       ]), ENT_QUOTES, 'UTF-8') ?>'>
         <?php
-        $product_image = !empty($product['product_image'])
-          ? h($product['product_image'])
-          : 'default_product.webp';
+        $product['file_path'] ?? 'products/default_product.webp'
         ?>
-
-        <img src="/img/upload/<?= $product_image ?>"
+        <img src="/img/upload/<?= h($product['file_path'] ?? 'products/default_product.webp') ?>"
           height="300"
           width="300"
           alt="Product Image"

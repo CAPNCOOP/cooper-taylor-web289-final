@@ -16,17 +16,6 @@ function url_for($script_path)
 }
 
 /**
- * URL-encodes a string using `urlencode`.
- *
- * @param string $string The string to encode.
- * @return string The encoded string.
- */
-function u($string = "")
-{
-  return urlencode($string);
-}
-
-/**
  * Escapes HTML special characters in a string using `htmlspecialchars`.
  *
  * @param string $string The string to escape.
@@ -35,28 +24,6 @@ function u($string = "")
 function h($string = "")
 {
   return htmlspecialchars($string ?? "", ENT_QUOTES, 'UTF-8');
-}
-
-/**
- * Sends a 404 Not Found header and exits.
- *
- * @return void
- */
-function error_404()
-{
-  header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-  exit();
-}
-
-/**
- * Sends a 500 Internal Server Error header and exits.
- *
- * @return void
- */
-function error_500()
-{
-  header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal Server Error");
-  exit();
 }
 
 /**
@@ -81,16 +48,6 @@ function redirect_to($location)
 function is_post_request()
 {
   return $_SERVER['REQUEST_METHOD'] === 'POST';
-}
-
-/**
- * Checks whether the current request method is GET.
- *
- * @return bool True if GET, false otherwise.
- */
-function is_get_request()
-{
-  return $_SERVER['REQUEST_METHOD'] === 'GET';
 }
 
 /**

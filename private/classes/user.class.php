@@ -105,19 +105,4 @@ class User extends DatabaseObject
 
     return $result['file_path'] ?? 'default_user.png';
   }
-
-  /**
-   * Retrieves user data by username.
-   *
-   * @param string $username The username to search for.
-   * @return array|false Associative array of user data, or false if not found.
-   */
-  function find_by_username($username)
-  {
-    global $db;
-    $sql = "SELECT * FROM users WHERE username = ? LIMIT 1";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$username]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-  }
 }

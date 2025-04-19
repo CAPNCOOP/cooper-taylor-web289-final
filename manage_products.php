@@ -36,12 +36,12 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle Product Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $product_name = trim($_POST['product_name']);
+  $product_name = strip_tags(trim($_POST['product_name']));
   $price = trim($_POST['price']);
   $amount_id = trim($_POST['amount_id']);
   $category_id = trim($_POST['category_id']);
-  $description = trim($_POST['description']);
-  $custom_tags = strtolower(trim($_POST['custom_tags'] ?? '')); // Convert to lowercase
+  $description = strip_tags(trim($_POST['description']));
+  $custom_tags = strip_tags(strtolower(trim($_POST['custom_tags'] ?? '')));
 
   if (empty($product_name) || empty($price) || empty($amount_id) || empty($description)) {
     $session->message("❌ Error: All fields must be filled.");
@@ -227,13 +227,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php if (!empty($products)): ?>
     <?php foreach ($products as $product): ?>
       <div class="product-card">
+        <img src="img/upload/<?= h($product['file_path'] ?? 'products/default_product.webp'); ?>" height="300" width="300" alt="Product Image" loading="lazy">
         <h3><?= h($product['name']); ?></h3>
-        <img src="img/upload/<?= h($product['file_path'] ?? 'products/default_product.webp'); ?>" height="150" width="150" alt="Product Image" loading="lazy">
-        <p><strong>Price:</strong> $<?= number_format($product['price'], 2); ?></p>
-        <p><strong>Per:</strong> <?= h($product['amount_name'] ?? 'unit'); ?></p> <!-- New Line for Amount Offered -->
-        <p><?= h($product['description']); ?></p>
-        <a href="edit_product.php?id=<?= $product['product_id']; ?>" class="edit-btn" aria-label="Update Product">Update</a>
-        <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');" aria-label="Delete Product">Delete</a>
+        <div>
+          <a href="edit_product.php?id=<?= $product['product_id']; ?>" class="edit-btn" aria-label="Update Product">Update</a>
+          <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');" aria-label="Delete Product">Delete</a>
+        </div>
       </div>
 
     <?php endforeach; ?>
