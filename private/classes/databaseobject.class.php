@@ -39,14 +39,15 @@ class DatabaseObject
    * @return array Array of objects based on the query result.
    * @throws Exception If the database connection is not set.
    */
-  public static function find_by_sql(string $sql): array
+  public static function find_by_sql(string $sql, array $params = []): array
+
   {
     if (self::$db === null) {
       throw new Exception("Database connection not initialized. Run DatabaseObject::setDatabase(\$pdo) first.");
     }
 
     $stmt = self::$db->prepare($sql);
-    $stmt->execute();
+    $stmt->execute($params);
 
     $object_array = [];
     while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {

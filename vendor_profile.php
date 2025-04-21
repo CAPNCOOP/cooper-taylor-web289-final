@@ -96,7 +96,7 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
 <div id="vendorhead">
   <h2>Products</h2>
 
-  <form method="GET" action="vendor_profile.php" role="form">
+  <form method="GET" action="vendor_profile.php" role="search">
     <input type="hidden" name="vendor_id" value="<?= h($vendor_id) ?>">
     <input
       type="text"
@@ -104,8 +104,7 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
       name="search"
       placeholder="Search this vendor's products..."
       value="<?= h($searchTerm) ?>"
-      aria-label="Search Products"
-      role="search">
+      aria-label="Search Products">
     <button type="submit" aria-label="Search Products">Search</button>
   </form>
 </div>
@@ -135,7 +134,7 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
           height="300"
           width="300"
           alt="Product Image"
-          loading="lazy" />
+          loading="lazy">
 
         <h3><?= h($product['name']) ?></h3>
         <div class="card-footer">
@@ -150,8 +149,8 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
 <div id="product-modal" class="modal-overlay" style="display:none;">
   <div class="modal-content">
     <button class="modal-close" aria-label="Close">&times;</button>
-    <img id="modal-product-image" src="" alt="Product Image" height="300" width="300" loading="lazy" />
-    <h2 id="modal-product-name"></h2>
+    <img id="modal-product-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" height="300" width="300" loading="lazy">
+    <h2 id="modal-product-name" style="display: none;">Product</h2>
     <p><strong>Price:</strong> $<span id="modal-product-price"></span></p>
     <p><strong>Per:</strong> <span id="modal-product-amount"></span></p>
     <p id="modal-product-description"></p>

@@ -12,7 +12,7 @@ if (!isset($_GET['vendor_id']) || !is_numeric($_GET['vendor_id'])) {
 $vendor_id = (int) $_GET['vendor_id'];
 $currentUser = User::find_by_id($_SESSION['user_id']);
 
-if ($currentUser && $currentUser->removeFavoriteVendor($vendor_id)) {
+if ($currentUser && Favorite::remove((int)$currentUser->user_id, (int)$vendor_id)) {
   $session->message("✅ Vendor removed successfully.");
 } else {
   $session->message("❌ Vendor not found in your favorites.");

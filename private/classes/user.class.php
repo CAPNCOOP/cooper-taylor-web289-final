@@ -33,16 +33,6 @@ class User extends DatabaseObject
   }
 
   /**
-   * Returns the user's active status as a human-readable string.
-   *
-   * @return string 'Active' or 'Inactive'.
-   */
-  function statusLabel(): string
-  {
-    return $this->is_active ? 'Active' : 'Inactive';
-  }
-
-  /**
    * Checks if a username already exists in the database.
    *
    * @param string $username The username to check.
@@ -104,5 +94,12 @@ class User extends DatabaseObject
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $result['file_path'] ?? 'default_user.png';
+  }
+
+  public static function find_by_id($id)
+  {
+    $sql = "SELECT * FROM " . static::$table_name . " WHERE " . static::$primary_key . " = ? LIMIT 1";
+    $result = static::find_by_sql($sql, [$id]);
+    return !empty($result) ? $result[0] : null;
   }
 }

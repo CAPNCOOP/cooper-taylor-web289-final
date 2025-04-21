@@ -92,7 +92,7 @@ body {
 }
 
 #backToTop {
-  /* background-color: var(--dark); */
+  border: none;
   border-radius: 100%;
   bottom: 55px;
   cursor: pointer;
@@ -740,21 +740,20 @@ footer > div div:last-of-type {
 
 /* Text content */
 .vendor-item div {
+  align-items: flex-start;
+  color: var(--dark);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  font: 18px var(--secondary-text);
+  justify-content: flex-end;
+  line-height: 1.4;
+  margin: 0.25rem 0;
 }
 
 .vendor-item strong {
   color: var(--dark);
   font-size: 1.25rem;
   margin-bottom: 0.25rem;
-}
-
-.vendor-item p {
-  color: var(--dark);
-  line-height: 1.4;
-  margin: 0.25rem 0;
 }
 
 .vendor-item p:last-of-type {
@@ -1516,6 +1515,12 @@ a[href^='tel:'],
   justify-content: center;
 }
 
+.vendor-signup div:nth-of-type(3) legend,
+.sign-up div:nth-of-type(2) legend {
+  font: 18px var(--secondary-text);
+  text-align: center;
+}
+
 .g-recaptcha {
   display: flex;
   justify-content: center;
@@ -1588,14 +1593,15 @@ a[href^='tel:'],
   display: flex;
   flex-direction: column;
   font: 18px var(--secondary-text);
-  margin: 0.5rem;
+  margin: 0.5rem auto;
   padding: 10px 15px;
   text-align: center;
   transition: all 0.2s ease-in-out;
+  width: 100%;
 }
 
 /* Hover effect */
-.upload-label {
+.upload-label:hover {
   opacity: 0.7;
   transform: translateY(-3px);
 }
@@ -1616,7 +1622,7 @@ a[href^='tel:'],
   padding: 0.5rem;
 }
 
-.sign-up legend {
+.sign-up h2 {
   font: 48px var(--main-text);
   margin: 1rem;
   text-align: center;
@@ -1817,10 +1823,6 @@ a[href^='tel:'],
   text-align: center;
 }
 
-.edit-profile-details form label {
-  font: 32px var(--secondary-text);
-}
-
 .edit-profile-details form {
   align-items: center;
   background-color: var(--light);
@@ -1838,13 +1840,19 @@ a[href^='tel:'],
   flex-direction: column;
 }
 
+.edit-profile-details legend {
+  font: 18px var(--secondary-text);
+  text-align: center;
+}
+
 .edit-profile-details input {
   background-color: var(--main-color);
   border: none;
   border-radius: 5px;
   margin-top: 0.5rem;
   padding: 5px;
-  width: 300px;
+  width: 100%;
+  min-width: 200px;
 }
 
 .edit-profile-details input[type='text'],
@@ -1995,6 +2003,15 @@ form[action='manage_products.php'] button {
   width: 90%;
 }
 
+.edit-product legend {
+  font: 18px var(--secondary-text);
+  text-align: center;
+}
+
+.edit-product img {
+  margin: 0 auto;
+}
+
 .edit-product fieldset {
   align-items: flex-start;
   border: none;
@@ -2097,42 +2114,44 @@ form[action='update_homepage.php'] {
   row-gap: 0.5rem;
 }
 
-.super-admin-dashboard .create-vendor-form,
-.admin-dashboard .create-vendor-form {
-  align-items: flex-start;
+.create-vendor-form {
   background-color: var(--main-color);
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
 }
 
-.super-admin-dashboard .create-vendor-form fieldset,
-.admin-dashboard .create-vendor-form fieldset {
+.create-vendor-form fieldset:first-of-type {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.create-vendor-form fieldset {
   border: none;
 }
 
-.super-admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset,
-.admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset {
+.create-vendor-form div:nth-of-type(4) fieldset {
+  border-radius: 1px solid red;
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.super-admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset + div,
-.admin-dashboard .create-vendor-form div:nth-of-type(3) fieldset + div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  row-gap: 5px;
+.create-vendor-form legend {
+  font: 18px var(--secondary-text);
+  text-align: center;
 }
 
-.admin-dashboard button,
-.super-admin-dashboard button {
+.admin-dashboard section button,
+.super-admin-dashboard section button {
   background-color: var(--dark);
   border-radius: 5px;
   color: var(--light);
   padding: 0.25rem;
+  width: 100% !important;
 }
 
 .admin-dashboard section:nth-of-type(5) form,
@@ -2203,7 +2222,7 @@ div.section-content:last-of-type {
   .error-404 h1,
   header h1,
   .user-login span,
-  .sign-up legend,
+  .sign-up h2,
   .vendor-signup h2,
   #user-profile h2,
   .edit-profile-details h2,
@@ -2236,8 +2255,7 @@ div.section-content:last-of-type {
   }
 
   #type-text,
-  .aboutus-item p,
-  .edit-profile-details form label {
+  .aboutus-item p {
     font-size: calc(16px + (32 - 16) * (100vw - 375px) / (1400 - 375));
   }
 
@@ -2273,6 +2291,11 @@ div.section-content:last-of-type {
   }
 
   /* originally 18px */
+  .create-vendor-form legend,
+  .edit-profile-details legend,
+  .vendor-signup div:nth-of-type(3) legend,
+  .sign-up div:nth-of-type(2) legend,
+  .vendor-item div,
   .product-full-view p,
   .error-404 .btn,
   .error-404 p,

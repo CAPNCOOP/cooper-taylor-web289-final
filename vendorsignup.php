@@ -92,7 +92,14 @@ unset($_SESSION['form_data']);
 
       <fieldset>
         <label for="website" class="visually-hidden">Website</label>
-        <input type="url" id="website" name="website" placeholder="Website (optional)" value="<?= h($form_data['website'] ?? '') ?>">
+        <input
+          type="url"
+          id="website"
+          name="website"
+          placeholder="Website (optional)"
+          pattern="https?://.+"
+          value="<?= h($form_data['website'] ?? '') ?>">
+
       </fieldset>
 
       <fieldset>
@@ -107,8 +114,8 @@ unset($_SESSION['form_data']);
           <?php
           $states = Admin::fetchStates();
           foreach ($states as $state) {
-            $selected = ($form_data['state_id'] ?? '') == $state['state_id'] ? 'selected' : '';
-            echo "<option value=\"{$state['state_id']}\" $selected>" . h($state['state_abbr']) . "</option>";
+            $selected = ($form_data['state_id'] ?? '') == $state['state_id'] ? ' selected' : '';
+            echo "<option value=\"" . h($state['state_id']) . "\"$selected>" . h($state['state_abbr']) . "</option>";
           }
           ?>
         </select>
@@ -137,17 +144,40 @@ unset($_SESSION['form_data']);
 
     <div>
       <fieldset>
-        <label class="upload-label" role="button" for="user-profile-pic" aria-label="Upload Profile Photo">
-          Upload Profile Photo
-          <img src="img/assets/add-photo.svg" alt="" id="profile-preview" class="image-preview" height="300" width="300" loading="lazy">
-          <input type="file" id="user-profile-pic" name="profile_image" accept="image/png, image/jpeg, image/webp" onchange="previewImage(event)" aria-describedby="profile-desc">
-        </label>
-        <p id="profile-desc" class="visually-hidden">Upload a JPG, PNG, or WebP vendor profile photo.</p>
+        <legend>Upload Profile Photo</legend>
+
+        <div class="image-upload-wrapper">
+          <img
+            src="img/assets/add-photo.svg"
+            alt="Add a vendor profile photo"
+            id="profile-preview"
+            class="image-preview"
+            height="300"
+            width="300"
+            loading="lazy">
+
+          <label for="user-profile-pic" class="upload-label" aria-label="Upload Vendor Profile Photo">
+            Choose Photo
+          </label>
+
+          <input
+            type="file"
+            id="user-profile-pic"
+            name="profile_image"
+            class="image-input"
+            accept="image/png, image/jpeg, image/webp"
+            aria-describedby="profile-desc"
+            onchange="previewImage(event)">
+
+          <p id="profile-desc" class="visually-hidden">
+            Upload a JPG, PNG, or WebP vendor profile photo.
+          </p>
+        </div>
       </fieldset>
 
       <div id="cropper-modal" style="display: none;">
         <div id="cropper-modal-inner">
-          <img id="cropper-image" src="">
+          <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="">
         </div>
         <button type="button" id="crop-confirm">Crop & Upload</button>
       </div>

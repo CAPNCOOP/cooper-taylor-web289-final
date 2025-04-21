@@ -20,33 +20,3 @@ function db_connect(): PDO
     die("Database connection failed: " . $e->getMessage());
   }
 }
-
-
-/**
- * Confirms a successful MySQLi database connection.
- *
- * @param mysqli $connection The MySQLi connection object.
- * @return void
- */
-function confirm_db_connect($connection)
-{
-  if ($connection->connect_errno) {
-    $msg = "Database connection failed: ";
-    $msg .= $connection->connect_error;
-    $msg .= " (" . $connection->connect_errno . ")";
-    exit($msg);
-  }
-}
-
-/**
- * Closes an active MySQLi database connection.
- *
- * @param mysqli $connection The MySQLi connection object.
- * @return void
- */
-function db_disconnect($connection)
-{
-  if (isset($connection)) {
-    $connection->close();
-  }
-}

@@ -32,7 +32,7 @@ unset($_SESSION['form_data']);
   <form action="private/auth.php" method="POST" enctype="multipart/form-data">
 
     <div>
-      <legend>User Sign up</legend>
+      <h2>User Sign up</h2>
 
       <fieldset>
         <label for="username" class="visually-hidden">Username</label>
@@ -71,37 +71,47 @@ unset($_SESSION['form_data']);
 
     <div>
       <fieldset>
-        <label class="upload-label" role="button" for="user-profile-pic" aria-label="Upload Profile Photo">
-          Upload Profile Photo
+        <legend>Upload Profile Photo</legend>
+
+        <div class="image-upload-wrapper">
           <img
             src="img/assets/add-photo.svg"
-            alt=""
+            alt="Add a profile photo"
             id="profile-preview"
             class="image-preview"
             width="250"
             height="250"
-            loading="lazy" />
+            loading="lazy">
+
+          <label for="user-profile-pic" class="upload-label" aria-label="Upload Profile Photo">
+            Choose Photo
+          </label>
+
           <input
             type="file"
             name="profile_image"
             id="user-profile-pic"
+            class="image-input"
             accept="image/png, image/jpeg, image/webp"
             aria-describedby="profile-desc"
-            onchange="previewImage(event)"
-            style="display: none;" />
-        </label>
-        <p id="profile-desc" class="visually-hidden">Upload a JPG, PNG, or WebP profile photo.</p>
+            onchange="previewImage(event)">
+
+          <p id="profile-desc" class="visually-hidden">
+            Upload a JPG, PNG, or WebP profile photo.
+          </p>
+        </div>
       </fieldset>
+
 
       <!-- Cropping Modal -->
       <div id="cropper-modal" style="display: none;">
         <div id="cropper-modal-inner">
-          <img id="cropper-image" src="">
+          <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Preview of cropped profile photo">
         </div>
         <button type="button" id="crop-confirm">Crop & Upload</button>
       </div>
 
-      <input type="hidden" name="cropped-image" id="cropped-image">
+      <input type="hidden" name="cropped-profile" id="cropped-image">
 
       <div>
         <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
@@ -112,5 +122,3 @@ unset($_SESSION['form_data']);
 
   </form>
 </main>
-
-<?php require_once 'private/footer.php'; ?>

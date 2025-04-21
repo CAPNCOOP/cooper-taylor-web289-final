@@ -109,131 +109,148 @@
     <form class="create-vendor-form" action="/private/auth.php" method="POST" enctype="multipart/form-data" role="form">
       <input type="hidden" name="admin_created" value="1">
       <input type="hidden" name="is_vendor" value="1">
-      <!-- LEFT SIDE FORM -->
-      <div>
-        <fieldset>
-          <input type="text" id="username" name="username" required aria-label="Username" placeholder="Username">
-        </fieldset>
 
-        <fieldset>
-          <input type="text" id="fname" name="fname" required aria-label="First Name" placeholder="First Name">
-        </fieldset>
+      <fieldset>
+        <legend>Create a New Vendor</legend>
 
-        <fieldset>
-          <input type="text" id="lname" name="lname" required aria-label="Last Name" placeholder="Last Name">
-        </fieldset>
-
-        <fieldset>
-          <input type="email" id="email" name="email" required aria-label="Email Address" placeholder="Email Address">
-        </fieldset>
-
-        <fieldset>
-          <input type="password" id="password" name="password" required aria-label="Password" placeholder="Password">
-        </fieldset>
-
-        <fieldset>
-          <input type="password" id="confirm-pass" name="confirm-pass" required aria-label="Confirm Password" placeholder="Confirm Password">
-        </fieldset>
-
-        <fieldset>
-          <input type="text" id="business-name" name="business_name" required aria-label="Business Name" placeholder="Business Name">
-        </fieldset>
-
-        <fieldset>
-          <input type="text" id="contact-number" name="contact_number" required aria-label="Contact Number" placeholder="Contact Number">
-        </fieldset>
-
-        <fieldset>
-          <input type="text" id="business-ein" name="business_EIN" required aria-label="Business EIN" placeholder="Business EIN">
-        </fieldset>
-      </div>
-
-      <!-- RIGHT SIDE FORM -->
-      <div>
-        <fieldset>
-          <input type="email" id="business-email" name="business_email" required aria-label="Business Email" placeholder="Business Email">
-        </fieldset>
-
-        <fieldset>
-          <input type="url" id="website" name="website" aria-label="Website" placeholder="Website (optional)">
-        </fieldset>
-
-        <fieldset>
-          <input type="text" id="city" name="city" required aria-label="City" placeholder="City">
-        </fieldset>
-
-        <fieldset>
-          <select id="state" name="state_id" required aria-label="State">
-            <option value="">Select State</option>
-            <?php
-            $state_sql = "SELECT state_id, state_abbr FROM state ORDER BY state_abbr ASC";
-            $state_stmt = $db->prepare($state_sql);
-            $state_stmt->execute();
-            $states = $state_stmt->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($states as $state) {
-              echo "<option value=\"" . h($state['state_id']) . "\">" . h($state['state_abbr']) . "</option>";
-            }
-            ?>
-          </select>
-        </fieldset>
-
-        <fieldset>
-          <input type="text" id="street-address" name="street_address" required aria-label="Street Address" placeholder="Street Address">
-        </fieldset>
-
-        <fieldset>
-          <input type="text" id="zip-code" name="zip_code" required aria-label="Zip Code" placeholder="Zip Code">
-        </fieldset>
-
+        <!-- LEFT SIDE FORM -->
         <div>
           <fieldset>
-            <textarea id="description" name="description" required aria-label="Business Description" placeholder="Business Description, a short blurb about your business."></textarea>
+            <input type="text" id="username" name="username" required aria-label="Username" placeholder="Username">
           </fieldset>
 
           <fieldset>
-            <textarea id="vendor-bio" name="vendor_bio" required aria-label="Vendor Bio" placeholder="Vendor Bio, tell the consumer about the history of your business!"></textarea>
+            <input type="text" id="fname" name="fname" required aria-label="First Name" placeholder="First Name">
+          </fieldset>
+
+          <fieldset>
+            <input type="text" id="lname" name="lname" required aria-label="Last Name" placeholder="Last Name">
+          </fieldset>
+
+          <fieldset>
+            <input type="email" id="email" name="email" required aria-label="Email Address" placeholder="Email Address">
+          </fieldset>
+
+          <fieldset>
+            <input type="password" id="password" name="password" required aria-label="Password" placeholder="Password">
+          </fieldset>
+
+          <fieldset>
+            <input type="password" id="confirm-pass" name="confirm-pass" required aria-label="Confirm Password" placeholder="Confirm Password">
+          </fieldset>
+
+          <fieldset>
+            <input type="text" id="business-name" name="business_name" required aria-label="Business Name" placeholder="Business Name">
+          </fieldset>
+
+          <fieldset>
+            <input type="text" id="contact-number" name="contact_number" required aria-label="Contact Number" placeholder="Contact Number">
+          </fieldset>
+
+          <fieldset>
+            <input type="text" id="business-ein" name="business_EIN" required aria-label="Business EIN" placeholder="Business EIN">
           </fieldset>
         </div>
-      </div>
 
-      <!-- IMAGE + SUBMIT -->
-      <div>
-        <fieldset>
-          <label for="user-profile-pic">Choose Vendor Photo</label>
+        <!-- RIGHT SIDE FORM -->
+        <div>
+          <fieldset>
+            <input type="email" id="business-email" name="business_email" required aria-label="Business Email" placeholder="Business Email">
+          </fieldset>
 
-          <img class="image-preview"
-            id="profile-preview"
-            src="img/assets/add-photo.svg"
-            alt="Vendor Profile Preview"
-            data-preview="image-preview"
-            height="300"
-            width="300"
-            loading="lazy">
+          <fieldset>
+            <input type="url" id="website" name="website" aria-label="Website" placeholder="Website (optional)">
+          </fieldset>
 
-          <input type="file"
-            id="user-profile-pic"
-            name="profile_image"
-            class="image-input"
-            data-preview="image-preview"
-            accept="image/png, image/jpeg, image/webp"
-            onchange="previewImage(event)">
-        </fieldset>
+          <fieldset>
+            <input type="text" id="city" name="city" required aria-label="City" placeholder="City">
+          </fieldset>
 
-        <div id="cropper-modal" style="display: none;">
-          <div id="cropper-modal-inner">
-            <img id="cropper-image" src="">
+          <fieldset>
+            <select id="state" name="state_id" required aria-label="State">
+              <option value="">Select State</option>
+              <?php
+              $state_sql = "SELECT state_id, state_abbr FROM state ORDER BY state_abbr ASC";
+              $state_stmt = $db->prepare($state_sql);
+              $state_stmt->execute();
+              $states = $state_stmt->fetchAll(PDO::FETCH_ASSOC);
+              foreach ($states as $state) {
+                echo "<option value=\"" . h($state['state_id']) . "\">" . h($state['state_abbr']) . "</option>";
+              }
+              ?>
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <input type="text" id="street-address" name="street_address" required aria-label="Street Address" placeholder="Street Address">
+          </fieldset>
+
+          <fieldset>
+            <input type="text" id="zip-code" name="zip_code" required aria-label="Zip Code" placeholder="Zip Code">
+          </fieldset>
+
+          <div>
+            <fieldset>
+              <textarea id="description" name="description" required aria-label="Business Description" placeholder="Business Description, a short blurb about your business."></textarea>
+            </fieldset>
+
+            <fieldset>
+              <textarea id="vendor-bio" name="vendor_bio" required aria-label="Vendor Bio" placeholder="Vendor Bio, tell the consumer about the history of your business!"></textarea>
+            </fieldset>
           </div>
-          <button type="button" id="crop-confirm">Crop & Upload</button>
         </div>
 
-        <input type="hidden" name="cropped-profile" id="cropped-image">
+        <!-- IMAGE + SUBMIT -->
+        <div>
+          <fieldset>
+            <legend>Choose Vendor Photo</legend>
 
-        <div class="recaptcha-container">
-          <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
-          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-          <button class="signup-button" type="submit" name="register" value="1">New Vendor</button>
+            <div class="image-upload-wrapper">
+              <img
+                class="image-preview"
+                id="profile-preview"
+                src="img/assets/add-photo.svg"
+                alt="Vendor Profile Preview"
+                data-preview="image-preview"
+                height="300"
+                width="300"
+                loading="lazy">
+
+              <label for="user-profile-pic" class="upload-label" aria-label="Upload Vendor Photo">
+                Choose Photo
+              </label>
+
+              <input
+                type="file"
+                id="user-profile-pic"
+                name="profile_image"
+                class="image-input"
+                data-preview="image-preview"
+                accept="image/png, image/jpeg, image/webp"
+                onchange="previewImage(event)">
+
+              <p id="profile-desc" class="visually-hidden">
+                Upload a JPG, PNG, or WebP vendor photo.
+              </p>
+            </div>
+          </fieldset>
+
+          <div id="cropper-modal" style="display: none;">
+            <div id="cropper-modal-inner">
+              <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Cropper image preview">
+            </div>
+            <button type="button" id="crop-confirm">Crop & Upload</button>
+          </div>
+
+          <input type="hidden" name="cropped-profile" id="cropped-image">
+
+          <div class="recaptcha-container">
+            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <button class="signup-button" type="submit" name="register" value="1">New Vendor</button>
+          </div>
         </div>
-      </div>
+      </fieldset>
 
     </form>
   </div>

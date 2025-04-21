@@ -198,29 +198,41 @@ if (is_post_request()) {
 
   <div>
     <fieldset>
-      <label class="upload-label" for="product-image" aria-label="Edit Product Photo">
-        Edit Product Image
-        <img src="img/upload/<?= h($current_image ?? 'products/default_product.webp') ?>"
+      <legend>Edit Product Image</legend>
+
+      <div class="image-upload-wrapper">
+        <img
+          src="img/upload/<?= h($current_image ?? 'products/default_product.webp') ?>"
           alt="Current product preview"
           id="product-preview"
           class="image-preview"
-          width="150"
-          height="150"
+          width="200"
+          height="200"
           loading="lazy">
-        <input type="file"
+
+        <label for="product-image" class="upload-label" aria-label="Edit Product Image">
+          Choose New Image
+        </label>
+
+        <input
+          type="file"
           name="product_image"
           id="product-image"
+          class="image-input"
           accept="image/png, image/jpeg, image/webp"
-          onchange="previewImage(event)"
           aria-describedby="product-image-desc"
-          style="display: none;">
-      </label>
+          onchange="previewImage(event)">
 
-      <p id="product-image-desc" class="visually-hidden">Upload a JPG, PNG, or WebP product image.</p>
+        <p id="product-image-desc" class="visually-hidden">
+          Upload a JPG, PNG, or WebP product image.
+        </p>
+      </div>
 
+      <!-- Cropper Modal -->
       <div id="cropper-modal" style="display: none;">
         <div id="cropper-modal-inner">
-          <img id="cropper-image"
+          <img
+            id="cropper-image"
             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
             alt="Product image crop preview"
             style="display: none;">

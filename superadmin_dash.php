@@ -18,10 +18,7 @@ $market_weeks_map = $superAdmin->fetchMarketWeeksByVendor();
 $upcoming_markets = $superAdmin->fetchUpcomingMarkets();
 $homepage_content = $superAdmin->fetchHomepageContent();
 $pending_vendors = $superAdmin->fetchPendingVendors();
-
-
 ?>
-
 
 <main role="main">
   <h2>Welcome, Super Admin</h2>

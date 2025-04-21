@@ -29,13 +29,37 @@ if ($user_level == 2) {
   <h2>Edit Profile</h2>
   <form action="process_profile_update.php" method="POST" enctype="multipart/form-data">
     <fieldset>
-      <label class="upload-label" for="user-profile-pic" aria-label="Upload Profile Photo">
-        Upload Profile Photo
-        <img class="image-preview" id="profile-preview" src="<?= h('img/upload/' . $user->getImagePath()) ?>" alt="" data-preview="image-preview" height="300" width="300" loading="lazy">
-        <input type="file" id="user-profile-pic" name="profile_image" class="image-input" data-preview="image-preview" accept="image/png, image/jpeg, image/webp" onchange="previewImage(event)" aria-describedby="profile-desc">
-      </label>
-      <p id="profile-desc" class="visually-hidden">Upload a JPG, PNG, or WebP profile photo.</p>
+      <legend>Upload Profile Photo</legend>
+
+      <div class="image-upload-wrapper">
+        <img
+          class="image-preview"
+          id="profile-preview"
+          src="<?= h('img/upload/' . $user->getImagePath()) ?>"
+          alt="Current profile photo"
+          height="300"
+          width="300"
+          loading="lazy">
+
+        <label for="user-profile-pic" class="upload-label" aria-label="Upload New Profile Photo">
+          Choose New Photo
+        </label>
+
+        <input
+          type="file"
+          id="user-profile-pic"
+          name="profile_image"
+          class="image-input"
+          accept="image/png, image/jpeg, image/webp"
+          aria-describedby="profile-desc"
+          onchange="previewImage(event)">
+
+        <p id="profile-desc" class="visually-hidden">
+          Upload a JPG, PNG, or WebP profile photo.
+        </p>
+      </div>
     </fieldset>
+
 
     <div id="cropper-modal" style="display: none;">
       <div id="cropper-modal-inner">
@@ -77,6 +101,26 @@ if ($user_level == 2) {
         <textarea id="description" name="description"><?= h($form_data['description'] ?? $vendor->description) ?></textarea>
       </fieldset>
     <?php endif; ?>
+
+    <fieldset>
+      <label for="new_password">New Password</label>
+      <input
+        type="password"
+        name="new_password"
+        id="new_password"
+        minlength="6"
+        placeholder="Leave blank to keep current password">
+    </fieldset>
+
+    <fieldset>
+      <label for="confirm_password">Confirm New Password</label>
+      <input
+        type="password"
+        name="confirm_password"
+        id="confirm_password"
+        minlength="6"
+        placeholder="Retype new password">
+    </fieldset>
 
     <button type="submit">Save Changes</button>
   </form>

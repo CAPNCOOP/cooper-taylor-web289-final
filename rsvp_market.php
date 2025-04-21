@@ -16,8 +16,8 @@ if (!$vendor || $vendor->vendor_status !== 'approved') {
 
 $weeks = Admin::fetchUpcomingMarkets();
 $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
-
 ?>
+
 <?php require_once 'private/popup_message.php'; ?>
 
 <h2>RSVP for Upcoming Markets</h2>
@@ -35,34 +35,33 @@ $rsvp_map = Admin::fetchVendorRsvps($vendor->vendor_id);
         <th>Action</th>
       </tr>
     </thead>
-
-    <?php foreach ($weeks as $week): ?>
-      <tr>
-        <td data-label="Week Start"><?= h(date('M-d-Y', strtotime($week['week_start']))) ?></td>
-        <td data-label="Week End"><?= h(date('M-d-Y', strtotime($week['week_end']))) ?></td>
-        <td data-label="RSVP Status">
-          <?= isset($rsvp_map[$week['week_id']]) ? ucfirst($rsvp_map[$week['week_id']]) : 'Not RSVPed' ?>
-        </td>
-        <td data-label="Deadline"><?= h(date('M-d-Y', strtotime($week['confirmation_deadline']))) ?></td>
-        <td data-label="Action">
-          <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
-            <form method="post" action="rsvp_action.php" role="form">
-              <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
-              <select name="status" onchange="this.form.submit()">
-                <option value="planned" <?= ($rsvp_map[$week['week_id']] ?? '') === 'planned' ? 'selected' : '' ?>>Planned</option>
-                <option value="confirmed" <?= ($rsvp_map[$week['week_id']] ?? '') === 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
-                <option value="canceled" <?= ($rsvp_map[$week['week_id']] ?? '') === 'canceled' ? 'selected' : '' ?>>Canceled</option>
-              </select>
-              <noscript><button type="submit">Submit</button></noscript>
-            </form>
-          <?php else: ?>
-            <span style="color: gray;">RSVP Closed</span>
-          <?php endif; ?>
-        </td>
-      </tr>
-
-      </tr>
-    <?php endforeach; ?>
+    <tbody>
+      <?php foreach ($weeks as $week): ?>
+        <tr>
+          <td data-label="Week Start"><?= h(date('M-d-Y', strtotime($week['week_start']))) ?></td>
+          <td data-label="Week End"><?= h(date('M-d-Y', strtotime($week['week_end']))) ?></td>
+          <td data-label="RSVP Status">
+            <?= isset($rsvp_map[$week['week_id']]) ? ucfirst($rsvp_map[$week['week_id']]) : 'Not RSVPed' ?>
+          </td>
+          <td data-label="Deadline"><?= h(date('M-d-Y', strtotime($week['confirmation_deadline']))) ?></td>
+          <td data-label="Action">
+            <?php if ($week['confirmation_deadline'] >= date('Y-m-d')): ?>
+              <form method="post" action="rsvp_action.php">
+                <input type="hidden" name="week_id" value="<?= h($week['week_id']) ?>">
+                <select name="status" onchange="this.form.submit()">
+                  <option value="planned" <?= ($rsvp_map[$week['week_id']] ?? '') === 'planned' ? 'selected="selected"' : '' ?>>Planned</option>
+                  <option value="confirmed" <?= ($rsvp_map[$week['week_id']] ?? '') === 'confirmed' ? 'selected="selected"' : '' ?>>Confirmed</option>
+                  <option value="canceled" <?= ($rsvp_map[$week['week_id']] ?? '') === 'canceled' ? 'selected="selected"' : '' ?>>Canceled</option>
+                </select>
+                <noscript><button type="submit">Submit</button></noscript>
+              </form>
+            <?php else: ?>
+              <span style="color: gray;">RSVP Closed</span>
+            <?php endif; ?>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
   </table>
 <?php endif; ?>
 
