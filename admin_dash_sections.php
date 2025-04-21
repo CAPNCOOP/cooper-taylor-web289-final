@@ -55,11 +55,10 @@
             <td data-label="Market Status">
               <form method="POST" action="update_rsvp.php" role="form">
                 <input type="hidden" name="vendor_id" value="<?= h($vendor->vendor_id) ?>">
-                <select name="week_id" required>
-                  <option value="">Select a Week</option>
+                <select name="week_id">
                   <?php if (!empty($market_weeks_map[$vendor->vendor_id])): ?>
                     <?php foreach ($market_weeks_map[$vendor->vendor_id] as $week): ?>
-                      <option value="<?= h($week['week_id']) ?>">
+                      <option value="<?= h($week['week_id']) ?>" <?= $selected_week_id == $week['week_id'] ? 'selected' : '' ?>>
                         <?= h($week['week_start'] . " - " . $week['week_end']) ?>
                       </option>
                     <?php endforeach; ?>
@@ -74,7 +73,7 @@
                   ? $vendor_rsvp_map[$vendor->vendor_id][$selected_week_id]
                   : $default_status;
                 ?>
-                <select name="status" required>
+                <select name="status">
                   <option value="planned" <?= $current_status == 'planned' ? 'selected' : '' ?>>Planned</option>
                   <option value="confirmed" <?= $current_status == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
                   <option value="canceled" <?= $current_status == 'canceled' ? 'selected' : '' ?>>Canceled</option>

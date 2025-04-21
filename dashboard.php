@@ -31,13 +31,13 @@ if (Favorite::tableExists()) {
       <a href="edit_profile.php" class="btn"><img src="/img/assets/edit.png" width="40" height="40" alt="An edit icon." aria-label="Edit Profile Details">Edit Details</a>
     </div>
 
+    <h2>Saved Vendors</h2>
     <div id="saved-vendors">
-      <h2>Saved Vendors</h2>
       <?php if (!empty($favorites)): ?>
         <ul>
           <?php foreach ($favorites as $vendor): ?>
             <li>
-              <img src="<?= h($vendor->profile_image ?? 'default.png') ?>" height="200" width="200" alt="An Image of a Vendor." loading="lazy">
+              <img src="<?= h('img/upload/' . $vendor->profile_image ?? 'default.png') ?>" height="200" width="200" alt="An Image of a Vendor." loading="lazy">
               <a href="vendor_profile.php?vendor_id=<?= h($vendor->vendor_id) ?>" aria-label="View Vendor Profile">
                 <?= h($vendor->business_name) ?>
               </a>

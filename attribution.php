@@ -13,10 +13,11 @@ include_once 'private/header.php'; ?>
     <li><strong>Pexels</strong> — Free stock photos and videos shared by talented creators. Visit: <a href="https://www.pexels.com" target="_blank" aria-label="Link to Pexels.com">pexels.com</a></li>
     <li><strong>Pixabay</strong> — A vibrant community of creatives sharing copyright-free images and videos. Visit: <a href="https://www.pixabay.com" target="_blank" aria-label="Link to Pixabay.com">pixabay.com</a></li>
     <li><strong>Vecteezy</strong> — High-quality vectors and graphics available for free or with attribution. Visit: <a href="https://www.vecteezy.com" target="_blank" aria-label="Link to vecteezy.com">vecteezy.com</a></li>
+  </ul>
 
-    <p>Each contributor’s work is used under the licensing terms specified by the respective platform. If you believe an image has been used in error, please contact us at blueridgebounty@support.com.</p>
+  <p>Each contributor’s work is used under the licensing terms specified by the respective platform. If you believe an image has been used in error, please contact us at blueridgebounty@support.com.</p>
 
-    <p>We are committed to honoring and supporting creative work. Thank you!</p>
+  <p>We are committed to honoring and supporting creative work. Thank you!</p>
 </div>
 
 <?php require_once 'private/footer.php'; ?>

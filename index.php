@@ -1,5 +1,7 @@
 <?php
 $page_title = "Home";
+$meta_description = "Rooted in community, growing with every season.";
+$og_image = 'https://blueridgebounty.us/img/assets/index-thumb.webp';
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 
@@ -41,9 +43,21 @@ if (!str_ends_with($requested_path, '.php') || !file_exists($full_path)) {
 }
 ?>
 
-
-
 <div class="hero-image">
+
+  <noscript>
+    <div style="
+    background-color: #ffcccc;
+    border-bottom: 2px solid #660000;
+    color: #660000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    padding: 12px;
+    text-align: center;
+  ">
+      ⚠️ Some features of this site require JavaScript to function properly. Please enable JavaScript for the best experience.
+    </div>
+  </noscript>
 
   <div class="homepage-content">
     <div class="welcome-message">
@@ -137,7 +151,6 @@ if (!str_ends_with($requested_path, '.php') || !file_exists($full_path)) {
       <div class="numbertext">6/6</div>
       <div class="text"><strong>Want to be a vendor?</strong> Learn how you can join our community of growers and makers. <a href="vendorsignup.php">Click here!</a></div>
     </div>
-
 
     <!-- arrow buttons -->
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>

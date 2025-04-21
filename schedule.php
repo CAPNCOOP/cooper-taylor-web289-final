@@ -1,5 +1,7 @@
 <?php
 $page_title = "Market Schedule";
+$meta_description = "Plan your visit, taste what’s in season.";
+$og_image = "'https://blueridgebounty.us/img/assets/market-schedule-thumb.webp"; // update domain later
 require_once 'private/initialize.php';
 require_once 'private/map_header.php';
 

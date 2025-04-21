@@ -8,8 +8,8 @@
 // Site Ground
 // define("DB_SERVER", "localhost");
 // define("DB_USER", "uamij6bxstfg3");
-// define("DB_PASS", "w1ckedp155er!!");
-// define("DB_NAME", "dbzlvmnyeq51y6");
+// define("DB_PASS", "B33ts4days!!");
+// define("DB_NAME", "dbxiq331am0qu2");
 
 // Local Host
 define("DB_SERVER", "localhost");

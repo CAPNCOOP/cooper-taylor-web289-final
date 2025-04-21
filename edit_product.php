@@ -145,18 +145,16 @@ if (is_post_request()) {
 ?>
 
 <h2>Edit Product</h2>
-<form action="edit_product.php?id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" role="form">
+<form action="edit_product.php?id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
   <div>
     <fieldset>
       <label for="product_name">Product Name:</label>
-      <input type="text" id="product_name" name="product_name"
-        value="<?= h($form_data['product_name'] ?? $product->name) ?>" required>
+      <input type="text" id="product_name" name="product_name" value="<?= h($form_data['product_name'] ?? $product->name) ?>" required>
     </fieldset>
 
     <fieldset>
       <label for="price">Price ($):</label>
-      <input type="number" step="0.01" id="price" name="price"
-        value="<?= h($form_data['price'] ?? $product->price) ?>" required>
+      <input type="number" step="0.01" id="price" name="price" value="<?= h($form_data['price'] ?? $product->price) ?>" required>
     </fieldset>
 
     <fieldset>
@@ -182,8 +180,10 @@ if (is_post_request()) {
     <fieldset>
       <label for="category_id">Category:</label>
       <select id="category_id" name="category_id" required>
+        <option value="" disabled <?= empty($product->category_id) ? 'selected' : '' ?>>Select a Category</option>
         <?php foreach ($categories as $category): ?>
-          <option value="<?= $category['category_id'] ?>" <?= ($category['category_id'] == $product->category_id) ? 'selected' : '' ?>>
+          <option value="<?= $category['category_id'] ?>"
+            <?= ($category['category_id'] == $product->category_id) ? 'selected' : '' ?>>
             <?= h(ucwords(str_replace('_', ' ', $category['category_name']))) ?>
           </option>
         <?php endforeach; ?>
@@ -192,43 +192,45 @@ if (is_post_request()) {
 
     <fieldset>
       <label for="tags">Tags (comma-separated):</label>
-      <input type="text" id="tags" name="tags"
-        value="<?= h($form_data['tags'] ?? implode(', ', $product_tags)) ?>" spellcheck="true">
+      <input type="text" id="tags" name="tags" value="<?= h($form_data['tags'] ?? implode(', ', $product_tags)) ?>" spellcheck="true">
     </fieldset>
   </div>
 
   <div>
     <fieldset>
-      <label class="upload-label" role="button" tabindex="0">
-        Product Image
-        <img
-          src="img/upload/<?= h($current_image ?? 'products/default_product.webp') ?>"
-          alt="Product Preview"
+      <label class="upload-label" for="product-image" aria-label="Edit Product Photo">
+        Edit Product Image
+        <img src="img/upload/<?= h($current_image ?? 'products/default_product.webp') ?>"
+          alt="Current product preview"
           id="product-preview"
           class="image-preview"
           width="150"
           height="150"
-          loading="lazy" />
-        <input
-          type="file"
+          loading="lazy">
+        <input type="file"
           name="product_image"
           id="product-image"
           accept="image/png, image/jpeg, image/webp"
           onchange="previewImage(event)"
-          style="display: none;" />
+          aria-describedby="product-image-desc"
+          style="display: none;">
       </label>
+
+      <p id="product-image-desc" class="visually-hidden">Upload a JPG, PNG, or WebP product image.</p>
 
       <div id="cropper-modal" style="display: none;">
         <div id="cropper-modal-inner">
-          <img id="cropper-image" src="">
+          <img id="cropper-image"
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+            alt="Product image crop preview"
+            style="display: none;">
         </div>
         <button type="button" id="crop-confirm">Crop & Upload</button>
       </div>
 
-      <input type="hidden" name="cropped-product" id="cropped-product" />
+      <input type="hidden" name="cropped-product" id="cropped-product">
       <button type="submit">Save Changes</button>
     </fieldset>
-
   </div>
 </form>
 

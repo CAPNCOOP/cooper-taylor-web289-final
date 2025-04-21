@@ -33,10 +33,10 @@ body {
 
 .popup-message {
   animation: fadeOut 2s ease forwards;
-  background-color: #333;
+  background-color: var(--dark);
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  color: #fff;
+  color: var(--light);
   font-weight: bold;
   left: 50%;
   padding: 12px 24px;
@@ -92,17 +92,14 @@ body {
 }
 
 #backToTop {
-  background-color: var(--dark);
+  /* background-color: var(--dark); */
+  border-radius: 100%;
   bottom: 55px;
-  border: 3px solid var(--main-color);
-  border-radius: 50%;
   cursor: pointer;
   display: none;
   height: 100px;
-  padding: 10px;
   position: fixed;
   right: 30px;
-  transition: opacity 0.3s ease-in-out;
   width: 100px;
   z-index: 999;
 }
@@ -162,10 +159,10 @@ body {
 }
 
 .error-illustration {
-  max-width: 100%;
-  height: auto;
   display: block;
+  height: auto;
   margin: 2rem auto;
+  max-width: 100%;
 }
 
 /* Header - Footer */
@@ -232,17 +229,17 @@ header h1 {
 }
 
 .nav-links {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 100%;
-  padding: 10px;
   background: var(--dark);
+  opacity: 0;
+  padding: 10px;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
   text-align: center;
+  top: 100%;
+  transition: opacity 0.3s ease;
+  visibility: hidden;
+  width: 100%;
   z-index: 999; /* put this here instead of .active */
 }
 
@@ -253,17 +250,17 @@ header h1 {
 
 .nav-links.active {
   opacity: 1;
-  visibility: visible;
   pointer-events: auto;
+  visibility: visible;
 }
 
 #menu {
-  background-color: var(--dark);
+  background-color: var(--main-color);
+  border: 1px solid var(--dark);
   border-radius: 5px;
-  border: 1px solid var(--main-color);
-  color: var(--light);
+  color: var(--dark);
   cursor: pointer;
-  font: 48px var(--secondary-text);
+  font: 32px var(--secondary-text);
   transition: all 0.2s ease-in-out;
 }
 
@@ -282,8 +279,8 @@ div#nav-history {
 
 #nav-history button {
   background-color: var(--secondary-color) !important;
-  border-radius: 5px;
   border: 1px solid var(--main-color);
+  border-radius: 5px;
   color: var(--light);
   cursor: pointer;
   font-size: 18px;
@@ -300,8 +297,8 @@ div#nav-history {
 #breadcrumbs ul {
   display: flex;
   list-style: none;
-  padding: 0;
   margin: 0 0 0 3px;
+  padding: 0;
 }
 
 #breadcrumbs li {
@@ -310,9 +307,9 @@ div#nav-history {
 }
 
 #breadcrumbs li::after {
+  color: var(--light);
   content: '›';
   margin-left: 0.5rem;
-  color: var(--light);
 }
 
 #breadcrumbs li:last-child::after {
@@ -338,17 +335,17 @@ footer {
   color: var(--light);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
   font: 18px var(--secondary-text);
+  gap: 0.25rem;
   justify-content: space-between;
   padding: 1rem;
 }
 
 footer a {
   color: var(--light);
+  margin: 0.25rem;
   text-decoration: none;
   transition: 0.2s ease-in-out;
-  margin: 0.25rem;
 }
 
 footer a:hover {
@@ -364,8 +361,8 @@ footer ul {
   align-items: center;
   display: flex;
   flex-direction: column;
-  padding-left: 0;
   justify-items: center;
+  padding-left: 0;
 }
 
 footer li {
@@ -383,15 +380,15 @@ footer div:nth-of-type(1):not(.social-links) {
 }
 
 footer div:nth-of-type(2) span:first-of-type {
-  text-align: center;
   margin: 1rem;
+  text-align: center;
 }
 
 footer .social-links {
   display: flex !important;
   flex-direction: row !important;
-  justify-content: center;
   gap: 0.25rem;
+  justify-content: center;
 }
 
 footer > div div:last-of-type {
@@ -441,7 +438,7 @@ footer > div div:last-of-type {
 
 .hero-image {
   align-items: center;
-  background: url('../img/assets/hero.jpg') center / cover no-repeat;
+  background: url('../img/assets/hero.webp') center / cover no-repeat;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -457,8 +454,8 @@ footer > div div:last-of-type {
   color: var(--dark);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 0.5rem;
+  justify-content: center;
   padding: 1rem;
   width: 70%;
 }
@@ -479,8 +476,8 @@ footer > div div:last-of-type {
   background-color: var(--dark);
   border-radius: 5px;
   color: var(--light);
-  padding: 0.5rem;
   margin: 1rem auto;
+  padding: 0.5rem;
   text-decoration: none;
   transition: 0.2s ease-in-out;
 }
@@ -494,8 +491,8 @@ footer > div div:last-of-type {
 .slideshow-container {
   display: flex;
   flex-direction: column;
-  margin: 1rem auto 0 auto;
   justify-content: center;
+  margin: 1rem auto 0 auto;
   max-width: 1000px;
   position: relative;
 }
@@ -640,8 +637,8 @@ footer > div div:last-of-type {
 
 .market-schedule h2 {
   font: 36px var(--main-text);
-  text-align: center;
   margin: 0 0 1rem 0;
+  text-align: center;
 }
 
 .market-schedule table {
@@ -667,8 +664,8 @@ footer > div div:last-of-type {
 }
 
 .market-schedule table tr {
-  border: 1px solid var(--tertiary-color);
   background-color: var(--main-color);
+  border: 1px solid var(--tertiary-color);
 }
 
 .market-schedule table tr:nth-of-type(odd) {
@@ -701,33 +698,70 @@ footer > div div:last-of-type {
 
 .week-vendor {
   background-color: var(--light);
-  padding: 1rem;
-  margin: 1rem;
+  display: grid;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 2rem;
 }
 
+/* Vendor card */
 .vendor-item {
-  border-bottom: 3px solid var(--secondary-color);
-  font: 24px var(--secondary-text);
-  gap: 1rem;
-  list-style-type: none;
-  padding: 0.5rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.vendor-item a {
-  align-items: center;
-  color: var(--dark);
+  align-items: flex-start;
+  background-color: #fff;
+  border: 1px solid var(--secondary-color);
+  border-radius: 12px;
   display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vendor-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.01);
+}
+
+/* Clickable link wrapper */
+.vendor-item a {
+  color: inherit;
+  display: flex;
+  gap: 1rem;
   text-decoration: none;
+  width: 100%;
 }
 
-.vendor-item img {
-  border-radius: 100%;
+/* Profile photo */
+.vendor-photo {
+  border-radius: 8px;
+  height: 120px;
+  object-fit: cover;
+  width: 120px;
 }
 
-.vendor-item a:hover {
-  color: var(--light);
-  background-color: var(--secondary-color);
+/* Text content */
+.vendor-item div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vendor-item strong {
+  color: var(--dark);
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.vendor-item p {
+  color: var(--dark);
+  line-height: 1.4;
+  margin: 0.25rem 0;
+}
+
+.vendor-item p:last-of-type {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 /* Our Vendors */
@@ -754,18 +788,18 @@ div#vendorhead {
   border-radius: 5px;
   display: flex;
   gap: 1rem;
-  justify-content: center;
   height: 1.5rem;
+  justify-content: center;
   margin: 0 auto;
 }
 
 #vendorhead input {
   border: none;
   border-radius: 5px;
-  height: 1.5rem;
-  width: 400px;
   flex: 4;
+  height: 1.5rem;
   transition: 0.1s ease-in-out;
+  width: 400px;
 }
 
 #vendorhead button:hover {
@@ -868,11 +902,11 @@ div#vendorhead {
 /* Vendor Product List */
 
 .product-list {
-  margin: 1rem;
   display: flex;
-  gap: 1rem;
   flex-flow: row wrap;
+  gap: 1rem;
   justify-content: center;
+  margin: 1rem;
 }
 
 .product-card {
@@ -911,10 +945,10 @@ div#vendorhead {
   color: var(--light);
   display: inline;
   flex: 1;
-  padding: 0.5rem;
   margin-top: auto;
-  text-decoration: none;
+  padding: 0.5rem;
   text-align: center;
+  text-decoration: none;
   transition: all 0.1s ease-in-out;
 }
 
@@ -950,14 +984,14 @@ div#vendorhead {
 }
 
 .profile-product-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 250px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   transition: transform 0.2s ease;
+  width: 250px;
 }
 
 .profile-product-card:hover {
@@ -973,9 +1007,9 @@ div#vendorhead {
   background: var(--secondary-color);
   border-radius: 0 0 5px 5px !important;
   color: var(--light);
+  display: inline-block;
   font-size: 0.9rem;
   font-weight: bold;
-  display: inline-block;
   padding: 0.3rem 0.6rem;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
@@ -1038,8 +1072,8 @@ div#vendorhead {
   cursor: pointer;
   font-size: 20px;
   height: 50px;
-  width: 50px;
   transition: all 0.3s ease-in-out;
+  width: 50px;
 }
 
 .favorite-btn:hover {
@@ -1084,8 +1118,8 @@ div#vendorhead {
 }
 
 #vendor-contact-info div p {
-  border: 1px solid var(--secondary-color);
   background-color: var(--light);
+  border: 1px solid var(--secondary-color);
   border-radius: 5px;
   font: 18px var(--secondary-text);
   padding: 1rem;
@@ -1166,14 +1200,14 @@ div#vendorhead {
 }
 
 #modal-product-tags .tag {
-  display: inline-block;
   background-color: #f0f0f0;
-  color: #333;
-  padding: 4px 8px;
-  margin: 3px 4px 0 0;
   border-radius: 5px;
+  color: #333;
+  display: inline-block;
   font-size: 0.85rem;
   font-weight: 500;
+  margin: 3px 4px 0 0;
+  padding: 4px 8px;
 }
 
 /* Show Product Page */
@@ -1268,8 +1302,8 @@ div#vendorhead {
   border-radius: 5px;
   color: var(--light);
   font: 32px var(--secondary-text);
-  padding: 0.5rem 1rem;
   margin: 0 auto;
+  padding: 0.5rem 1rem;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
 }
@@ -1298,13 +1332,19 @@ div#vendorhead {
 #contact {
   background-color: var(--dark);
   color: var(--light);
-  text-align: center;
   margin: 0;
   padding: 1rem;
+  text-align: center;
 }
 
 #contact div {
   margin: 0.5rem;
+}
+
+a[href^='tel:'],
+#contact span {
+  color: #fff !important;
+  text-decoration: none;
 }
 
 .about-us div div:last-of-type h3,
@@ -1315,7 +1355,7 @@ div#vendorhead {
 /* User Login */
 
 .log-in {
-  background: url('/img/assets/blueberries.jpg') center / cover no-repeat;
+  background: url('/img/assets/blueberries.webp') center / cover no-repeat;
 }
 
 .user-login {
@@ -1329,7 +1369,7 @@ div#vendorhead {
   width: 50%;
 }
 
-.user-login legend {
+.user-login span {
   font: 48px var(--main-text);
   text-align: center;
 }
@@ -1355,8 +1395,8 @@ div#vendorhead {
 
 .user-login input[type='password'] {
   background: url(/img/assets/lock.png) no-repeat left 10px center;
-  border-radius: 5px;
   background-size: 20px 20px;
+  border-radius: 5px;
   color: var(--dark);
   height: 30px;
   padding-left: 40px;
@@ -1376,8 +1416,8 @@ div#vendorhead {
   border-radius: 5px;
   color: var(--light);
   font: 18px var(--secondary-text);
-  text-decoration: none;
   padding: 5px 10px;
+  text-decoration: none;
   transition: 0.1s ease-in-out;
 }
 
@@ -1469,8 +1509,7 @@ div#vendorhead {
   transform: translateY(-3px);
 }
 
-.sign-up div:nth-of-type(2) div,
-.vendor-signup div:nth-of-type(3) fieldset + div {
+.sign-up div:nth-of-type(2) div {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -1482,20 +1521,21 @@ div#vendorhead {
   justify-content: center;
   margin: 0 auto;
   transform-origin: center;
-  width: 100%;
+  width: auto;
 }
 
-.vendor-signup div:nth-of-type(3) div fieldset {
+.vendor-signup div:nth-of-type(3) div {
   align-items: center;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
   justify-content: center;
 }
 
 #description,
 #vendor-bio {
-  min-width: 150px;
   flex: 1 1 auto;
+  min-width: 150px;
   resize: vertical;
 }
 
@@ -1569,9 +1609,11 @@ div#vendorhead {
 .vendor-signup fieldset {
   border: none;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 0.25rem;
   justify-content: center;
-  padding: 1rem;
+  margin: 1rem;
+  padding: 0.5rem;
 }
 
 .sign-up legend {
@@ -1587,24 +1629,24 @@ div#vendorhead {
 }
 
 .vendor-signup p {
-  font: 18px var(--secondary-text);
   flex-basis: 100%;
+  font: 18px var(--secondary-text);
 }
 
 .sign-up input {
   border: 0;
   border-radius: 5px;
   height: 30px;
-  width: 400px;
   padding: 10px;
+  width: 400px;
 }
 
 .vendor-signup input {
   border: 0;
   border-radius: 5px;
+  padding: 10px;
   height: 30px;
   width: 200px;
-  padding: 10px;
 }
 
 .file-preview-container {
@@ -1613,9 +1655,21 @@ div#vendorhead {
 }
 
 .image-preview {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   max-width: 100%;
+}
+
+.visually-hidden {
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
 }
 
 /* User Dashboard */
@@ -1644,9 +1698,9 @@ div#vendorhead {
   flex: 1;
   flex-direction: column;
   height: auto;
+  justify-content: center;
   margin: 1rem;
   padding: 1rem;
-  justify-content: center;
   row-gap: 1rem;
   width: 50%;
 }
@@ -1691,6 +1745,10 @@ div#vendorhead {
   padding: 1rem;
 }
 
+#saved-vendors p {
+  display: block;
+}
+
 #saved-vendors h2 {
   margin: 0 auto;
 }
@@ -1701,10 +1759,10 @@ div#vendorhead {
 }
 
 #saved-vendors ul {
-  padding-left: 0;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+  padding-left: 0;
 }
 
 #saved-vendors li {
@@ -1712,8 +1770,8 @@ div#vendorhead {
   border-radius: 5px;
   display: inline-flex;
   flex-direction: column;
-  justify-items: center;
   font: 18px;
+  justify-items: center;
   list-style-type: none;
   margin: 1rem;
   padding: 1rem;
@@ -1755,8 +1813,8 @@ div#vendorhead {
 
 .edit-profile-details h2 {
   font: 48px var(--main-text);
-  text-align: center;
   margin: 0.5rem;
+  text-align: center;
 }
 
 .edit-profile-details form label {
@@ -1833,11 +1891,11 @@ div#vendorhead {
 
 #vendor-info div {
   align-items: center;
-  justify-content: center;
   display: flex;
   flex: 1;
-  gap: 1rem;
   flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
 }
 
 #vendor-info a {
@@ -1877,21 +1935,21 @@ div#vendorhead {
   font: 48px var(--main-text);
 }
 
-form[action='manage_products.php'] legend,
-form[action='edit_product.php'] legend {
-  font: 24px var(--secondary-text);
-  text-align: center;
-  padding: 1rem;
-}
-
 form[action='manage_products.php'] {
   background-color: var(--light);
   border-radius: 5px;
-  margin: 0 auto;
   display: flex;
   justify-content: center;
+  margin: 0 auto;
   padding: 1rem;
   width: 80%;
+}
+
+form[action='manage_products.php'] h3,
+form[action='edit_product.php'] legend {
+  font: 24px var(--secondary-text);
+  padding: 1rem;
+  text-align: center !important;
 }
 
 form[action='manage_products.php'] div:nth-of-type(2) {
@@ -2014,9 +2072,9 @@ form[action='manage_products.php'] button {
   border-radius: 5px;
   color: var(--light) !important;
   padding: 0.25rem;
+  text-align: center;
   text-decoration: none;
   width: 100%;
-  text-align: center;
 }
 
 .super-admin-dashboard table td:last-of-type,
@@ -2105,8 +2163,8 @@ div.section-content:last-of-type {
 
 .status-rejected {
   color: rgb(155, 13, 13);
-  font-weight: bold;
   cursor: help;
+  font-weight: bold;
 }
 
 .section-header {
@@ -2141,14 +2199,10 @@ div.section-content:last-of-type {
     font-size: calc(32px + (64 - 32) * (100vw - 375px) / (1400 - 375));
   }
 
-  #menu {
-    font-size: calc(32px + (48 - 32) * (100vw - 375px) / (1400 - 375));
-  }
-
   /* originally 48px */
   .error-404 h1,
   header h1,
-  .user-login legend,
+  .user-login span,
   .sign-up legend,
   .vendor-signup h2,
   #user-profile h2,
@@ -2175,6 +2229,7 @@ div.section-content:last-of-type {
   }
 
   /* originally 32px */
+  #menu,
   .aboutus-item:nth-of-type(4) a,
   .vendor-profile h2 {
     font-size: calc(16px + (32 - 24) * (100vw - 375px) / (1400 - 375));
@@ -2187,6 +2242,8 @@ div.section-content:last-of-type {
   }
 
   /* originally 24px */
+  form[action='manage_products.php'] span,
+  form[action='edit_product.php'] legend,
   .hero-image > div h2,
   .week-vendor li,
   .market-schedule table,
@@ -2435,8 +2492,8 @@ div.section-content:last-of-type {
     border: 1px solid #ddd;
     display: flex;
     flex-wrap: wrap;
-    padding: 10px;
     margin-bottom: 10px;
+    padding: 10px;
   }
 
   .admin-dashboard td,
@@ -2583,26 +2640,41 @@ div.section-content:last-of-type {
   }
 
   .market-rsvp tr {
-    margin-bottom: 10px;
     border: 1px solid #ddd;
     background: white;
-    padding: 10px;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 10px;
+    padding: 10px;
   }
 
   .market-rsvp td {
+    border-bottom: 1px solid #ddd;
     display: flex;
     justify-content: space-between;
     padding: 5px;
     width: 100%;
-    border-bottom: 1px solid #ddd;
   }
 
   .market-rsvp td::before {
     content: attr(data-label);
-    font-weight: bold;
     flex-basis: 40%;
+    font-weight: bold;
+  }
+
+  /* Market Vendors */
+  .vendor-item {
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .vendor-photo {
+    margin: 0 0 1rem 0;
+  }
+
+  .vendor-item div {
+    align-items: center;
   }
 }
 

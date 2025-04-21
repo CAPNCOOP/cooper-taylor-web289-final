@@ -139,12 +139,11 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php require_once 'private/popup_message.php'; ?>
 
 <h2>Manage Products</h2>
-<p>Business: <?= h($vendor['business_name']); ?></span>
+<p>Business: <?= h($vendor['business_name']); ?></p>
 
-  <!-- Product Upload Form -->
-<form action="manage_products.php" method="POST" enctype="multipart/form-data" role="form">
+<form action="manage_products.php" method="POST" enctype="multipart/form-data">
   <div>
-    <legend>Add New Product</legend>
+    <h3>Add New Product</h3>
 
     <fieldset>
       <label for="product_name">Product Name:</label>
@@ -159,6 +158,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <fieldset>
       <label for="amount_id">Select Amount:</label>
       <select id="amount_id" name="amount_id" required>
+        <option value="" disabled selected>Select an amount</option>
         <?php foreach ($amounts as $amount): ?>
           <option value="<?= $amount['amount_id']; ?>"><?= h($amount['amount_name']); ?></option>
         <?php endforeach; ?>
@@ -168,6 +168,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <fieldset>
       <label for="category_id">Select Category:</label>
       <select id="category_id" name="category_id" required>
+        <option value="" disabled selected>Select a category</option>
         <?php foreach ($categories as $category): ?>
           <option value="<?= $category['category_id']; ?>"><?= h(ucwords(str_replace('_', ' ', $category['category_name']))); ?></option>
         <?php endforeach; ?>
@@ -187,37 +188,40 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <div>
     <fieldset>
-      <label class="upload-label" role="button" tabindex="0">
+      <label class="upload-label" for="product-image" aria-label="Upload Product Image">
         Upload Product Image
-        <img
-          src="img/assets/add-photo.svg"
-          alt="Product Preview"
-          id="product-preview"
-          class="image-preview"
-          width="200"
-          height="200"
-          loading="lazy" />
-        <input
-          type="file"
-          name="product_image"
-          id="product-image"
-          accept="image/png, image/jpeg, image/webp"
-          onchange="previewImage(event)"
-          style="display: none;" />
       </label>
 
-      <!-- 🔲 Cropping Modal -->
+      <img src="img/assets/add-photo.svg"
+        alt="Preview of uploaded product"
+        id="product-preview"
+        class="image-preview"
+        width="200"
+        height="200"
+        loading="lazy">
+
+      <input type="file"
+        name="product_image"
+        id="product-image"
+        accept="image/png, image/jpeg, image/webp"
+        onchange="previewImage(event)"
+        aria-describedby="product-image-desc"
+        style="display: none;">
+
+      <p id="product-image-desc" class="visually-hidden">Upload a JPG, PNG, or WebP product image.</p>
+
       <div id="cropper-modal" style="display: none;">
         <div id="cropper-modal-inner">
-          <img id="cropper-image" src="">
+          <img id="cropper-image"
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+            alt="Image crop preview"
+            style="display: none;">
         </div>
         <button type="button" id="crop-confirm">Crop & Upload</button>
       </div>
 
-      <input type="hidden" name="cropped-product" id="cropped-product" />
-
+      <input type="hidden" name="cropped-product" id="cropped-product">
     </fieldset>
-
 
     <button type="submit">Add Product</button>
   </div>
@@ -234,7 +238,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <a href="delete_product.php?id=<?= $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');" aria-label="Delete Product">Delete</a>
         </div>
       </div>
-
     <?php endforeach; ?>
   <?php else: ?>
     <p>No products added yet.</p>

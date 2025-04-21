@@ -10,9 +10,20 @@ if (!isset($page_title)) {
 
 <head>
   <meta charset="UTF-8">
-  <title><?= h($page_title) ?></title>
-  <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title><?= h($page_title ?? "Blue Ridge Bounty") ?></title>
+  <meta name="description" content="<?= h($meta_description ?? 'Support local farmers and discover what’s fresh each week at Blue Ridge Bounty.') ?>">
+
+  <!-- Open Graph for social sharing -->
+  <meta property="og:title" content="<?= h($page_title ?? 'Blue Ridge Bounty') ?>">
+  <meta property="og:description" content="<?= h($meta_description ?? 'Support local farmers and discover what’s fresh each week at Blue Ridge Bounty.') ?>">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://blueridgebounty.us/img/assets/index-thumb.webp">
+  <meta property="og:url" content="https://<?= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>">
+
+  <!-- CSS & JS -->
+  <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <script src="/js/script.js" defer></script>
   <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
@@ -95,5 +106,5 @@ if (!isset($page_title)) {
     </div>
   </header>
   <button id="backToTop" aria-label="Back to Top">
-    <img src="img/assets/topButton.webp" alt="A back to top button." height="100" width="100" loading="lazy">
+    <img src="img/assets/btt.webp" alt="A back to top button." height="100" width="100" loading="lazy">
   </button>

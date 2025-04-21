@@ -1,5 +1,7 @@
 <?php
 $page_title = "Our Vendors";
+$meta_description = "Meet the hands that feed your home.";
+$og_image = "'https://blueridgebounty.us/img/assets/ourvendors-thumb.webp";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';

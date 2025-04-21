@@ -19,7 +19,7 @@ $profile_image = get_profile_image($user_id);
 
 $vendor = null;
 if ($user_level == 2) {
-  $vendor = Vendor::find_by_user_id($user_id); // Make sure this method exists in Vendor class
+  $vendor = Vendor::find_by_user_id($user_id);
 }
 ?>
 
@@ -27,34 +27,19 @@ if ($user_level == 2) {
   <?php require_once 'private/popup_message.php'; ?>
 
   <h2>Edit Profile</h2>
-  <form action="process_profile_update.php" method="POST" enctype="multipart/form-data" role="form">
+  <form action="process_profile_update.php" method="POST" enctype="multipart/form-data">
     <fieldset>
-      <label class="upload-label" tabindex="0" role="button" for="user-profile-pic" aria-label="Upload Profile Photo">
-
+      <label class="upload-label" for="user-profile-pic" aria-label="Upload Profile Photo">
         Upload Profile Photo
-
-        <img class="image-preview"
-          id="profile-preview"
-          src="<?= h('img/upload/' . $user->getImagePath()) ?>"
-          alt="Current Profile Image"
-          data-preview="image-preview"
-          height="300"
-          width="300"
-          loading="lazy">
-
-        <input type="file"
-          id="user-profile-pic"
-          name="profile_image"
-          class="image-input"
-          data-preview="image-preview"
-          accept="image/png, image/jpeg, image/webp"
-          onchange="previewImage(event)">
+        <img class="image-preview" id="profile-preview" src="<?= h('img/upload/' . $user->getImagePath()) ?>" alt="" data-preview="image-preview" height="300" width="300" loading="lazy">
+        <input type="file" id="user-profile-pic" name="profile_image" class="image-input" data-preview="image-preview" accept="image/png, image/jpeg, image/webp" onchange="previewImage(event)" aria-describedby="profile-desc">
       </label>
+      <p id="profile-desc" class="visually-hidden">Upload a JPG, PNG, or WebP profile photo.</p>
     </fieldset>
 
     <div id="cropper-modal" style="display: none;">
       <div id="cropper-modal-inner">
-        <img id="cropper-image" src="">
+        <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Image Preview Area">
       </div>
       <button type="button" id="crop-confirm">Crop & Upload</button>
     </div>
@@ -74,30 +59,26 @@ if ($user_level == 2) {
     <?php if (Session::is_vendor() && $vendor): ?>
       <fieldset>
         <label for="business_name">Business Name:</label>
-        <input type="text" id="business_name" name="business_name"
-          value="<?= h($form_data['business_name'] ?? $vendor->business_name) ?>">
+        <input type="text" id="business_name" name="business_name" value="<?= h($form_data['business_name'] ?? $vendor->business_name) ?>">
       </fieldset>
 
       <fieldset>
         <label for="business_ein">Business EIN:</label>
-        <input type="text" id="business_ein" name="business_ein"
-          value="<?= h($form_data['business_ein'] ?? $vendor->business_EIN) ?>">
+        <input type="text" id="business_ein" name="business_ein" value="<?= h($form_data['business_ein'] ?? $vendor->business_EIN) ?>">
       </fieldset>
 
       <fieldset>
         <label for="contact_number">Contact Number:</label>
-        <input type="text" id="contact_number" name="contact_number"
-          value="<?= h($form_data['contact_number'] ?? $vendor->contact_number) ?>">
+        <input type="text" id="contact_number" name="contact_number" value="<?= h($form_data['contact_number'] ?? $vendor->contact_number) ?>">
       </fieldset>
 
       <fieldset>
         <label for="description">Business Description:</label>
         <textarea id="description" name="description"><?= h($form_data['description'] ?? $vendor->description) ?></textarea>
       </fieldset>
-
     <?php endif; ?>
 
-    <button type="submit" aria-label="Save Profile Changes">Save Changes</button>
+    <button type="submit">Save Changes</button>
   </form>
 </main>
 

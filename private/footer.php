@@ -15,14 +15,14 @@
     <div>
       <span>Follow us on social media:</span>
       <div class="social-links">
-        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-          <img src="../img/assets/facebook-icon.png" alt="Facebook" height="50" width="50" loading="lazy" aria-label="Facebook">
+        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <img src="../img/assets/facebook-icon.png" alt="Facebook" height="50" width="50" loading="lazy">
         </a>
         <a href="https://www.instagram.com/capnxcoop" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <img src="../img/assets/instagram-icon.png" alt="Instagram" height="50" width="50" loading="lazy">
         </a>
         <a href="https://www.linkedin.com/in/tcooper1412/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <img src="../img/assets/linkedin-icon.png" alt="Twitter" height="50" width="50" loading="lazy">
+          <img src="../img/assets/linkedin-icon.png" alt="Linkedin Icon" height="50" width="50" loading="lazy">
         </a>
       </div>
 

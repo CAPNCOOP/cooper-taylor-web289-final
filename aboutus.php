@@ -1,5 +1,7 @@
 <?php
-$page_title = "About Us"; // Set dynamic title
+$page_title = "About Us";
+$meta_description = "Cultivating connection through local food and good soil.";
+$og_image = "'https://blueridgebounty.us/img/assets/aboutus-thumb.webp";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 ?>
@@ -10,12 +12,10 @@ require_once 'private/header.php';
     <div>
       <div class="aboutus-item">
         <picture>
-          <!-- WebP sources for modern browsers -->
           <source srcset="img/assets/farmer4-1000h.webp" media="(min-width: 1200px)">
           <source srcset="img/assets/farmer4-800h.webp" media="(min-width: 992px)">
           <source srcset="img/assets/farmer4-600h.webp" media="(min-width: 768px)">
           <source srcset="img/assets/farmer4-400h.webp" media="(min-width: 480px)">
-          <!-- Default image (fallback to JPG if WebP is unsupported) -->
           <img src="img/assets/farmer4.webp" alt="A photo of a local farmer." width="667" height="1000" loading="lazy" onerror="this.onerror=null;this.src='img/assets/farmer4.jpg';">
         </picture>
         <p>At <strong>Blue Ridge Bounty</strong>, we believe that food should be more than just sustenance—it should be a connection to the land, the farmers who cultivate it, and the community that gathers around it. Founded with a passion for local, sustainable agriculture, our farmers market is a vibrant hub where fresh, non-GMO produce, pasture-raised meats, and handcrafted goods come together in celebration of real food and honest craftsmanship.</p>
@@ -53,11 +53,11 @@ require_once 'private/header.php';
       <div id="contact">
         <h3>Contact Us</h3>
         <div>
-          <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25" loading="lazy" aria-label="Email Icon">
+          <img src="img/assets/envelope.png" alt="An envelope icon." height="25" width="25" loading="lazy">
           <span>support@blueridgebounty.us</span>
         </div>
         <div>
-          <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25" loading="lazy" aria-label="Phone Icon">
+          <img src="img/assets/phone.png" alt="An envelope icon." height="25" width="25" loading="lazy">
           <span>1-828-874-2689</span>
         </div>
       </div>
