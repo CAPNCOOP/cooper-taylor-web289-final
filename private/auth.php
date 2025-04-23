@@ -114,7 +114,7 @@ if (is_post_request() && isset($_POST['register']) && $_POST['register'] == '1')
 
   $profile_image = $uploaded_filename
     ? "users/" . $uploaded_filename
-    : 'img/upload/users/default.webp';
+    : 'users/default.webp';
 
   $sql = "INSERT INTO profile_image (user_id, file_path) VALUES (?, ?)";
   $stmt = $db->prepare($sql);
