@@ -110,6 +110,7 @@ if ($user_level == 2) {
   $vendor->business_EIN = strip_tags(trim($_POST['business_ein']));
   $vendor->contact_number = strip_tags(trim($_POST['contact_number']));
   $vendor->description = strip_tags(trim($_POST['description']));
+  $vendor->vendor_bio = strip_tags(trim($_POST['vendor_bio']));
 
   if (!$vendor->save()) {
     $session->message("❌ Error: Profile update failed.");

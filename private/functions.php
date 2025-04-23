@@ -73,7 +73,7 @@ function upload_image($file, $folder, $name, $id = null)
     $file_type = $finfo->file($file['tmp_name']);
     $ext_check = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-    // 🔒 Reject MIME or known bad extensions
+    // Reject MIME or known bad extensions
     if (in_array($file_type, $rejected_types) || !in_array($file_type, $allowed_types)) {
       $_SESSION['message'] = "❌ Invalid image type. Please upload JPG, PNG, or WebP.";
       return null;
@@ -84,7 +84,7 @@ function upload_image($file, $folder, $name, $id = null)
       return null;
     }
 
-    // 🛡️ Validate actual GD image resource
+    // Validate actual GD image resource
     try {
       /** @var GdImage|false $image */
       switch ($file_type) {
@@ -117,7 +117,7 @@ function upload_image($file, $folder, $name, $id = null)
 
     $target_path = $upload_dir . $new_filename;
 
-    // 🖼️ Convert to 500x500 webp
+    // Convert to 500x500 webp
     $width = imagesx($image);
     $height = imagesy($image);
     $size = min($width, $height);

@@ -15,7 +15,7 @@ class User extends DatabaseObject
   public $user_level_id;
   public $is_active = 1;
 
-  /**
+  /** 
    * User constructor.
    *
    * @param array $args Optional associative array to initialize user properties.

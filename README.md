@@ -4,11 +4,11 @@
 Created by: Taylor Weston Cooper
 Date: April 16, 2025
 
-## 📜 Overview
+## Overview
 
 Blue Ridge Bounty is a full-stack web application built for a local farmers market. The platform connects community members with local vendors, manages weekly market schedules, and enables administrative oversight of market operations, vendors, and users.
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 - **Frontend:** HTML, CSS (custom), JavaScript
 - **Backend:** PHP (OOP structure)
@@ -18,7 +18,7 @@ Blue Ridge Bounty is a full-stack web application built for a local farmers mark
 - **Security:** Password hashing (`bcrypt`), session-based auth, CAPTCHA verification
 - **Hosting Tools:** GitHub (private repo),
 
-## 🧠 Features
+## Features
 
 - **Vendor Registration & Profile Management**
 - **User Roles:** Member, Vendor, Admin, Super Admin
@@ -34,7 +34,7 @@ Blue Ridge Bounty is a full-stack web application built for a local farmers mark
 - **404 Error Logging**
 - **Responsive Design**
 
-## 🗄️ Database Overview
+## Database Overview
 
 ![ERD Diagram](https://dbdiagram.io/d/289DB-updated-67a3c27e263d6cf9a02b8ae2)
 
@@ -42,24 +42,24 @@ Blue Ridge Bounty is a full-stack web application built for a local farmers mark
 - Normalized structure for vendors, products, market weeks, users, images, and tags
 - All sensitive relationships use `ON DELETE CASCADE` or soft delete strategy where appropriate
 
-## 🔐 Security Notes
+## Security Notes
 
 - `config.php`, `db_credentials.php`, and other sensitive files are `.gitignore`d
 - All passwords are encrypted using `bcrypt`
 
-## 🧪 Testing & Feedback
+## Testing & Feedback
 
 - Multiple rounds of usability testing
 - Edge case testing for registration, vendor approval, and RSVP submission
 - CAPTCHA validation rigorously tested against bots/spam
 
-## 🧼 To Do / Known Issues
+## To Do / Known Issues
 
 - Image optimization could be further enhanced with dynamic resizing
 - Admin dashboard analytics (optional)
 - CSV export for admin data (optional)
 
-## 🚀 How to Deploy (Local Dev)
+## How to Deploy (Local Dev)
 
 1. Clone the repo
 2. Create your `.env` and `config.php` files
@@ -68,5 +68,3 @@ Blue Ridge Bounty is a full-stack web application built for a local farmers mark
 5. Access via `localhost/blueridgebounty`
 
 ---
-
-Let me know if you want help generating the actual Markdown file or tweaking anything like badges, license, or contributor credits. &#8203;:contentReference[oaicite:0]{index=0}&#8203;

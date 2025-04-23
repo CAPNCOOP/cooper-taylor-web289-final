@@ -133,12 +133,12 @@ unset($_SESSION['form_data']);
 
       <fieldset>
         <label for="description" class="visually-hidden">Business Description</label>
-        <textarea id="description" name="description" required placeholder="Business Description"><?= h($form_data['description'] ?? '') ?></textarea>
+        <textarea id="description" name="description" required placeholder="A short description of your business.."><?= h($form_data['description'] ?? '') ?></textarea>
       </fieldset>
 
       <fieldset>
         <label for="vendor-bio" class="visually-hidden">Vendor Bio</label>
-        <textarea id="vendor-bio" name="vendor_bio" required placeholder="Vendor Bio"><?= h($form_data['vendor_bio'] ?? '') ?></textarea>
+        <textarea id="vendor-bio" name="vendor_bio" required placeholder="Tell us your story, values, or mission..."><?= h($form_data['vendor_bio'] ?? '') ?></textarea>
       </fieldset>
     </div>
 

@@ -81,10 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  // ✅ Final file path for DB (always includes 'products/')
+  // Final file path for DB 
   $product_image = 'products/' . $product_file;
 
-  // 🧠 Insert into product_image table (always happens)
+  // Insert into product_image table 
   $sql = "INSERT INTO product_image (product_id, file_path) VALUES (?, ?)";
   $stmt = $db->prepare($sql);
   $stmt->execute([$product_id, $product_image]);

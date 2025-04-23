@@ -956,7 +956,7 @@ div#vendorhead {
 }
 
 .product-list a:last-of-type {
-  background-color: #a23024;
+  background-color: #722219;
 }
 
 .product-list a:hover {
@@ -1572,6 +1572,7 @@ a[href^='tel:'],
   border-radius: 5px;
   color: var(--light);
   cursor: pointer;
+  width: 150px;
 }
 
 /* Hide the default file input appearance */
@@ -1801,17 +1802,17 @@ a[href^='tel:'],
 
 #saved-vendors a:first-of-type,
 #saved-vendors a:last-of-type {
-  background-color: #333333cc;
+  background-color: var(--dark);
   color: var(--light);
   transition: 0.2s ease-in-out;
 }
 
 #saved-vendors a:first-of-type:hover {
-  background-color: #4caf50;
+  background-color: #19561b;
 }
 
 #saved-vendors a:last-of-type:hover {
-  background-color: #a53124;
+  background-color: #722219;
   color: var(--light);
 }
 
@@ -2130,14 +2131,6 @@ form[action='update_homepage.php'] {
 
 .create-vendor-form fieldset {
   border: none;
-}
-
-.create-vendor-form div:nth-of-type(4) fieldset {
-  border-radius: 1px solid red;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .create-vendor-form legend {

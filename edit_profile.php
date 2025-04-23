@@ -60,7 +60,6 @@ if ($user_level == 2) {
       </div>
     </fieldset>
 
-
     <div id="cropper-modal" style="display: none;">
       <div id="cropper-modal-inner">
         <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Image Preview Area">
@@ -98,7 +97,16 @@ if ($user_level == 2) {
 
       <fieldset>
         <label for="description">Business Description:</label>
-        <textarea id="description" name="description"><?= h($form_data['description'] ?? $vendor->description) ?></textarea>
+        <textarea id="description" name="description" placeholder="A short description of your business.."><?= h($form_data['description'] ?? $vendor->description) ?></textarea>
+      </fieldset>
+
+      <fieldset>
+        <label for="vendor_bio">Business Bio:</label>
+        <textarea
+          id="vendor-bio"
+          name="vendor_bio"
+          rows="6"
+          placeholder="Tell us your story, values, or mission..."><?= h($form_data['vendor_bio'] ?? $vendor->vendor_bio) ?></textarea>
       </fieldset>
     <?php endif; ?>
 
