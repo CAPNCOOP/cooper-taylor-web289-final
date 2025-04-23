@@ -1,0 +1,16 @@
+{
+  "name": "blueridgebounty",
+  "version": "1.0.0",
+  "description": "**Capstone Project for WEB-289**  \r Created by: Taylor Weston Cooper\r Date: April 16, 2025",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.39.0"
+  }
+}

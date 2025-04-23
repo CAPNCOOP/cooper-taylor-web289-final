@@ -7,3 +7,8 @@
 # Uploaded Content (optional, if dynamic)
 img/upload/*
 !img/upload/.gitkeep
+# Minified CSS/JS
+css/styles.min.css
+js/script.min.js
+# Node Modules
+/node_modules/
