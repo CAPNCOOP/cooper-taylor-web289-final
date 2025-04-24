@@ -11,7 +11,6 @@ function is_blank($value)
   return !isset($value) || trim($value) === '';
 }
 
-
 /**
  * Check if a value's length is greater than a given minimum.
  *
@@ -50,7 +49,6 @@ function has_length_exactly($value, $exact)
   $length = (!is_null($value) && $value !== '') ? strlen($value) : 0;
   return $length == $exact;
 }
-
 
 /**
  * Check if a value's length meets specified length constraints.

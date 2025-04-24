@@ -1559,20 +1559,28 @@ a[href^='tel:'],
 }
 
 #cropper-modal-inner {
+  align-items: center;
   background: var(--light);
   border-radius: 10px;
-  max-height: 80vh;
+  display: flex;
+  height: 50vh;
+  justify-content: center;
+  max-height: 90vh;
   max-width: 600px;
   overflow: auto;
   padding: 20px;
+  width: 90vw;
 }
 
-#crop-confirm {
+button#crop-confirm {
   background-color: var(--secondary-color);
   border-radius: 5px;
   color: var(--light);
-  cursor: pointer;
-  width: 150px;
+  cursor: pointer !important;
+  font: 18px var(--secondary-text);
+  padding: 0.5rem !important;
+  margin: 1rem !important;
+  width: 150px !important;
 }
 
 /* Hide the default file input appearance */
@@ -1961,7 +1969,7 @@ form[action='edit_product.php'] legend {
   text-align: center !important;
 }
 
-form[action='manage_products.php'] div:nth-of-type(2) {
+.product-upload-wrapper {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -2201,11 +2209,6 @@ div.section-content:last-of-type {
 /* Fluid Text */
 
 @media screen and (max-width: 1400px) {
-  /* originally 72px */
-  .static-text {
-    font-size: calc(36px + (72 - 36) * (100vw - 375px) / (1400 - 375));
-  }
-
   /* originally 64px */
   .about-us h2 {
     font-size: calc(32px + (64 - 32) * (100vw - 375px) / (1400 - 375));
@@ -2557,9 +2560,6 @@ div.section-content:last-of-type {
 
 @media screen and (max-width: 780px) {
   /* Home */
-  .static-text {
-    top: 50%;
-  }
 
   .hero-image {
     height: 65vh;

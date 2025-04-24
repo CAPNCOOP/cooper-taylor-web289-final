@@ -186,7 +186,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </fieldset>
   </div>
 
-  <div>
+  <div class="product-upload-wrapper">
     <fieldset>
       <label class="upload-label" for="product-image" aria-label="Upload Product Image">
         Upload Product Image

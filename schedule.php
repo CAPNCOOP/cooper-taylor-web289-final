@@ -14,7 +14,6 @@ $sql = "SELECT mw.week_id, mw.week_start,
     AND mw.is_deleted = 0
     ORDER BY mw.week_start ASC";
 
-
 $stmt = $db->query($sql);
 $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -44,7 +43,6 @@ $markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </tbody>
     </table>
   </div>
-
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
