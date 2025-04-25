@@ -152,11 +152,12 @@ class Session
     unset($_SESSION['user_id']);
     unset($_SESSION['username']);
     unset($_SESSION['last_login']);
-    unset($_SESSION['user_level']); // FIX: Unset user_level
+    unset($_SESSION['user_level']);
+    unset($_SESSION['breadcrumbs']);
     unset($this->user_id);
     unset($this->username);
     unset($this->last_login);
-    unset($this->user_level); // FIX: Unset user_level in class
+    unset($this->user_level);
     return true;
   }
 

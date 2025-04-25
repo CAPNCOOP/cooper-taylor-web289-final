@@ -60,7 +60,7 @@ class Admin extends User
    */
   public function fetchUsers()
   {
-    return User::find_by_sql("SELECT * FROM users WHERE user_level_id != 4");
+    return User::find_by_sql("SELECT * FROM users WHERE user_level_id = 1");
   }
 
   /**

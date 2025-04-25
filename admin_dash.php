@@ -4,6 +4,7 @@ require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
 require_once 'private/config.php';
+Session::require_login();
 Session::require_admin();
 
 $admin = new Admin();

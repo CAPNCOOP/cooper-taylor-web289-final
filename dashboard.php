@@ -3,7 +3,7 @@ $page_title = "Member - Dashboard";
 require_once 'private/initialize.php';
 require_once 'private/header.php';
 require_once 'private/functions.php';
-require_login();
+Session::require_login();
 Session::require_member();
 
 $user_id = $_SESSION['user_id'] ?? null;

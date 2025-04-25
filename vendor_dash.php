@@ -18,7 +18,7 @@ if (!$user || !$vendor) {
   exit("Error: Vendor not found.");
 }
 
-$profile_image = get_profile_image($user_id); // ✅ If not yet abstracted, fine to keep
+$profile_image = get_profile_image($user_id);
 $vendor_status = $vendor->vendor_status;
 
 require_once 'private/popup_message.php';
