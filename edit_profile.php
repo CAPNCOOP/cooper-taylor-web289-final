@@ -60,15 +60,6 @@ if ($user_level == 2) {
       </div>
     </fieldset>
 
-    <div id="cropper-modal" style="display: none;">
-      <div id="cropper-modal-inner">
-        <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Image Preview Area">
-      </div>
-      <button type="button" id="crop-confirm">Crop & Upload</button>
-    </div>
-
-    <input type="hidden" name="cropped-profile" id="cropped-image">
-
     <fieldset>
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" value="<?= h($form_data['username'] ?? $user->username) ?>" required>
@@ -133,5 +124,14 @@ if ($user_level == 2) {
     <button type="submit">Save Changes</button>
   </form>
 </main>
+
+<div id="cropper-modal" style="display: none;">
+  <div id="cropper-modal-inner">
+    <img id="cropper-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Image Preview Area">
+  </div>
+  <button type="button" id="crop-confirm">Crop & Upload</button>
+</div>
+
+<input type="hidden" name="cropped-profile" id="cropped-image">
 
 <?php require_once 'private/footer.php'; ?>

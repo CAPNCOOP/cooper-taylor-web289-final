@@ -11,17 +11,20 @@ if (!isset($page_title)) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title><?= h($page_title ?? "Blue Ridge Bounty") ?></title>
   <meta name="description" content="<?= h($meta_description ?? 'Support local farmers and discover what’s fresh each week at Blue Ridge Bounty.') ?>">
-
+  <meta name="robots" content="index, follow">
   <!-- Open Graph for social sharing -->
   <meta property="og:title" content="<?= h($page_title ?? 'Blue Ridge Bounty') ?>">
   <meta property="og:description" content="<?= h($meta_description ?? 'Support local farmers and discover what’s fresh each week at Blue Ridge Bounty.') ?>">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://blueridgebounty.us/img/assets/index-thumb.webp"> <!-- Update this with your real image path -->
+  <meta property="og:image" content="<?= htmlspecialchars($og_image ?? 'https://blueridgebounty.us/img/assets/index-thumb.webp') ?>">
   <meta property="og:url" content="https://<?= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>">
-
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?= h($page_title ?? 'Blue Ridge Bounty') ?>">
+  <meta name="twitter:description" content="<?= h($meta_description ?? 'Support local farmers and discover what’s fresh each week at Blue Ridge Bounty.') ?>">
+  <meta name="twitter:image" content="<?= htmlspecialchars($og_image ?? 'https://blueridgebounty.us/img/assets/index-thumb.webp') ?>">
   <!-- CSS & JS -->
   <link rel="stylesheet" href="<?= url_for('/css/styles.css') ?>">
   <script src="/js/script.js" defer></script>
