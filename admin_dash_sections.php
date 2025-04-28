@@ -49,12 +49,20 @@
       </thead>
       <tbody>
         <?php foreach ($vendor_list as $vendor): ?>
+          <?php
+          $selected_week_id = $market_weeks_map[$vendor->vendor_id][0]['week_id'] ?? null;
+          $default_status = 'planned';
+          $current_status = $selected_week_id && isset($vendor_rsvp_map[$vendor->vendor_id][$selected_week_id])
+            ? $vendor_rsvp_map[$vendor->vendor_id][$selected_week_id]
+            : $default_status;
+          ?>
           <tr>
             <td data-label="Name"><?= h($vendor->first_name . " " . $vendor->last_name) ?></td>
             <td data-label="Email"><?= h($vendor->email) ?></td>
             <td data-label="Market Status">
               <form method="POST" action="update_rsvp.php" role="form">
                 <input type="hidden" name="vendor_id" value="<?= h($vendor->vendor_id) ?>">
+
                 <select name="week_id">
                   <?php if (!empty($market_weeks_map[$vendor->vendor_id])): ?>
                     <?php foreach ($market_weeks_map[$vendor->vendor_id] as $week): ?>
@@ -66,18 +74,13 @@
                     <option value="">No Confirmed Weeks</option>
                   <?php endif; ?>
                 </select>
-                <?php
-                $selected_week_id = $market_weeks_map[$vendor->vendor_id][0]['week_id'] ?? null;
-                $default_status = 'planned';
-                $current_status = $selected_week_id && isset($vendor_rsvp_map[$vendor->vendor_id][$selected_week_id])
-                  ? $vendor_rsvp_map[$vendor->vendor_id][$selected_week_id]
-                  : $default_status;
-                ?>
+
                 <select name="status">
                   <option value="planned" <?= $current_status == 'planned' ? 'selected' : '' ?>>Planned</option>
                   <option value="confirmed" <?= $current_status == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
                   <option value="canceled" <?= $current_status == 'canceled' ? 'selected' : '' ?>>Canceled</option>
                 </select>
+
                 <button type="submit" aria-label="Change Market Status">Update</button>
               </form>
             </td>
@@ -88,7 +91,7 @@
               $button_class = $vendor->is_active ? 'btn btn-danger' : 'btn btn-success';
               $button_text = $vendor->is_active ? 'Deactivate Vendor' : 'Activate Vendor';
               ?>
-              <a href="toggle_entity.php?id=<?= $vendor->user_id ?>&action=<?= $vendor_action ?>&type=vendor" class="<?= $button_class ?>">
+              <a href="toggle_entity.php?id=<?= h($vendor->vendor_id) ?>&action=<?= $vendor_action ?>&type=vendor" class="<?= $button_class ?>">
                 <?= $button_text ?>
               </a>
             </td>
