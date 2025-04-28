@@ -34,8 +34,8 @@ $week_end_formatted = strtoupper(date('M-d-Y', strtotime($market['week_end'] ?? 
           src="<?= h($profile_path) ?>"
           alt="Photo of <?= h($vendor->business_name) ?>"
           class="vendor-photo"
-          height="150"
-          width="150"
+          height="200"
+          width="200"
           loading="lazy">
         <div>
           <strong><?= h($vendor->business_name) ?></strong> – <?= h($vendor->city . ", " . $vendor->state_abbr) ?>
