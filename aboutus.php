@@ -49,7 +49,6 @@ require_once 'private/header.php';
         <a href=<?= url_for('/vendorsignup.php') ?> aria-label="Apply to be Vendor">Apply Now!</a>
       </div>
 
-
       <div id="contact">
         <h3>Contact Us</h3>
         <div>

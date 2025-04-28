@@ -92,7 +92,6 @@ $markets = Vendor::fetchUpcomingMarkets($vendor_id);
   </div>
 </div>
 
-
 <div id="vendorhead">
   <h2>Products</h2>
 
